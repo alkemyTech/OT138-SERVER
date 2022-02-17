@@ -44,7 +44,7 @@ export const register = async (req, res) => {
             user: null,
           })
         : res.status(200).json({
-            error: true,
+            error: false,
             status: "200",
             message: "The user was created successfully.",
             user: {
