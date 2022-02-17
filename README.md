@@ -26,3 +26,15 @@ npx sequelize-cli db:seed:all
 ``` bash
 npm start
 ```
+
+## Start Development local server
+
+``` bash
+npm run dev
+```
+
+## Build local server
+
+``` bash
+npm run build
+```
