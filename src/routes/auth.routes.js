@@ -1,6 +1,7 @@
 import express from "express";
 import { validate } from "express-validation";
 import {
+  imLoggedIn,
   login,
   refresh,
   register,
@@ -18,6 +19,8 @@ router.post(
 router.post("/auth/refresh", refresh);
 
 router.post("/auth/login", login);
+
+router.post("/auth/imloggedin", isLoggedIn, imLoggedIn);
 
 /* This route protected by middleware is fully illustrative */
 router.get("/auth/protected", isLoggedIn, (req, res) => {
