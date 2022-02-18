@@ -1,10 +1,12 @@
 'use strict';
 
 import express from "express";
-import { retrieve } from "../controllers/news.controller";
+import { retrieve, update } from "../controllers/news.controller";
+import { updateNewsValidator } from '../middlewares/news.middleware';
 const router = express.Router();
 
 router.get("/news/:id", retrieve);
+router.put("/news/:id", updateNewsValidator, update);
 
 /**
  * @swagger
