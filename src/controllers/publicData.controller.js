@@ -1,13 +1,13 @@
 const publicData = {
   name: "Aklemy ONG",
-  image: "../public/assets/logo.png", //add env variable for base url `${process.env.BASE_API_URL}/public/assets/logo.png`_
+  image: `${process.env.FRONTEND_URL}/public/assets/logo.png`, //add env variable for base url `${process.env.BASE_API_URL}/public/assets/logo.png`_
   phone: "+54 11 4876 2158",
   address: "Cabildo 1234, CABA, Buenos Aires, Argentina",
   welcomeText: "Bienvenidos a Alkemy ONG",
   webLinks: {
-    home: `${process.env.FONTEND_URL}`,
-    contacts: `${process.env.FONTEND_URL}/contacts`,
-    faq: `${process.env.FONTEND_URL}/faq`,
+    home: `${process.env.FRONTEND_URL}`,
+    contacts: `${process.env.FRONTEND_URL}/contacts`,
+    faq: `${process.env.FRONTEND_URL}/faq`,
   },
   socialMediaLinks: {
     linkedin: "https://www.linkedin.com/company/alkemy2020/",
