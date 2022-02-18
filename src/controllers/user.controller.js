@@ -1,6 +1,8 @@
 import sequelize, { Op } from "sequelize";
 import { User } from "../models";
 
+export const user = async (req, res) => {};
+
 export const profile = async (req, res) => {
   try {
     const user = await User.findOne({
