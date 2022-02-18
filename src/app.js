@@ -45,7 +45,12 @@ app.use(function (err, req, res, next) {
 });
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 app.use("/", (_, res) => {
-  res.json({ working: true });
+  res.json({
+    name: "AlkemyONG API",
+    version: "v0.1",
+    group: "Grupo 138 Alkemy",
+    state: `Uptime ${parseInt(process.uptime())} seconds`,
+  });
 });
 
 server.listen(process.env.PORT || 4000, async () => {
