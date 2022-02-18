@@ -168,3 +168,23 @@ export const refresh = async (req, res) => {
   });
   return res.status(200).json({ error: false, status: "200", accessToken });
 };
+
+export const imLoggedIn = async (req, res) => {
+  try {
+    if (req.email) {
+      res.status(200).json({
+        error: false,
+        status: 200,
+        message: "You are logged in.",
+      });
+    } else {
+      res.status(200).json({
+        error: true,
+        status: 401,
+        message: `You are not logged in.`,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
