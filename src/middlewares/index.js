@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-export const isLoggedIn = (req, res, next) => {
+export const isLoggedIn = async (req, res, next) => {
   try {
     let token = req.get("Authorization");
     if (!token) {
