@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
     "name": "ong-server",
     "version": "0.0.0",
     "private": true,
@@ -42,3 +43,41 @@
         "sequelize-cli": "^6.2.0"
     }
 }
+=======
+  "name": "ong-server",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "cross-env NODE_ENV=production node dist/app.js",
+    "dev": "nodemon --exec npx babel-node src/app.js",
+    "build": "cross-env NODE_ENV=production babel src --out-dir dist"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
+    "debug": "~2.6.9",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.3",
+    "express-validation": "^3.0.8",
+    "http-errors": "~1.6.3",
+    "jsonwebtoken": "^8.5.1",
+    "morgan": "^1.10.0",
+    "mysql2": "^2.3.3",
+    "sequelize": "^6.3.5",
+    "sequelize-auto": "^0.8.8",
+    "swagger-jsdoc": "^4.0.0",
+    "swagger-ui-express": "^4.1.4",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.17.3",
+    "@babel/core": "^7.17.4",
+    "@babel/node": "^7.16.8",
+    "@babel/preset-env": "^7.16.11",
+    "nodemon": "^2.0.15",
+    "sequelize-cli": "^6.2.0"
+  }
+}
+>>>>>>> dev
