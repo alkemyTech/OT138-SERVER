@@ -1,6 +1,6 @@
 const publicData = {
   name: "Aklemy ONG",
-  image: `${process.env.FRONTEND_URL}/public/assets/logo.png`, //add env variable for base url `${process.env.BASE_API_URL}/public/assets/logo.png`_
+  image: `${process.env.FRONTEND_URL}/public/assets/logo.png`,
   phone: "+54 11 4876 2158",
   address: "Cabildo 1234, CABA, Buenos Aires, Argentina",
   welcomeText: "Bienvenidos a Alkemy ONG",
