@@ -1,10 +1,9 @@
 import express from "express";
 const router = express.Router();
-import {profile,userDelete} from "../controllers/user.controller";
+import {list} from "../controllers/getAllUser.controller";
 
 
-router.get("/users",profile);
-router.delete("/users/:id",userDelete)
+router.get("/users",list);
 
 
 export default router;

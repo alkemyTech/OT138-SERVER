@@ -1,55 +1,46 @@
+import sequelize, { Op } from "sequelize";
 import { User } from "../models";
 
+export const user = async (req, res) => {};
 
-
-//GET USERS
 export const profile = async (req, res) => {
   try {
-
-  const user = await User.findAll({attributes:["firstName","lastName","email","image","createdAt","updatedAt","deletedAt",]});
-  if (!user) {
-  res.status(400).json({
-  error: true,
-  status: false,
-  message: "The user was not found.",
-  user: null,
-  });
-  }else{
-  res.status(200).json({
-  status: true,
-  user,
-  })}
-
-  }catch (error) {
-  return res.status(200).json({
-  status: false,
-  content: error,
-  })}
-};
-
-
-
-
-//DELETE USERS
-export const userDelete = async (req,res) =>{
-  const id = req.params.id;
-  if(!id){
-  res.status(400).json({
-  error:true,
-  message:"ID is not provided"
-  })
-  }else{
-  User.destroy({where:{id}})
-  .then((result)=>{
-  if(!result){
-  res.status(404).json({message:"No user"});
-  }else{
-  res.status(200).json({message:"deleted users",result});
-  }})
-  .catch((error)=>{
-  res.status(400).json({message:error});
-  });
-    
+    const user = await User.findOne({
+      where: {
+        email: { [Op.eq]: req.email },
+      },
+      attributes: [
+        "id",
+        "firstName",
+        "lastName",
+        "email",
+        "image",
+        "createdAt",
+        "updatedAt",
+        "deletedAt",
+      ],
+    });
+    if (!user) {
+      res.status(200).json({
+        error: true,
+        status: "404",
+        message: "The user was not found.",
+        user: null,
+      });
+    } else {
+      res.status(200).json({
+        error: false,
+        status: "200",
+        message: "User was successfully found.",
+        user,
+      });
+    }
+  } catch (error) {
+    return res.status(200).json({
+      error: true,
+      status: "500",
+      message: "An error occurred while searching for the user.",
+      content: error,
+    });
   }
-
-}
+};
