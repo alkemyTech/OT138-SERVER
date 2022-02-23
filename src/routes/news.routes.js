@@ -1,12 +1,14 @@
 'use strict';
 
 import express from "express";
-import { retrieve, update } from "../controllers/news.controller";
+import { retrieve, update, retrieveAll } from "../controllers/news.controller";
 import { updateNewsValidator } from '../middlewares/news.middleware';
 const router = express.Router();
 
 router.get("/news/:id", retrieve);
 router.put("/news/:id", updateNewsValidator, update);
+
+router.get("/news", retrieveAll);
 
 /**
  * @swagger
@@ -57,6 +59,16 @@ router.put("/news/:id", updateNewsValidator, update);
  *              application/json:
  *                schema:
  *                  type: object
+ * /api/news:
+ *      get:
+ *          summary: Get all the entries of type 'news'
+ *          responses:
+ *              '200':
+ *                  description: Array of all entries of type 'news'
+ *                  content:
+ *                      application/json:
+ *                          schema:
+ *                              type: object
  */
 
 export default router;

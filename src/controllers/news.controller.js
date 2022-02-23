@@ -77,3 +77,36 @@ export const retrieve = async (req, res) => {
         });
     }
 }
+
+/**
+Finds all the instances of Entry of type 'news' and retrieve its name, image and createdAt fields,
+or an error if the instances wasn't found, or if there is a server error.
+*/
+export const retrieveAll = async (req, res) => {
+
+    try{
+        const instances = await Entry.findAll({
+            where: {type: 'news'},
+            attributes: ['name', 'image', 'createdAt']
+        });
+        if(!instances){
+            res.status(200).json({
+                error: true,
+                status: "404",
+                message: "Entries not found"
+            })
+        } else{
+            res.json({
+                error: false,
+                status: "200",
+                data: instances
+            })
+        }
+    } catch(error){
+        res.status(200).json({
+            error: true,
+            status: "500",
+            message: "Internal server error"
+        })
+    }
+}
