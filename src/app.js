@@ -27,7 +27,9 @@ const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use(
   cors({
     credentials: true,
-    origin: "http://localhost:3000",
+    origin: process.env.FRONTEND_URL
+      ? Array.from(process.env.FRONTEND_URL.split(","))
+      : "http://localhost:3000",
   })
 );
 
