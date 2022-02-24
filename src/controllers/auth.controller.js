@@ -108,7 +108,7 @@ export const login = async (req, res) => {
 
         const { password: userPassword } = user;
 
-        const passwordMatch = bcrypt.compare(password, userPassword);
+        const passwordMatch = await bcrypt.compare(password, userPassword);
 
         if (passwordMatch) {
             const accessToken = jwt.sign({ email: email }, jwtSecret, {
