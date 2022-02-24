@@ -8,7 +8,7 @@ import {
   register,
   registerValidation,
 } from "../controllers/auth.controller";
-import { isLoggedIn } from "../middlewares";
+import { isLoggedIn, isAdmin } from "../middlewares/auth.middleware";
 const router = express.Router();
 
 router.post(
@@ -24,6 +24,10 @@ router.post("/auth/login", login);
 router.post("/auth/imloggedin", isLoggedIn, imLoggedIn);
 
 router.get("/auth/me", isLoggedIn, profile);
+
+router.get("/admintest", isLoggedIn, isAdmin, (req, res) => {
+    return res.json({message: 'isAdmin: true'});
+});
 
 /* This route protected by middleware is fully illustrative */
 router.get("/auth/protected", isLoggedIn, (req, res) => {
