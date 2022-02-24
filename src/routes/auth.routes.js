@@ -8,7 +8,7 @@ import {
   register,
   registerValidation,
 } from "../controllers/auth.controller";
-import { isLoggedIn } from "../middlewares";
+import { isLoggedIn, isAdmin, loginValidator } from "../middlewares/auth.middleware";
 const router = express.Router();
 
 router.post(
@@ -19,7 +19,7 @@ router.post(
 
 router.post("/auth/refresh", refresh);
 
-router.post("/auth/login", login);
+router.post("/auth/login", loginValidator, login);
 
 router.post("/auth/imloggedin", isLoggedIn, imLoggedIn);
 
@@ -27,7 +27,7 @@ router.get("/auth/me", isLoggedIn, profile);
 
 /* This route protected by middleware is fully illustrative */
 router.get("/auth/protected", isLoggedIn, (req, res) => {
-  res.json({ email: req.email, protected: true });
+  res.json({ email: req.user.email, protected: true });
 });
 
 /**
