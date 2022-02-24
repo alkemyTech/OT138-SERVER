@@ -39,7 +39,8 @@ export const isLoggedIn = async (req, res, next) => {
     const user = await User.findOne({
         where: {
             email: decoded.email
-        }
+        },
+        attributes: { exclude: ['password', 'deletedAt'] }
     });
 
     // No user found with the email provided

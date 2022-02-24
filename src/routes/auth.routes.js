@@ -27,7 +27,7 @@ router.get("/auth/me", isLoggedIn, profile);
 
 /* This route protected by middleware is fully illustrative */
 router.get("/auth/protected", isLoggedIn, (req, res) => {
-  res.json({ email: req.email, protected: true });
+  res.json({ email: req.user.email, protected: true });
 });
 
 /**
