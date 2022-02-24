@@ -8,6 +8,12 @@ import { Joi } from 'express-validation';
 export const isLoggedIn = async (req, res, next) => {
     let token = req.get("Authorization");
     let decoded = {};
+    let jwtSecret = process.env.JWT_SECRET
+
+    if(!jwtSecret) {
+        console.warn('JWT_SECRET env variable not set, using default value');
+        jwtSecret = "SECRET_KEY";
+    }
 
     // Authorization header not set
     if (!token) {
@@ -21,7 +27,7 @@ export const isLoggedIn = async (req, res, next) => {
     token = token.split(" ")[1];
 
     try {
-        decoded = jwt.verify(token, "accessSecret");
+        decoded = jwt.verify(token, jwtSecret);
     } catch (error) {
         console.log(error);
         return res
