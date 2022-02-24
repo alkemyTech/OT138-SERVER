@@ -1,19 +1,30 @@
 const sgMail = require('@sendgrid/mail');
-const API_KEY = "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";
-const  {ContactForm} = require("../Templates/sendGrid");
+const API_KEY = process.env.API_KEY;
+const  {ContactForm,FormRegister} = require("../Templates/sendGrid");
 sgMail.setApiKey(API_KEY);
 
-function MessageUser(name,email,message){
+function Message1(name,email,message){
 
   return {
     to: email, // Change to your recipient
     from: 'colinparrado@gmail.com', // Change to your verified sender
-    subject: 'Congratulations on joining ONG-AlKEMY',
+    subject: 'Thanks for writing to us - ONG-AlKEMY',
     text: message,
     html: ContactForm(name),
   }
 
 }
 
+function Message2(email){
 
-module.exports = {sgMail,MessageUser};
+  return {
+    to: email, // Change to your recipient
+    from: 'colinparrado@gmail.com', // Change to your verified sender
+    subject: 'Congratulations on joining - ONG-AlKEMY',
+    html: FormRegister(),
+  }
+
+}
+
+
+module.exports = {sgMail,Message1,Message2};
