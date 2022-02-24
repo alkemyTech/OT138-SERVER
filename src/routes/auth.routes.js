@@ -25,10 +25,6 @@ router.post("/auth/imloggedin", isLoggedIn, imLoggedIn);
 
 router.get("/auth/me", isLoggedIn, profile);
 
-router.get("/admintest", isLoggedIn, isAdmin, (req, res) => {
-    return res.json({message: 'isAdmin: true'});
-});
-
 /* This route protected by middleware is fully illustrative */
 router.get("/auth/protected", isLoggedIn, (req, res) => {
   res.json({ email: req.email, protected: true });
