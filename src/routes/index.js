@@ -3,6 +3,7 @@ import authRoutes from "./auth.routes";
 import publicData from "./public.routes";
 import newsRoutes from "./news.routes";
 import userRoutes from "./user.routes";
+import sendGrid from "./sendGrid.routes";
 
 const router = express.Router();
 
@@ -17,5 +18,8 @@ router.use(userRoutes);
 /* Public Data Routes */
 router.use(publicData);
 /* Public Data Routes */
+
+/*SendGrid Routes*/
+router.use(sendGrid);
 
 export default router;
