@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import { User, Role } from '../models';
+import { Joi } from 'express-validation';
 
 /**
  * Checks if the user is authenticated and appends the user instance (if valid) to the request object.
@@ -66,4 +67,25 @@ export const isAdmin = async (req, res, next) => {
     console.log(user.role);
 
     next()
+}
+
+export const loginValidator = async (req, res, next) => {
+
+    const loginValidationSchema = Joi.object({
+        email: Joi.string().required(),
+        password: Joi.string().required()
+    }).unknown().options({abortEarly: false});
+
+    const { error, value } = loginValidationSchema.validate(req.body);
+
+    if(error) {
+        return res.status(200).json({
+            error: true,
+            status: "400",
+            message: "Invalid request",
+            invalidFields: error.details
+        });
+    }
+
+    next();
 }

@@ -8,7 +8,7 @@ import {
   register,
   registerValidation,
 } from "../controllers/auth.controller";
-import { isLoggedIn, isAdmin } from "../middlewares/auth.middleware";
+import { isLoggedIn, isAdmin, loginValidator } from "../middlewares/auth.middleware";
 const router = express.Router();
 
 router.post(
@@ -19,7 +19,7 @@ router.post(
 
 router.post("/auth/refresh", refresh);
 
-router.post("/auth/login", login);
+router.post("/auth/login", loginValidator, login);
 
 router.post("/auth/imloggedin", isLoggedIn, imLoggedIn);
 
