@@ -36,3 +36,7 @@ export const createActivitiesController = async (req, res) => {
     }
   }
 };
+
+export const getActivitiesController = async (req, res) => {
+  console.log("Get activities endpoint");
+};
