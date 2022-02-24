@@ -7,21 +7,18 @@ const createActivitiesSchema = Joi.object({
   content: Joi.string().required(),
 });
 export const createActivitiesController = async (req, res) => {
-  console.log("------activity--------");
   const { error, value } = createActivitiesSchema.validate(req.body);
   if (error) {
-    //Validation failed
+    // Validation failed
     res.json({
       error: true,
       status: "400",
       message: error.message,
     });
   } else {
-    console.log(value);
-    //meter datos en la db
+    // Validation success
     try {
       const activity = await Activities.create(value);
-      console.log(activity);
       res.json({
         error: false,
         status: "200",
