@@ -1,9 +1,13 @@
 import express from "express";
-import { createActivitiesController } from "../controllers/activities.controller";
+import {
+  createActivitiesController,
+  getActivitiesController,
+} from "../controllers/activities.controller";
 
 const router = express.Router();
 
 router.post("/activities", createActivitiesController);
+router.get("/activities", getActivitiesController);
 
 /**
  * @swagger
