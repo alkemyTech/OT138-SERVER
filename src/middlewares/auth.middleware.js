@@ -29,12 +29,10 @@ export const isLoggedIn = async (req, res, next) => {
             .json({ error: true, status: "401", message: 'Invalid token' });
     }
 
-    userEmail = decoded.email;
-
     // Find user using the email encoded in the jwt
     const user = await User.findOne({
         where: {
-            email: userEmail
+            email: decoded.email
         }
     });
 
@@ -64,11 +62,30 @@ export const isAdmin = async (req, res, next) => {
             .json({ error: true, status: "401", message: 'User is not authenticated' });
     }
 
-    console.log(user.role);
+    if(user.roleId === null) {
+        return res
+            .status(200)
+            .json({ error: true, status: "403", message: 'User does not have the admin Role' });
+    }
 
-    next()
+    const userRole = await Role.findOne({
+        where: {
+            id: user.roleId
+        }
+    });
+
+    if(userRole === null || userRole.name !== 'Admin') {
+        return res
+            .status(200)
+            .json({ error: true, status: "403", message: 'User does not have the admin Role' });
+    }
+
+    next();
 }
 
+/**
+ * Verifies that the request body contains the properties email and password required to authenticate the user.
+ */
 export const loginValidator = async (req, res, next) => {
 
     const loginValidationSchema = Joi.object({
