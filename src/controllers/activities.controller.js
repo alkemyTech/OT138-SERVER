@@ -37,6 +37,50 @@ export const createActivitiesController = async (req, res) => {
   }
 };
 
+const getActivitiesQueryParamsSchema = Joi.object({
+  limit: Joi.number().integer().greater(0),
+  page: Joi.number().integer().greater(0),
+});
+
 export const getActivitiesController = async (req, res) => {
-  console.log("Get activities endpoint");
+  let limit = req?.query?.limit ? parseInt(req?.query?.limit) : null;
+  let page = req?.query?.page ? parseInt(req?.query?.page) : null;
+  const { error } = getActivitiesQueryParamsSchema.validate({ limit, page });
+  if (error) {
+    // Validation failed
+    res.json({ error: true, status: 400, message: error.message });
+  } else {
+    // Validation success
+    const activities = await Activities.findAndCountAll({
+      subQuery: false,
+      limit: limit,
+      offset: (page - 1) * limit, // -1 so first page starts from 1
+      order: [["createdAt", "DESC"]],
+    });
+
+    let result = {};
+    if (page > 1) {
+      // if there is a previous page add previous property
+      result.previous = {
+        page: page - 1,
+        limit: limit,
+      };
+    }
+    if (page * limit < activities.count) {
+      // if there is a next page add next property
+      result.next = {
+        page: page + 1,
+        limit: limit,
+      };
+    }
+    // add activities to result
+    result.activities = activities.rows;
+    // response
+    res.json({
+      error: false,
+      status: "200",
+      message: "Success",
+      result,
+    });
+  }
 };
