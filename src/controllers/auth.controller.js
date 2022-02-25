@@ -85,7 +85,10 @@ export const login = async (req, res) => {
                 email: email
             },
             attributes: {
-                include: [[sequelize.col('role.name'), 'roleName']]
+                include: [
+                    'password',
+                    [sequelize.col('role.name'), 'roleName']
+                ]
             },
             include: [{
                 model: Role,
@@ -94,6 +97,8 @@ export const login = async (req, res) => {
                 attributes: []
             }],
         });
+
+        console.log(user);
 
         if (!user) {
             /* Intentional error to avoid providing information about the existence of the user's email address. */
@@ -119,7 +124,7 @@ export const login = async (req, res) => {
             });
 
             // Remove sensitive information
-            const { password, deletedAt, ...userData } = user.dataValues;
+            const { password, ...userData } = user.dataValues;
 
             return res
                 .status(200)
