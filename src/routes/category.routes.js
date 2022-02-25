@@ -2,9 +2,10 @@
 
 import express from "express";
 import { create } from "../controllers/category.controller";
+import { createCategoryValidator } from '../middlewares/category.middleware';
 const router = express.Router();
 
-router.post("/category", create);
+router.post("/category", createCategoryValidator, create);
 
 /**
  * @swagger
