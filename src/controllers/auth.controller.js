@@ -1,7 +1,7 @@
 import sequelize, { Op } from "sequelize";
 import bcrypt from "bcryptjs";
 import { Joi } from "express-validation";
-import { User } from "../models";
+import { User, Role } from "../models";
 import jwt from "jsonwebtoken";
 import { verifyRefresh } from "../helpers";
 
@@ -81,20 +81,20 @@ export const login = async (req, res) => {
         const { email, password } = req.body;
 
         const user = await User.findOne({
-            raw: true,
             where: {
-                [Op.and]: [
-                    {
-                        [Op.or]: [
-                            sequelize.where(
-                                sequelize.fn("lower", sequelize.col("email")),
-                                sequelize.fn("lower", `${email}`)
-                            ),
-                        ],
-                    },
-                ],
+                email: email
             },
+            attributes: {
+                include: [[sequelize.col('role.name'), 'roleName']]
+            },
+            include: [{
+                model: Role,
+                required: false,
+                as: 'role',
+                attributes: []
+            }],
         });
+
         if (!user) {
             /* Intentional error to avoid providing information about the existence of the user's email address. */
             return res.status(200).json({
@@ -118,6 +118,9 @@ export const login = async (req, res) => {
                 expiresIn: "7d",
             });
 
+            // Remove sensitive information
+            const { password, deletedAt, ...userData } = user.dataValues;
+
             return res
                 .status(200)
                 .cookie("access-token", `${accessToken}`, {
@@ -138,6 +141,7 @@ export const login = async (req, res) => {
                     error: false,
                     status: 200,
                     message: "User was authenticated successfully.",
+                    user: userData,
                     accessToken,
                     refreshToken,
                 });
@@ -150,6 +154,7 @@ export const login = async (req, res) => {
             refreshToken: null,
         });
     } catch (error) {
+        console.log(error);
         return res.status(200).json({
             error: true,
             status: "500",
