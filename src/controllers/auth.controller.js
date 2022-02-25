@@ -1,7 +1,7 @@
 import sequelize, { Op } from "sequelize";
 import bcrypt from "bcryptjs";
 import { Joi } from "express-validation";
-import { User } from "../models";
+import { User, Role } from "../models";
 import jwt from "jsonwebtoken";
 import { verifyRefresh } from "../helpers";
 
@@ -69,6 +69,10 @@ export const register = async (req, res) => {
     }
 };
 
+/**
+ * Authenticates the user if the credentials are valid.
+ * @returns User data, access token and refresh token
+ */
 export const login = async (req, res) => {
     let jwtSecret = process.env.JWT_SECRET
 
@@ -81,20 +85,23 @@ export const login = async (req, res) => {
         const { email, password } = req.body;
 
         const user = await User.findOne({
-            raw: true,
             where: {
-                [Op.and]: [
-                    {
-                        [Op.or]: [
-                            sequelize.where(
-                                sequelize.fn("lower", sequelize.col("email")),
-                                sequelize.fn("lower", `${email}`)
-                            ),
-                        ],
-                    },
-                ],
+                email: email
             },
+            attributes: {
+                include: [
+                    'password',
+                    [sequelize.col('role.name'), 'roleName']
+                ]
+            },
+            include: [{
+                model: Role,
+                required: false,
+                as: 'role',
+                attributes: []
+            }],
         });
+
         if (!user) {
             /* Intentional error to avoid providing information about the existence of the user's email address. */
             return res.status(200).json({
@@ -106,9 +113,9 @@ export const login = async (req, res) => {
             });
         }
 
-        const { password: userPassword } = user;
+        const { password: savedPassword } = user;
 
-        const passwordMatch = await bcrypt.compare(password, userPassword);
+        const passwordMatch = await bcrypt.compare(password, savedPassword);
 
         if (passwordMatch) {
             const accessToken = jwt.sign({ email: email }, jwtSecret, {
@@ -117,6 +124,9 @@ export const login = async (req, res) => {
             const refreshToken = jwt.sign({ email: email }, jwtSecret, {
                 expiresIn: "7d",
             });
+
+            // Remove sensitive information
+            const { password, ...userData } = user.dataValues;
 
             return res
                 .status(200)
@@ -138,6 +148,7 @@ export const login = async (req, res) => {
                     error: false,
                     status: 200,
                     message: "User was authenticated successfully.",
+                    user: userData,
                     accessToken,
                     refreshToken,
                 });
@@ -150,6 +161,7 @@ export const login = async (req, res) => {
             refreshToken: null,
         });
     } catch (error) {
+        console.log(error);
         return res.status(200).json({
             error: true,
             status: "500",
@@ -188,6 +200,7 @@ export const imLoggedIn = async (req, res) => {
         if (req.user) {
             res.status(200).json({
                 error: false,
+                user: req.user,
                 status: 200,
                 message: "You are logged in.",
             });
