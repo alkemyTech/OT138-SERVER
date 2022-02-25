@@ -5,7 +5,7 @@ import { create } from "../controllers/category.controller";
 import { createCategoryValidator } from '../middlewares/category.middleware';
 const router = express.Router();
 
-router.post("/category", createCategoryValidator, create);
+router.post("/categories", createCategoryValidator, create);
 
 /**
  * @swagger
