@@ -69,6 +69,10 @@ export const register = async (req, res) => {
     }
 };
 
+/**
+ * Authenticates the user if the credentials are valid.
+ * @returns User data, access token and refresh token
+ */
 export const login = async (req, res) => {
     let jwtSecret = process.env.JWT_SECRET
 
@@ -98,8 +102,6 @@ export const login = async (req, res) => {
             }],
         });
 
-        console.log(user);
-
         if (!user) {
             /* Intentional error to avoid providing information about the existence of the user's email address. */
             return res.status(200).json({
@@ -111,9 +113,9 @@ export const login = async (req, res) => {
             });
         }
 
-        const { password: userPassword } = user;
+        const { password: savedPassword } = user;
 
-        const passwordMatch = await bcrypt.compare(password, userPassword);
+        const passwordMatch = await bcrypt.compare(password, savedPassword);
 
         if (passwordMatch) {
             const accessToken = jwt.sign({ email: email }, jwtSecret, {
@@ -198,6 +200,7 @@ export const imLoggedIn = async (req, res) => {
         if (req.user) {
             res.status(200).json({
                 error: false,
+                user: req.user,
                 status: 200,
                 message: "You are logged in.",
             });
