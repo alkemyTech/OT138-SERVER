@@ -51,36 +51,57 @@ export const getActivitiesController = async (req, res) => {
     res.json({ error: true, status: 400, message: error.message });
   } else {
     // Validation success
-    const activities = await Activities.findAndCountAll({
-      subQuery: false,
-      limit: limit,
-      offset: (page - 1) * limit, // -1 so first page starts from 1
-      order: [["createdAt", "DESC"]],
-    });
+    try {
+      const activities = await Activities.findAndCountAll({
+        subQuery: false,
+        limit: limit,
+        offset: (page - 1) * limit, // -1 so first page starts from 1
+        order: [["createdAt", "DESC"]],
+      });
+      const totalNumberOfPages = Math.ceil(activities.count / limit);
+      let result = {};
+      if (page > 1 && page <= totalNumberOfPages) {
+        // if there is a previous page add previous property
+        result.previous = {
+          page: page - 1,
+          limit: limit,
+        };
+      }
+      if (page < totalNumberOfPages) {
+        // if there is a next page add next property
+        result.next = {
+          page: page + 1,
+          limit: limit,
+        };
+      }
+      // add activities to result
+      result.activities = activities.rows;
+      //Add number of activities to result
+      result.count = activities.rows.length;
+      //Add total number of pages
+      result.totalNumberOfPages = totalNumberOfPages;
 
-    let result = {};
-    if (page > 1) {
-      // if there is a previous page add previous property
-      result.previous = {
-        page: page - 1,
-        limit: limit,
-      };
+      // Response
+      let status = "200";
+      let message = "success";
+      if (activities.rows.length === 0) {
+        status = "204";
+        message = "No activities found";
+      }
+      res.json({
+        error: false,
+        status,
+        message,
+        result,
+      });
+    } catch (error) {
+      res.json({
+        error: true,
+        status: "500",
+        message:
+          "An unexpected error occurred when retrieving data form database",
+        content: error,
+      });
     }
-    if (page * limit < activities.count) {
-      // if there is a next page add next property
-      result.next = {
-        page: page + 1,
-        limit: limit,
-      };
-    }
-    // add activities to result
-    result.activities = activities.rows;
-    // response
-    res.json({
-      error: false,
-      status: "200",
-      message: "Success",
-      result,
-    });
   }
 };
