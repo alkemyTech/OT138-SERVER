@@ -7,7 +7,7 @@ import {
 const router = express.Router();
 
 router.post("/activities", createActivitiesController);
-router.get("/activities", getActivitiesController);
+router.get("/activities/:id?", getActivitiesController);
 
 /**
  * @swagger

@@ -1,6 +1,6 @@
 import { Joi } from "express-validation";
 import { Activities } from "../models";
-
+import { Op } from "sequelize";
 const createActivitiesSchema = Joi.object({
   name: Joi.string().required(),
   image: Joi.string().uri(),
@@ -43,6 +43,8 @@ const getActivitiesQueryParamsSchema = Joi.object({
 });
 
 export const getActivitiesController = async (req, res) => {
+  const id = req.params.id;
+  let condition = id ? { id: { [Op.eq]: id } } : null;
   let limit = req?.query?.limit ? parseInt(req?.query?.limit) : null;
   let page = req?.query?.page ? parseInt(req?.query?.page) : null;
   const { error } = getActivitiesQueryParamsSchema.validate({ limit, page });
@@ -57,6 +59,7 @@ export const getActivitiesController = async (req, res) => {
         limit: limit,
         offset: (page - 1) * limit, // -1 so first page starts from 1
         order: [["createdAt", "DESC"]],
+        where: condition,
       });
       const totalNumberOfPages = Math.ceil(activities.count / limit);
       let result = {};
