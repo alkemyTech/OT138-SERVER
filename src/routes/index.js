@@ -3,7 +3,9 @@ import authRoutes from "./auth.routes";
 import publicData from "./public.routes";
 import newsRoutes from "./news.routes";
 import userRoutes from "./user.routes";
+import activitiesRoutes from "./activities.routes";
 import sendGrid from "./sendGrid.routes";
+import categoryRoutes from "./category.routes";
 
 const router = express.Router();
 
@@ -17,9 +19,13 @@ router.use(newsRoutes);
 router.use(userRoutes);
 /* Public Data Routes */
 router.use(publicData);
-/* Public Data Routes */
+/* Activities Routes */
+router.use(activitiesRoutes);
 
 /*SendGrid Routes*/
 router.use(sendGrid);
+
+/* Category Routes */
+router.use(categoryRoutes);
 
 export default router;

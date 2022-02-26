@@ -44,3 +44,32 @@ npm run build
 ``` bash
 npm run test
 ```
+
+## Demo users
+
+#### This credentials can be used to login.
+
+Email:
+
+- myrl.wiza@yahoo.com
+- tina.stanton@yahoo.com
+- calista_ferry@yahoo.com
+- emily81@hotmail.com
+- mario.thompson64@yahoo.com
+- jaren_balistreri@gmail.com
+- carolina_russel2@yahoo.com
+- dorian.rutherford57@hotmail.com
+- daisha_kuphal@gmail.com
+- ruthe50@hotmail.com
+- aletha_kilback@hotmail.com
+- modesto74@gmail.com
+- corene.langworth@yahoo.com
+- cecelia_hickle@yahoo.com
+- caesar99@yahoo.com
+- alexander_jast6@gmail.com
+- marty84@hotmail.com
+- camylle.dooley@gmail.com
+- easter.denesik20@hotmail.com
+- manley_vonrueden59@gmail.com
+
+Password for all users: test1234

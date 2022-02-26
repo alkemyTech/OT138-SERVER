@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import sequelize from 'sequelize';
 import { User, Role } from '../models';
 import { Joi } from 'express-validation';
 
@@ -10,7 +11,7 @@ export const isLoggedIn = async (req, res, next) => {
     let decoded = {};
     let jwtSecret = process.env.JWT_SECRET
 
-    if(!jwtSecret) {
+    if (!jwtSecret) {
         console.warn('JWT_SECRET env variable not set, using default value');
         jwtSecret = "SECRET_KEY";
     }
@@ -40,7 +41,15 @@ export const isLoggedIn = async (req, res, next) => {
         where: {
             email: decoded.email
         },
-        attributes: { exclude: ['password', 'deletedAt'] }
+        attributes: {
+            include: [[sequelize.col('role.name'), 'roleName']]
+        },
+        include: [{
+            model: Role,
+            required: false,
+            as: 'role',
+            attributes: []
+        }],
     });
 
     // No user found with the email provided
@@ -62,14 +71,14 @@ export const isLoggedIn = async (req, res, next) => {
  */
 export const isAdmin = async (req, res, next) => {
     const user = req.user;
-    
-    if(!user) {
+
+    if (!user) {
         return res
             .status(200)
             .json({ error: true, status: "401", message: 'User is not authenticated' });
     }
 
-    if(user.roleId === null) {
+    if (user.roleId === null) {
         return res
             .status(200)
             .json({ error: true, status: "403", message: 'User does not have the admin Role' });
@@ -81,7 +90,7 @@ export const isAdmin = async (req, res, next) => {
         }
     });
 
-    if(userRole === null || userRole.name !== 'Admin') {
+    if (userRole === null || userRole.name !== 'Admin') {
         return res
             .status(200)
             .json({ error: true, status: "403", message: 'User does not have the admin Role' });
@@ -98,11 +107,11 @@ export const loginValidator = async (req, res, next) => {
     const loginValidationSchema = Joi.object({
         email: Joi.string().required(),
         password: Joi.string().required()
-    }).unknown().options({abortEarly: false});
+    }).unknown().options({ abortEarly: false });
 
     const { error, value } = loginValidationSchema.validate(req.body);
 
-    if(error) {
+    if (error) {
         return res.status(200).json({
             error: true,
             status: "400",
