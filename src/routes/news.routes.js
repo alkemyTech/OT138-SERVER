@@ -7,9 +7,9 @@ import { isLoggedIn, isAdmin } from '../middlewares/auth.middleware';
 const router = express.Router();
 
 router.get("/news/:id", retrieve);
-router.put("/news/:id", updateNewsValidator, isLoggedIn, isAdmin, update);
+router.put("/news/:id", updateNewsValidator, update);
 
-router.get("/news", retrieveAll);
+router.get("/news", isLoggedIn, isAdmin, retrieveAll);
 router.post("/news", updateNewsValidator, isLoggedIn, isAdmin, create);
 
 /**
