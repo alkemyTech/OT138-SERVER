@@ -9,6 +9,7 @@
         "test": "mocha -r @babel/register -r regenerator-runtime/runtime src/tests"
     },
     "dependencies": {
+        "@sendgrid/mail": "^7.6.1",
         "bcryptjs": "^2.4.3",
         "cookie-parser": "^1.4.6",
         "cors": "^2.8.5",
@@ -34,6 +35,7 @@
         "@babel/node": "^7.16.8",
         "@babel/preset-env": "^7.16.11",
         "@babel/register": "^7.17.0",
+        "@faker-js/faker": "^6.0.0-alpha.7",
         "chai": "^4.3.6",
         "mocha": "^9.2.0",
         "nodemon": "^2.0.15",
