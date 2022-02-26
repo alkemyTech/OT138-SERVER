@@ -110,3 +110,28 @@ export const retrieveAll = async (req, res) => {
         })
     }
 }
+
+export const create = async (req, res) => {
+
+    try{
+        await Entry.create({
+            ...req.body,
+            type: 'news',
+            createdAt: Date.now(),
+            updatedAt: Date.now()
+        });
+
+        res.status(200).json({
+            error: false,
+            status: "200"
+        })
+
+    } catch(err) {
+        console.log(err);
+        res.status(200).json({
+            error: true,
+            status: "500",
+            message: "Internal server error"
+        })
+    }
+}
