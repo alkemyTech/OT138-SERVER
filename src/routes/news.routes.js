@@ -3,14 +3,14 @@
 import express from "express";
 import { retrieve, update, retrieveAll, create } from "../controllers/news.controller";
 import { updateNewsValidator } from '../middlewares/news.middleware';
-import { isAdmin } from '../middlewares/auth.middleware';
+import { isLoggedIn, isAdmin } from '../middlewares/auth.middleware';
 const router = express.Router();
 
 router.get("/news/:id", retrieve);
-router.put("/news/:id", updateNewsValidator, update);
+router.put("/news/:id", updateNewsValidator, isLoggedIn, isAdmin, update);
 
 router.get("/news", retrieveAll);
-router.post("/news", updateNewsValidator, isAdmin, create);
+router.post("/news", updateNewsValidator, isLoggedIn, isAdmin, create);
 
 /**
  * @swagger
