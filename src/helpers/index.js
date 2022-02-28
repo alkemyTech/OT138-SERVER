@@ -21,8 +21,8 @@ export const verifyRefresh = ({ email, refreshToken }) => {
  * @param {*} model Sequelize model class
  * @param {Number} limit Amount of items returned. Default: 10
  * @param {Number} page Page of the results. Default: 1
- * @param {Array} order Sequelize order. Default: []
- * @param {Object} where Conditions used to filter the results. Default: {}
+ * @param {Array} order Sequelize order array. Default: []
+ * @param {Object} where Conditions (Sequelize where property) used to filter the results. Default: {}
  * @returns Object containing the results and information about the pagination
  * @throws InvalidArgumentsError if arguments limit or page are invalid.
  */
