@@ -1,16 +1,26 @@
 'use strict';
 
 import express from "express";
-import { create, update } from "../controllers/category.controller";
+import { list, create, update } from "../controllers/category.controller";
 import { categoryValidator } from '../middlewares/category.middleware';
 const router = express.Router();
 
+router.get("/categories", list);
 router.post("/categories", categoryValidator, create);
 router.put("/categories/:id", categoryValidator, update);
 
 /**
  * @swagger
  * /api/categories:
+ *      get:
+ *        summary: List all categories
+ *        responses:
+ *          '200':
+ *            description: List with all categories
+ *            content:
+ *              application/json:
+ *                schema:
+ *                  type: object
  *      post:
  *        summary: Create a category
  *        parameters:
