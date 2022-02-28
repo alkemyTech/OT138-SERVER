@@ -1,8 +1,9 @@
 import { Contact } from '../models';
+import { paginate } from '../helpers';
 
 export const list = async (req, res) => {
     try {
-        const contacts = await Contact.findAll();
+        const contacts = await paginate(Contact);
         return res.status(200).json({
             error: false,
             status: "200",
