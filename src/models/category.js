@@ -18,7 +18,12 @@ module.exports = (sequelize, DataTypes) => {
     }, {
         sequelize,
         modelName: 'Category',
-        paranoid: true
+        paranoid: true,
+        defaultScope: {
+            attributes: {
+                exclude: ['deletedAt']
+            }
+        },
     });
 
     return Category;
