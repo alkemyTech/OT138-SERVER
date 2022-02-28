@@ -1,9 +1,13 @@
 import { Contact } from '../models';
 import { paginate } from '../helpers';
+import { InvalidArgumentsError } from '../helpers/exceptions';
 
+/**
+ * Returns a list of conctacts
+ */
 export const list = async (req, res) => {
     try {
-        const contacts = await paginate(Contact);
+        const contacts = await paginate(Contact, req.query.limit, req.query.page);
         return res.status(200).json({
             error: false,
             status: "200",
@@ -11,11 +15,21 @@ export const list = async (req, res) => {
             data: contacts
         });
     } catch (err) {
+        let resData = {}
+        if (err instanceof InvalidArgumentsError) {
+            resData = {
+                error: true,
+                status: "400",
+                message: err.message
+            }
+        } else {
+            resData = {
+                error: true,
+                status: "500",
+                message: "An unexpected error occurred when retrieving data form database",
+            }
+        }
         console.log(err);
-        return res.status(200).json({
-            error: true,
-            status: "500",
-            message: "An unexpected error occurred when retrieving data form database",
-        });
+        return res.status(200).json(resData);
     }
 };

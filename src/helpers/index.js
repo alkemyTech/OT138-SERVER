@@ -1,4 +1,6 @@
 import jwt from "jsonwebtoken";
+import { Joi } from "express-validation";
+import { InvalidArgumentsError } from './exceptions';
 
 export const verifyRefresh = ({ email, refreshToken }) => {
     try {
@@ -22,8 +24,24 @@ export const verifyRefresh = ({ email, refreshToken }) => {
  * @param {Array} order Sequelize order. Default: []
  * @param {Object} where Conditions used to filter the results. Default: {}
  * @returns Object containing the results and information about the pagination
+ * @throws InvalidArgumentsError if arguments limit or page are invalid.
  */
 export const paginate = async (model, limit = 10, page = 1, order = [], where = {}) => {
+    // Validate params
+    const validationSchema = Joi.object({
+        limit: Joi.number().integer().greater(0),
+        page: Joi.number().integer().greater(0),
+    });
+    const { error } = validationSchema.validate({ limit, page });
+    
+    if(error) {
+        throw new InvalidArgumentsError('Invalid pagination params');
+    }
+    
+    // Cast params
+    limit = parseInt(limit);
+    page = parseInt(page);
+
     const result = {};
 
     const data = await model.findAndCountAll({
@@ -35,7 +53,7 @@ export const paginate = async (model, limit = 10, page = 1, order = [], where = 
     });
 
     const pages = Math.ceil(data.count / limit);
-    
+
     if (page > 1 && page <= pages) {
         result.previous = {
             page: page - 1,
@@ -49,7 +67,7 @@ export const paginate = async (model, limit = 10, page = 1, order = [], where = 
         };
     }
 
-    result.data = data.rows;
+    result.items = data.rows;
     result.count = data.rows.length;
     result.pages = pages;
 
