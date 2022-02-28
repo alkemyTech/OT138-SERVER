@@ -98,6 +98,9 @@ export const update = async (req, res) => {
     }
 }
 
+/**
+ * Delete the category with id passed as a param in the request.
+ */
 export const destroy = async (req, res) => {
     try {
         const instance = await Category.findOne({
