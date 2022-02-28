@@ -1,4 +1,4 @@
-import { Contact } from '../models';
+import { Contacts } from '../models';
 import { paginate } from '../helpers';
 import { InvalidArgumentsError } from '../helpers/exceptions';
 
@@ -7,7 +7,7 @@ import { InvalidArgumentsError } from '../helpers/exceptions';
  */
 export const list = async (req, res) => {
     try {
-        const contacts = await paginate(Contact, req.query.limit, req.query.page);
+        const contacts = await paginate(Contacts, req.query.limit, req.query.page);
         return res.status(200).json({
             error: false,
             status: "200",
