@@ -6,6 +6,7 @@ import userRoutes from "./user.routes";
 import activitiesRoutes from "./activities.routes";
 import sendGrid from "./sendGrid.routes";
 import categoryRoutes from "./category.routes";
+import contactsRoutes from './contacts.routes';
 
 const router = express.Router();
 
@@ -27,5 +28,8 @@ router.use(sendGrid);
 
 /* Category Routes */
 router.use(categoryRoutes);
+
+/* Contacts routes */
+router.use(contactsRoutes);
 
 export default router;
