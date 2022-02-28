@@ -1,11 +1,12 @@
 'use strict';
 
 import express from "express";
-import { create } from "../controllers/category.controller";
-import { createCategoryValidator } from '../middlewares/category.middleware';
+import { create, update } from "../controllers/category.controller";
+import { categoryValidator } from '../middlewares/category.middleware';
 const router = express.Router();
 
-router.post("/categories", createCategoryValidator, create);
+router.post("/categories", categoryValidator, create);
+router.put("/categories/:id", categoryValidator, update);
 
 /**
  * @swagger

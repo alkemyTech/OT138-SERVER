@@ -5,7 +5,7 @@ const validationSchema = Joi.object({
     description: Joi.string()
 }).unknown().options({abortEarly: false});
 
-export const createCategoryValidator = async (req, res, next) => {
+export const categoryValidator = async (req, res, next) => {
 
     const { error, value } = validationSchema.validate(req.body);
 
