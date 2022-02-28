@@ -1,7 +1,7 @@
 'use strict';
 
 import express from "express";
-import { list } from "../controllers/contacts.controller";
+import { list } from "../controllers/contact.controller";
 import { isLoggedIn, isAdmin } from '../middlewares/auth.middleware';
 const router = express.Router();
 
