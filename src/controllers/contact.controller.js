@@ -3,7 +3,7 @@ import { paginate } from '../helpers';
 import { InvalidArgumentsError } from '../helpers/exceptions';
 
 /**
- * Returns a list of conctacts
+ * Returns a list of contacts
  */
 export const list = async (req, res) => {
     try {
