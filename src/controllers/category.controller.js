@@ -2,6 +2,9 @@
 
 import { Category } from '../models';
 
+/**
+ * List all categories
+ */
 export const list = async (req, res) => {
     try {
         const categories = await Category.findAll();
