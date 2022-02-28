@@ -15,11 +15,12 @@ export const verifyRefresh = ({ email, refreshToken }) => {
 
 /**
  * Paginates all records of the given model.
+ * May throw an exception if the query fails.
  * @param {*} model Sequelize model class
- * @param {*} limit Amount of items returned. Default: 10
- * @param {*} page Page of the results. Default: 1
- * @param {*} order Sequelize order. Default: []
- * @param {*} where Conditions used to filter the results. Default: {}
+ * @param {Number} limit Amount of items returned. Default: 10
+ * @param {Number} page Page of the results. Default: 1
+ * @param {Array} order Sequelize order. Default: []
+ * @param {Object} where Conditions used to filter the results. Default: {}
  * @returns Object containing the results and information about the pagination
  */
 export const paginate = async (model, limit = 10, page = 1, order = [], where = {}) => {
