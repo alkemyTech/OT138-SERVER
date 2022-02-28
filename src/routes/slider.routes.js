@@ -5,7 +5,7 @@ import {SliderGet,SliderPut,SliderDelete,SliderPost} from "../controllers/slides
 
 router.get("/slides",SliderGet);
 router.post("/slides",SliderPost);
-router.put("/slides",SliderPut);
-router.delete("/slides",SliderDelete);
+router.put("/slides/:id",SliderPut);
+router.delete("/slides/:id",SliderDelete);
 
 export default router;
