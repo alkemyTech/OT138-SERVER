@@ -1,12 +1,13 @@
 'use strict';
 
 import express from "express";
-import { create, list } from "../controllers/category.controller";
-import { createCategoryValidator } from '../middlewares/category.middleware';
+import { list, create, update } from "../controllers/category.controller";
+import { categoryValidator } from '../middlewares/category.middleware';
 const router = express.Router();
 
 router.get("/categories", list);
-router.post("/categories", createCategoryValidator, create);
+router.post("/categories", categoryValidator, create);
+router.put("/categories/:id", categoryValidator, update);
 
 /**
  * @swagger
@@ -36,6 +37,34 @@ router.post("/categories", createCategoryValidator, create);
  *        responses:
  *          '200':
  *            description: The new category
+ *            content:
+ *              application/json:
+ *                schema:
+ *                  type: object
+ * 
+ * /api/categories/{id}: 
+ *      put:
+ *        summary: Update an existing category
+ *        parameters:
+ *          - in: path
+ *            name: id
+ *            schema:
+ *              type: integer
+ *            required: true
+ *            description: Id of the category to update
+ *          - in: body
+ *            schema:
+ *              type: object
+ *              required:
+ *                  - name
+ *              properties:
+ *                name:
+ *                  type: string
+ *                description:
+ *                  type: string
+ *        responses:
+ *          '200':
+ *            description: The updated category
  *            content:
  *              application/json:
  *                schema:
