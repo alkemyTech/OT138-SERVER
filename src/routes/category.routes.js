@@ -8,7 +8,7 @@ const router = express.Router();
 router.get("/categories", list);
 router.post("/categories", categoryValidator, create);
 router.put("/categories/:id", categoryValidator, update);
-//router.delete("/categories/:id", destroy);
+router.delete("/categories/:id", destroy);
 
 /**
  * @swagger
