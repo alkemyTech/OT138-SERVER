@@ -15,7 +15,7 @@ router.post("/categories", createCategoryValidator, create);
  *        summary: List all categories
  *        responses:
  *          '200':
- *            description: The new category
+ *            description: List with all categories
  *            content:
  *              application/json:
  *                schema:
