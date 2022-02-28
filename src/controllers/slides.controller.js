@@ -33,6 +33,37 @@ export const SliderGet =  async (req,res) => {
 }
 
 
+//POST SLIDER
+export const SliderPost =  async (req,res) => {
+      const {imageURL,text,order,organizationID} = req.body;
+      if(!imageURL || !text || !order || !organizationID){
+      res.status(400).json({
+      error: true,
+      status: "404",
+      message:"The corresponding data is not received"
+      })
+
+      }else{
+      try { 
+      await Slide.create({imageURL:imageURL,text:text,order:order,organizationID:organizationID,createdAt:new Date(),updatedAt:new Date()})
+      res.status(200).json({
+      message:"Slider created successfully",
+      error:false,
+      status:"200"
+      })
+      }catch (error) {
+      res.status(500).json({
+      message:error,
+      error:true,
+      status:"500"
+      })
+      }
+      }
+
+}
+
+
+
 //PUT SLIDER
 export const SliderPut =  async (req,res) => {
     
@@ -44,21 +75,13 @@ export const SliderPut =  async (req,res) => {
         message: "The corresponding data is not received",
         });
         }else{
-
         try { 
-        const slider = await Slide.update({imageURL:imageURL,text:text,updatedAt:new Date()},{where:{id:id}});
-        if(!slider){
-        res.status(400).json({
-        message:"There was an error updating the slider",
-        error:true,
-        status:"400"
-        })
-        }else{
+        await Slide.update({imageURL:imageURL,text:text,updatedAt:new Date()},{where:{id:id}});
         res.status(200).json({
         message:"Slider updated successfully",
         error:false,
         status:"200"
-        })}
+        })
 
         }catch (error) {
         res.status(500).json({
