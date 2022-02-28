@@ -3,12 +3,13 @@
 import express from "express";
 import { list, create, update, destroy } from "../controllers/category.controller";
 import { categoryValidator } from '../middlewares/category.middleware';
+import { isLoggedIn, isAdmin } from '../middlewares/auth.middleware';
 const router = express.Router();
 
-router.get("/categories", list);
-router.post("/categories", categoryValidator, create);
-router.put("/categories/:id", categoryValidator, update);
-router.delete("/categories/:id", destroy);
+router.get("/categories", isLoggedIn, isAdmin, list);
+router.post("/categories", isLoggedIn, isAdmin, categoryValidator, create);
+router.put("/categories/:id", isLoggedIn, isAdmin, categoryValidator, update);
+router.delete("/categories/:id", isLoggedIn, isAdmin, destroy);
 
 /**
  * @swagger
