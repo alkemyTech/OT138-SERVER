@@ -11,7 +11,7 @@ export const list = async (req, res) => {
         return res.status(200).json({
             error: false,
             status: "200",
-            message: "List of all contacts",
+            message: "List of contacts",
             data: contacts
         });
     } catch (err) {
