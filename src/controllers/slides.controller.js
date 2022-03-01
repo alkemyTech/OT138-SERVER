@@ -107,7 +107,12 @@ export const SliderDelete = async (req,res) =>{
        })
        }else{
        Slide.destroy({where:{id}})
-      .then((response)=>{res.status(200).json({message:"Slider removed",error:false,status:"200",response})})
-      .catch((error)=>{res.status(200).json({message:error,status:"500",error:true})})
-      }
-  }
+       .then((response)=>{
+       if(response === 0){
+       res.status(200).json({message:"There is no slider",status:"500",error:true})
+       }else{
+       res.status(200).json({message:"Slider removed",error:false,status:"200",response})
+       }})
+       .catch((error)=>{res.status(200).json({message:error,status:"500",error:true})})
+       }
+       }
