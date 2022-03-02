@@ -8,7 +8,6 @@ const contactsSchema = Joi.object({
   message: Joi.string(),
 });
 export const createContactsController = async (req, res) => {
-  console.log("create contacts");
   const { error, value } = contactsSchema.validate(req.body);
   if (error) {
     // Validation failed
