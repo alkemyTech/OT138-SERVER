@@ -1,6 +1,7 @@
 import { Joi } from "express-validation";
 import { Activities } from "../models";
 import { Op } from "sequelize";
+import { async } from "regenerator-runtime";
 const createActivitiesSchema = Joi.object({
   name: Joi.string().required(),
   image: Joi.string().uri(),
@@ -108,3 +109,43 @@ export const getActivitiesController = async (req, res) => {
     }
   }
 };
+
+
+export const updateActivitiesController = async (req,res) => {
+
+  const {id} = req.params;
+  const {name,image,content} = req.body;
+  if(!id || !name || !image || !content){
+  res.status(200).json({
+  error:true,
+  message:"The required data is not received",
+  status:"400"
+  })
+  }else{
+  try {
+  const activities =  await Activities.update({name:name,image:image,content:content},{where:{id:id}})
+  if(activities[0] === 0){
+  res.status(200).json({
+  error:true,
+  message:"An error occurred while trying to update an activity",
+  status:"404"
+  })
+
+  }else{
+  res.status(200).json({
+  error:false,
+  message:"The activity was updated correctly",
+  status:"200"
+  })}
+    
+  }catch (error) {
+  res.status(200).json({
+  error:true,
+  message:"There was a mistake",
+  status:"500",
+  content:error
+  })
+  }}
+  
+
+}
