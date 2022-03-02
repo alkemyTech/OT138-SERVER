@@ -7,6 +7,7 @@ import activitiesRoutes from "./activities.routes";
 import sendGrid from "./sendGrid.routes";
 import categoryRoutes from "./category.routes";
 import slider from "./slider.routes";
+import contactRoutes from "./contacts.routes";
 
 const router = express.Router();
 
@@ -18,8 +19,10 @@ router.use(newsRoutes);
 
 /* Users Routes*/
 router.use(userRoutes);
+
 /* Public Data Routes */
 router.use(publicData);
+
 /* Activities Routes */
 router.use(activitiesRoutes);
 
@@ -30,6 +33,9 @@ router.use(sendGrid);
 router.use(categoryRoutes);
 
 /*Slides Route*/
-router.use(slider)
+router.use(slider);
+
+/*Contacts Route*/
+router.use(contactRoutes);
 
 export default router;
