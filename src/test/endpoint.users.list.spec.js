@@ -112,15 +112,10 @@ describe('User endpoints', async () => {
             let res;
 
             // Login with admin user credentials
-            res = await chai.request(server)
-                .post('/api/auth/login')
-                .send({
-                    email: USER1_EMAIL,
-                    password: PASSWORD
-                });
+            const accessToken = await authenticateUser(USER1_EMAIL, PASSWORD);
 
             // Append token to request header
-            res = await chai.request(server).get('/api/users').set('Authorization', `Bearer ${res.body.accessToken}`);
+            res = await chai.request(server).get('/api/users').set('Authorization', `Bearer ${accessToken}`);
 
             res.should.have.status(200);
             res.body.should.be.a('object');
@@ -128,6 +123,20 @@ describe('User endpoints', async () => {
             res.body.result.should.be.a('array');
             expect(res.body.result).to.have.lengthOf(2, 'Result should contain 2 items');
             res.body.status.should.equal('200');
+        });
+
+        it('it should return a list of users without password field', async () => {
+            let res;
+
+            // Login with admin user credentials
+            const accessToken = await authenticateUser(USER1_EMAIL, PASSWORD);
+
+            // Append token to request header
+            res = await chai.request(server).get('/api/users').set('Authorization', `Bearer ${accessToken}`);
+
+            res.body.result.forEach(user => {
+                expect(user, 'Users should not include the password field in the response').to.not.have.property('password');
+            });
         });
     });
 
@@ -218,7 +227,7 @@ describe('User endpoints', async () => {
         //Test with authenticated user with Admin role on previously deleted userId
         it('it should return an error response if user was previously deleted', async () => {
             let res;
-            
+
             // Authenticate  with admins user credentials
             const accessToken = await authenticateUser(USER1_EMAIL, PASSWORD);
 
@@ -244,7 +253,7 @@ describe('User endpoints', async () => {
         //Test with authenticated user with Admin role on invalid userId
         it('it should return an error response if user id is invalid', async () => {
             let res;
-            
+
             // Authenticate  with admins user credentials
             const accessToken = await authenticateUser(USER1_EMAIL, PASSWORD);
 
