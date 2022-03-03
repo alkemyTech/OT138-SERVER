@@ -90,7 +90,7 @@ export const userDelete = async (req, res) => {
                 } else {
                     return res.status(200).json({
                         error: false,
-                        status: "204",
+                        status: "200",
                         message: "User deleted successfuly"
                     });
                 }

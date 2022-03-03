@@ -5,7 +5,9 @@ import path from "path";
 import Sequelize from "sequelize";
 const basename = path.basename(__filename);
 
-let config = {};
+let config = {
+    logging: false
+};
 
 switch(process.env.NODE_ENV) {
     case 'test':

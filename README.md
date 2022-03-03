@@ -44,6 +44,9 @@ npm run build
 ## Tests
 
 ```bash
+# Run migrations on test database
+NODE_ENV=test npx sequelize-cli db:migrate
+# Run tests
 npm run test
 ```
 
