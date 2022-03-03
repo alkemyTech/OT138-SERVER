@@ -1,6 +1,7 @@
 import sequelize, { Op } from "sequelize";
 import { User } from "../models";
 
+/*
 export const profile = async (req, res) => {
     try {
         const user = await User.findOne({
@@ -41,7 +42,7 @@ export const profile = async (req, res) => {
             message: "Internal error"
         });
     }
-};
+};*/
 
 //LIST USERS
 export const list = async (req, res) => {
