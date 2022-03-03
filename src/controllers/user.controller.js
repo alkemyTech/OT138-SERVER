@@ -18,27 +18,27 @@ export const profile = async (req, res) => {
                 "deletedAt",
             ],
         });
+
         if (!user) {
-            res.status(200).json({
+            return res.status(200).json({
                 error: true,
+                errorCode: 'REQ001',
                 status: "404",
-                message: "The user was not found.",
-                user: null,
+                message: "The user was not found."
             });
         } else {
-            res.status(200).json({
+            return res.status(200).json({
                 error: false,
                 status: "200",
-                message: "User was successfully found.",
-                user,
+                result: user,
             });
         }
     } catch (error) {
         return res.status(200).json({
             error: true,
+            errorCode: 'SRV001',
             status: "500",
-            message: "An error occurred while searching for the user.",
-            content: error,
+            message: "Internal error"
         });
     }
 };
@@ -47,7 +47,7 @@ export const profile = async (req, res) => {
 export const list = async (req, res) => {
     try {
         const users = await User.findAll();
-        
+
         return res.status(200).json({
             error: false,
             status: "200",
