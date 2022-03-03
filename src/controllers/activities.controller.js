@@ -114,38 +114,50 @@ export const getActivitiesController = async (req, res) => {
 export const updateActivitiesController = async (req,res) => {
 
   const {id} = req.params;
-  const {name,image,content} = req.body;
-  if(!id || !name || !image || !content){
-  res.status(200).json({
-  error:true,
-  message:"The required data is not received",
-  status:"400"
-  })
-  }else{
-  try {
-  const activities =  await Activities.update({name:name,image:image,content:content},{where:{id:id}})
-  if(activities[0] === 0){
-  res.status(200).json({
-  error:true,
-  message:"An error occurred while trying to update an activity",
-  status:"404"
-  })
+  
 
-  }else{
-  res.status(200).json({
-  error:false,
-  message:"The activity was updated correctly",
-  status:"200"
-  })}
+  try {
     
-  }catch (error) {
-  res.status(200).json({
-  error:true,
-  message:"There was a mistake",
-  status:"500",
-  content:error
-  })
-  }}
+    const instance = await Activities.findOne({where: {id: id}});
+
+    if(!instance) {
+    return res.status(200).json({
+    error: true,
+    errorCode:"REQ002",
+    status: "404",
+    message: "Activity not found",
+    result:{}
+    })
+    }
+
+    instance.set({
+    ...req.body,
+    deletedAt: instance.deletedAt,
+    createdAt: instance.createdAt,
+    updatedAt: Date.now()
+    });
+
+    await instance.save();
+
+    return res.status(200).json({
+      error: false,
+      errorCode:"",
+      status: "200",
+      message: "updated activity",
+      result:instance
+    });
+
+
+    }catch (err) {
+    console.error(err);
+    return res.status(200).json({
+      error: true,
+      errorCode:"SRV001",
+      status: "500",
+      message: "Could not connect to server",
+      result:instance
+    });
+}
   
 
 }
