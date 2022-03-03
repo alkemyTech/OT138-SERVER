@@ -90,6 +90,7 @@ export const userDelete = async (req, res) => {
                     return res.status(200).json({
                         error: false,
                         status: "204",
+                        message: "User deleted successfuly"
                     });
                 }
             })
