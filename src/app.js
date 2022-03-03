@@ -55,6 +55,8 @@ app.use("/", (_, res) => {
   });
 });
 
+console.log(process.env.NODE_ENV);
+
 server.listen(process.env.PORT || 4000, async () => {
   console.log(`Server on http://localhost:${process.env.PORT || 4000}`);
 });
