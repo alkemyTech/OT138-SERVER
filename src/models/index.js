@@ -7,12 +7,15 @@ const basename = path.basename(__filename);
 
 let config = {};
 
-if(process.env.NODE_ENV === 'test') {
-    config = require("../config/config").test;
-} else if(process.env.NODE_ENV === 'production') {
-    config = require("../config/config").production;
-} else {
-    config = require("../config/config").development;
+switch(process.env.NODE_ENV) {
+    case 'test':
+        config = require("../config/config").test;
+        break;
+    case 'production':
+        config = require("../config/config").production;
+        break;
+    default:
+        config = require("../config/config").development;
 }
 
 const db = {};
