@@ -135,3 +135,30 @@ export const create = async (req, res) => {
         })
     }
 }
+
+export const deleteNews = async (req,res) => {
+
+
+    const {id} = req.params;
+    if(!id){
+    res.status(200).json({
+    message:"ID is not provided",
+    error:true,
+    status:"404"
+    })
+    }else{
+    await Entry.destroy({where:{id:id},force:true})
+    .then((response)=>{
+    if(response === 0){
+    res.status(200).json({error:true,errorCode:"REQ001",errorFields:[],status:"404",message:"Entry does not exist",result:{response}})
+    }else{
+    res.status(200).json({error:false,status:"200",errorFields:[],message:"Entry was removed",result:{response}})
+    }})
+    .catch((error)=>{
+    res.status(200).json({error:true,errorCode:"SRV001",errorFields:[],status:"500",message:"Could not connect to server",result:{error}})
+    })
+    }
+
+
+
+}
