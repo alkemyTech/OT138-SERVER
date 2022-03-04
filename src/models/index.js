@@ -4,7 +4,22 @@ import fs from "fs";
 import path from "path";
 import Sequelize from "sequelize";
 const basename = path.basename(__filename);
-const config = require("../config/config").development;
+
+let config = {
+    logging: false
+};
+
+switch(process.env.NODE_ENV) {
+    case 'test':
+        config = require("../config/config").test;
+        break;
+    case 'production':
+        config = require("../config/config").production;
+        break;
+    default:
+        config = require("../config/config").development;
+}
+
 const db = {};
 dotenv.config();
 

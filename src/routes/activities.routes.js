@@ -2,12 +2,14 @@ import express from "express";
 import {
   createActivitiesController,
   getActivitiesController,
+  updateActivitiesController
 } from "../controllers/activities.controller";
 
 const router = express.Router();
 
 router.post("/activities", createActivitiesController);
 router.get("/activities/:id?", getActivitiesController);
+router.put("/activities/:id?", updateActivitiesController);
 
 /**
  * @swagger

@@ -10,26 +10,27 @@ export const list = async (req, res) => {
         const contacts = await paginate(Contacts, req.query.limit, req.query.page);
         return res.status(200).json({
             error: false,
-            status: "200",
-            message: "List of contacts",
-            data: contacts
+            status: '200',
+            result: contacts
         });
     } catch (err) {
         let resData = {}
         if (err instanceof InvalidArgumentsError) {
             resData = {
                 error: true,
-                status: "400",
+                errorCode: 'REQ002',
+                status: '400',
                 message: err.message
             }
         } else {
+            console.log(err);
             resData = {
                 error: true,
-                status: "500",
-                message: "An unexpected error occurred when retrieving data form database",
+                errorCode: 'SRV001',
+                status: '500',
+                message: 'Internal error',
             }
         }
-        console.log(err);
         return res.status(200).json(resData);
     }
 };

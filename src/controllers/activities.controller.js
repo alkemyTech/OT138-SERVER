@@ -1,6 +1,7 @@
 import { Joi } from "express-validation";
 import { Activities } from "../models";
 import { Op } from "sequelize";
+import { async } from "regenerator-runtime";
 const createActivitiesSchema = Joi.object({
   name: Joi.string().required(),
   image: Joi.string().uri(),
@@ -108,3 +109,55 @@ export const getActivitiesController = async (req, res) => {
     }
   }
 };
+
+
+export const updateActivitiesController = async (req,res) => {
+
+  const {id} = req.params;
+  
+
+  try {
+    
+    const instance = await Activities.findOne({where: {id: id}});
+
+    if(!instance) {
+    return res.status(200).json({
+    error: true,
+    errorCode:"REQ002",
+    status: "404",
+    message: "Activity not found",
+    result:{}
+    })
+    }
+
+    instance.set({
+    ...req.body,
+    deletedAt: instance.deletedAt,
+    createdAt: instance.createdAt,
+    updatedAt: Date.now()
+    });
+
+    await instance.save();
+
+    return res.status(200).json({
+      error: false,
+      errorCode:"",
+      status: "200",
+      message: "updated activity",
+      result:instance
+    });
+
+
+    }catch (err) {
+    console.error(err);
+    return res.status(200).json({
+      error: true,
+      errorCode:"SRV001",
+      status: "500",
+      message: "Could not connect to server",
+      result:instance
+    });
+}
+  
+
+}

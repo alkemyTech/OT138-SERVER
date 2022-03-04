@@ -1,7 +1,7 @@
 "use strict";
 
 import { Entry } from "../models";
-
+import { paginate } from "../helpers/index";
 /**
  * Returns an instance of the Entry given by the 'id' param or an error object if not found.
  */
@@ -82,27 +82,21 @@ or an error if the instances wasn't found, or if there is a server error.
 */
 export const retrieveAll = async (req, res) => {
   try {
-    let limit = req?.query?.limit ? parseInt(req?.query?.limit) : null;
-    let page = req?.query?.page ? parseInt(req?.query?.page) : null;
-    const entries = await Entry.findAndCountAll({
-      subQuery: false,
-      limit: limit,
-      offset: (page - 1) * limit, // -1 so first page starts from 1
-      order: [["createdAt", "DESC"]],
+    const instances = await Entry.findAll({
+      where: { type: "news" },
+      attributes: ["name", "image", "createdAt"],
     });
-
-    if (!entries?.rows?.length > 0) {
+    if (!instances) {
       res.status(200).json({
         error: true,
         status: "404",
         message: "Entries not found",
-        data: null,
       });
     } else {
       res.json({
         error: false,
         status: "200",
-        data: entries,
+        data: instances,
       });
     }
   } catch (error) {
@@ -110,7 +104,6 @@ export const retrieveAll = async (req, res) => {
       error: true,
       status: "500",
       message: "Internal server error",
-      data: null,
     });
   }
 };
@@ -134,6 +127,91 @@ export const create = async (req, res) => {
       error: true,
       status: "500",
       message: "Internal server error",
+    });
+  }
+};
+
+export const deleteNews = async (req, res) => {
+  const { id } = req.params;
+  if (!id) {
+    res.status(200).json({
+      message: "ID is not provided",
+      error: true,
+      status: "404",
+    });
+  } else {
+    await Entry.destroy({ where: { id: id }, force: true })
+      .then((response) => {
+        if (response === 0) {
+          res.status(200).json({
+            error: true,
+            errorCode: "REQ001",
+            errorFields: [],
+            status: "404",
+            message: "Entry does not exist",
+            result: { response },
+          });
+        } else {
+          res.status(200).json({
+            error: false,
+            status: "200",
+            errorFields: [],
+            message: "Entry was removed",
+            result: { response },
+          });
+        }
+      })
+      .catch((error) => {
+        res.status(200).json({
+          error: true,
+          errorCode: "SRV001",
+          errorFields: [],
+          status: "500",
+          message: "Could not connect to server",
+          result: { error },
+        });
+      });
+  }
+};
+
+export const getNews = async (req, res) => {
+  try {
+    const news = await paginate(
+      Entry,
+      req.params.page,
+      req.params.limit,
+      null,
+      {
+        type: "news",
+      }
+    );
+    if (!news) {
+      res.status(200).json({
+        error: true,
+        errorCode: "REQ001",
+        errorFields: [],
+        status: "404",
+        message: "News not found",
+        result: news,
+      });
+    } else {
+      res.status(200).json({
+        error: false,
+        errorCode: "",
+        errorFields: [],
+        status: "200",
+        message: "News found",
+        result: news,
+      });
+    }
+  } catch (error) {
+    res.status(200).json({
+      error: true,
+      errorCode: "SRV001",
+      errorFields: [],
+      status: "500",
+      message: "Server error",
+      result: null,
     });
   }
 };
