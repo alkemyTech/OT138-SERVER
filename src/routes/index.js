@@ -8,6 +8,7 @@ import sendGrid from "./sendGrid.routes";
 import categoryRoutes from "./category.routes";
 import contactRoutes from './contact.routes';
 import slider from "./slider.routes";
+import testimony from "./testimony.routes";
 
 const router = express.Router();
 
@@ -34,6 +35,9 @@ router.use(categoryRoutes);
 router.use(contactRoutes);
 
 /*Slides Route*/
-router.use(slider)
+router.use(slider);
+
+/*Testimony Route*/
+router.use(testimony)
 
 export default router;
