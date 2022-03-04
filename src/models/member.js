@@ -14,11 +14,18 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Member.init({
-    name: DataTypes.STRING,
-    image: DataTypes.STRING
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    image: {
+      type: DataTypes.STRING,
+      allowNull: false
+    }
   }, {
     sequelize,
     modelName: 'Member',
+    paranoid: true
   });
   return Member;
 };
