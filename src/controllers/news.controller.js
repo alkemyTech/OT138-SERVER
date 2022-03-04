@@ -162,3 +162,44 @@ export const deleteNews = async (req,res) => {
 
 
 }
+
+
+export const getNews = async (req,res)=> {
+
+    try {
+    
+        const news = await Entry.findAll({where: {type: 'news'},attributes: ['name', 'image', 'content']});
+        if(!news){
+    
+        res.status(200).json({
+        error:true,
+        errorCode:"REQ001",
+        errorFields:[],
+        status:"404",
+        message:"Resource not found",
+        result:news
+        })
+        }else{
+    
+        res.status(200).json({
+        error:false,
+        errorCode:"",
+        errorFields:[],
+        status:"200",
+        message:"news found",
+        result:news
+        })
+    
+        }
+        
+    }catch (error){
+    
+        res.status(200).json({
+        error:true,
+        errorCode:"SRV001",
+        errorFields:[],
+        status:"500",
+        message:"Server error",
+        result:news
+        })
+    }}
