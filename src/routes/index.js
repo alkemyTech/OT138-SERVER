@@ -8,7 +8,11 @@ import sendGrid from "./sendGrid.routes";
 import categoryRoutes from "./category.routes";
 import contactRoutes from './contact.routes';
 import slider from "./slider.routes";
+<<<<<<< HEAD
 import membersRoutes from "./members.routes";
+=======
+import testimony from "./testimony.routes";
+>>>>>>> 3283aa790e8376ced958039aee134a1bbaacbadc
 
 const router = express.Router();
 
@@ -35,7 +39,10 @@ router.use(categoryRoutes);
 router.use(contactRoutes);
 
 /*Slides Route*/
-router.use(slider)
+router.use(slider);
+
+/*Testimony Route*/
+router.use(testimony)
 
 /* Members Route */
 router.use(membersRoutes)
