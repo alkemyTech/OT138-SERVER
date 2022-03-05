@@ -5,7 +5,7 @@ import { getMembersController, createMemberController, updateMemberController, d
 import { isLoggedIn, isAdmin } from "../middlewares/auth.middleware";
 const router = express.Router();
 
-router.get("/members/:limit/:offset", isLoggedIn, isAdmin, getMembersController);
+router.get("/members/:limit/:offset", getMembersController);
 router.post("/members", isLoggedIn, isAdmin, createMemberController);
 router.put("/members/:id", isLoggedIn, isAdmin, updateMemberController);
 router.delete("/members/:id", isLoggedIn, isAdmin, deleteMemberController);
