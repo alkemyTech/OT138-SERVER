@@ -22,7 +22,7 @@ export const retrieve = async (req, res) => {
     return res.status(200).json({
       error: false,
       status: "200",
-      data: instance,
+      result: instance,
     });
   } catch (err) {
     console.error(err);
