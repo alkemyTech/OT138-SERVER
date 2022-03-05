@@ -8,11 +8,19 @@ const memberSchema = Joi.object({
 
 export const getMembersController = async (req, res) => {
     
-    const { limit, offset } = req.params;
+    //const { limit, offset } = req.params;
+    console.log(req.query)
+    const options = {}
+    if(req.query.limit){
+        options.limit = parseInt(req.query.limit);
+    }
+    if(req.query.offset){
+        options.offset = parseInt(req.query.offset);
+    }
 
     try{
 
-        let instances = await Member.findAll({limit: parseInt(limit), offset: parseInt(offset)});
+        let instances = await Member.findAll({...options});
 
         console.log(instances)
 
