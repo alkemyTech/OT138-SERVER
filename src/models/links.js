@@ -15,7 +15,6 @@ module.exports = (sequelize, DataTypes) => {
     {
       name: { type: DataTypes.STRING, allowNull: false },
       url: { type: DataTypes.STRING, allowNull: false },
-      type: { type: DataTypes.Enum, allowNull: false },
       organizationId: DataTypes.INTEGER,
       deletedAt: DataTypes.DATE,
     },
