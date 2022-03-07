@@ -1,23 +1,30 @@
-const publicData = {
-  name: "Alkemy ONG",
-  image: `${process.env.FRONTEND_URL}/logo.png`,
-  phone: "+54 11 4876 2158",
-  address: "Cabildo 1234, CABA, Buenos Aires, Argentina",
-  welcomeText: "Bienvenidos a Alkemy ONG",
-  webLinks: [
-    { name: "Home", url: `${process.env.FRONTEND_URL}` },
-    { name: "Registro", url: `${process.env.FRONTEND_URL}/registro` },
-    { name: "Login", url: `${process.env.FRONTEND_URL}/login` },
-    { name: "Contacts", url: `${process.env.FRONTEND_URL}/contacts` },
-    { name: "FAQ", url: `${process.env.FRONTEND_URL}/faq` },
-  ],
-  socialMediaLinks: [
-    { name: "Linkedin", url: "https://www.linkedin.com/company/alkemy2020/" },
-    { name: "Instagram", url: "https://www.instagram.com/alkemy__/" },
-    { name: "Facebook", url: "https://www.facebook.com/AlkemyLATAM/" },
-  ],
-};
+import { Organization } from "../models";
+import { Links } from "../models";
 
-export const publicDataController = (req, res) => {
-  res.json(publicData);
+export const publicDataController = async (req, res) => {
+  try {
+    const organization = await Organization.findByPk(
+      process.env.ORGANIZATION_ID
+    );
+    let result = organization.dataValues;
+    const links = await Links.findAll({
+      where: { organizationId: process.env.ORGANIZATION_ID },
+    });
+    result.links = links;
+    res.json({
+      error: false,
+      status: "200",
+      message: "success",
+      result,
+    });
+  } catch (error) {
+    res.json({
+      error: true,
+      errorCode: "DB001",
+      status: "500",
+      message:
+        "An unexpected error ocurred when retrieving data from database. Details:  " +
+        error.message,
+    });
+  }
 };
