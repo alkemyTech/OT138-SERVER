@@ -20,7 +20,7 @@ export const publicDataController = async (req, res) => {
   } catch (error) {
     res.json({
       error: true,
-      errorCode: "DB001",
+      errorCode: "SRV001",
       status: "500",
       message:
         "An unexpected error ocurred when retrieving data from database. Details:  " +
