@@ -1,18 +1,12 @@
 import { Joi } from "express-validation";
 import { Contacts } from "../models";
-import { Op } from "sequelize";
+import { getJoiErrorFields } from "../helpers";
 const contactsSchema = Joi.object({
   name: Joi.string().required(),
   phone: Joi.string(),
   email: Joi.string().required(),
   message: Joi.string(),
 });
-
-function getJoiErrorFields(joiValidationError) {
-  return joiValidationError.details.map((value) => {
-    return value.context.key;
-  });
-}
 
 export const createContactsController = async (req, res) => {
   const { error, value } = contactsSchema.validate(req.body, {

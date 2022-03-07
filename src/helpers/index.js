@@ -12,3 +12,9 @@ export const verifyRefresh = ({ email, refreshToken }) => {
     return false;
   }
 };
+
+export const getJoiErrorFields = (joiValidationError) => {
+  return joiValidationError.details.map((value) => {
+    return value.context.key;
+  });
+};
