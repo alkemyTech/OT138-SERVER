@@ -9,7 +9,7 @@ export const getTestimony = async (req,res) =>{
 
     try {
         
-        const testimonyData = await testimony.findAll({attributes:["id","image","content"]})
+        const testimonyData = await testimony.findAll({attributes:["id","name","image","content"]})
         if(!testimonyData){
             res.status(200).json({
             error: true,
