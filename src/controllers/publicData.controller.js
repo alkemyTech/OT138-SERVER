@@ -22,9 +22,7 @@ export const publicDataController = async (req, res) => {
       error: true,
       errorCode: "SRV001",
       status: "500",
-      message:
-        "An unexpected error ocurred when retrieving data from database. Details:  " +
-        error.message,
+      message: `An unexpected error ocurred when retrieving data from database. Details:  ${error.message}`,
     });
   }
 };
