@@ -56,7 +56,7 @@ export const create = async (req, res) => {
  * Updates an existing category
  * Receives the properties name and description in the body of the request
  */
- export const update = async (req, res) => {
+export const update = async (req, res) => {
     const { name, description } = req.body;
 
     try {
@@ -64,9 +64,9 @@ export const create = async (req, res) => {
             where: {
                 id: req.params.id
             }
-        })
+        });
 
-        if(!instance) {
+        if (!instance) {
             return res.status(200).json({
                 error: true,
                 status: "404",
@@ -79,14 +79,50 @@ export const create = async (req, res) => {
             deletedAt: instance.deletedAt,
             createdAt: instance.createdAt,
             updatedAt: Date.now()
-        })
+        });
 
-        await instance.save()
+        await instance.save();
 
         return res.status(200).json({
             error: false,
             status: "200",
             data: instance,
+        });
+    } catch (err) {
+        console.error(err);
+        return res.status(200).json({
+            error: true,
+            status: "500",
+            message: "Internal error",
+        });
+    }
+}
+
+/**
+ * Delete the category with id passed as a param in the request.
+ */
+export const destroy = async (req, res) => {
+    try {
+        const instance = await Category.findOne({
+            where: {
+                id: req.params.id
+            }
+        });
+
+        if (!instance) {
+            return res.status(200).json({
+                error: true,
+                status: "404",
+                message: "Category not found"
+            })
+        }
+
+        await instance.destroy();
+
+        return res.status(200).json({
+            error: false,
+            status: "200",
+            message: "Category deleted successfuly",
         });
     } catch (err) {
         console.error(err);

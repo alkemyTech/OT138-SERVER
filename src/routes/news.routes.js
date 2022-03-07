@@ -1,15 +1,24 @@
-'use strict';
+"use strict";
 
 import express from "express";
-import { retrieve, update, retrieveAll, create } from "../controllers/news.controller";
-import { updateNewsValidator } from '../middlewares/news.middleware';
-import { isLoggedIn, isAdmin } from '../middlewares/auth.middleware';
+import {
+  retrieve,
+  update,
+  retrieveAll,
+  create,
+  deleteNews,
+  getNews,
+} from "../controllers/news.controller";
+import { updateNewsValidator } from "../middlewares/news.middleware";
+import { isLoggedIn, isAdmin } from "../middlewares/auth.middleware";
 const router = express.Router();
 
 router.get("/news/:id", retrieve);
 router.put("/news/:id", updateNewsValidator, update);
+router.delete("/news/:id", deleteNews);
 
-router.get("/news", isLoggedIn, isAdmin, retrieveAll);
+router.get("/backoffice/news", isLoggedIn, isAdmin, retrieveAll);
+router.get("/news", getNews);
 router.post("/news", updateNewsValidator, isLoggedIn, isAdmin, create);
 
 /**
@@ -77,7 +86,7 @@ router.post("/news", updateNewsValidator, isLoggedIn, isAdmin, create);
  *            - in: body
  *              schema:
  *                  type: object
- *                  required: 
+ *                  required:
  *                      - name
  *                      - content
  *                  properties:

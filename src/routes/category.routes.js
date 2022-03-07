@@ -1,13 +1,15 @@
 'use strict';
 
 import express from "express";
-import { list, create, update } from "../controllers/category.controller";
+import { list, create, update, destroy } from "../controllers/category.controller";
 import { categoryValidator } from '../middlewares/category.middleware';
+import { isLoggedIn, isAdmin } from '../middlewares/auth.middleware';
 const router = express.Router();
 
-router.get("/categories", list);
-router.post("/categories", categoryValidator, create);
-router.put("/categories/:id", categoryValidator, update);
+router.get("/categories", isLoggedIn, isAdmin, list);
+router.post("/categories", isLoggedIn, isAdmin, categoryValidator, create);
+router.put("/categories/:id", isLoggedIn, isAdmin, categoryValidator, update);
+router.delete("/categories/:id", isLoggedIn, isAdmin, destroy);
 
 /**
  * @swagger
@@ -69,6 +71,18 @@ router.put("/categories/:id", categoryValidator, update);
  *              application/json:
  *                schema:
  *                  type: object
+ *      delete:
+ *        summary: Removes a category
+ *        parameters:
+ *          - in: path
+ *            name: id
+ *            schema:
+ *              type: integer
+ *            required: true
+ *            description: Id of the category to delete
+ *        responses:
+ *          '200':
+ *            description: Success message if the category was removed
  */
 
 export default router;

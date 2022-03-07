@@ -1,47 +1,52 @@
 # Server Base - Proyecto ONG
 
-
 ## Envinroment setup
 
-1) Create database
-2) Copy .env.example to .env and fill with database credentials.
+1. Create database
+2. Copy .env.example to .env and fill with database credentials.
 
 To install dependencies, run
-``` bash
+
+```bash
 npm install
 ```
 
-3) Migrations:
-``` bash
+3. Migrations:
+
+```bash
 npx sequelize-cli db:migrate
 ```
 
-4) Seeders:
-``` bash
+4. Seeders:
+
+```bash
 npx sequelize-cli db:seed:all
 ```
 
 ## Start local server
 
-``` bash
+```bash
 npm start
 ```
 
 ## Start Development local server
 
-``` bash
+```bash
 npm run dev
 ```
 
 ## Build local server
 
-``` bash
+```bash
 npm run build
 ```
 
 ## Tests
 
-``` bash
+```bash
+# Run migrations on test database
+NODE_ENV=test npx sequelize-cli db:migrate
+# Run tests
 npm run test
 ```
 
@@ -73,3 +78,16 @@ Email:
 - manley_vonrueden59@gmail.com
 
 Password for all users: test1234
+
+### API Response Format
+
+```js
+{
+  error: false, // required
+  errorCode: "VAL001", // ej. VAL001 = Validation failed on fields, required when error = true.
+  errorFields: [], // required when validation error.
+  status: "200", // required
+  message: "success", // required
+  result: {} // Object or Array. required
+}
+```
