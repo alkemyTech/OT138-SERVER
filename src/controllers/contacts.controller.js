@@ -7,12 +7,23 @@ const contactsSchema = Joi.object({
   email: Joi.string().required(),
   message: Joi.string(),
 });
+
+function getJoiErrorFields(joiValidationError) {
+  return joiValidationError.details.map((value) => {
+    return value.context.key;
+  });
+}
+
 export const createContactsController = async (req, res) => {
-  const { error, value } = contactsSchema.validate(req.body);
+  const { error, value } = contactsSchema.validate(req.body, {
+    abortEarly: false,
+  });
   if (error) {
     // Validation failed
     res.json({
       error: true,
+      errorCode: "VAL001",
+      errorFields: getJoiErrorFields(error),
       status: "400",
       message: error.message,
     });
@@ -29,6 +40,7 @@ export const createContactsController = async (req, res) => {
       console.log(error);
       res.json({
         error: true,
+        errorCode: "SRV001",
         status: "500",
         message:
           "An error occurred while adding contact to the database. Details: " +
