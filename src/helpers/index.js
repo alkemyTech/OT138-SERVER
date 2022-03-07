@@ -80,6 +80,14 @@ export const paginate = async (
   return result;
 };
 
+/**
+ * Extracts field list array with error fields in a Joi validation error object
+ * @param {Object} joiValidationError A instance of a Joi validation error object.
+ * @returns Array containing the fields with validation error.
+ * Note: by default Joi exits validation on first error so will return only one field,
+ * to check all fields {abortEarly: false} must be passed as an option.
+ * See https://joi.dev/api/?v=17.6.0#anyvalidatevalue-options
+ */
 export const getJoiErrorFields = (joiValidationError) => {
   return joiValidationError.details.map((value) => {
     return value.context.key;
