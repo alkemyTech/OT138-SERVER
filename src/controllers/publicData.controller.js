@@ -4,18 +4,16 @@ import { Links } from "../models";
 export const publicDataController = async (req, res) => {
   try {
     const organization = await Organization.findByPk(
-      process.env.ORGANIZATION_ID
+      process.env.ORGANIZATION_ID,
+      {
+        include: Links,
+      }
     );
-    let result = organization.dataValues;
-    const links = await Links.findAll({
-      where: { organizationId: process.env.ORGANIZATION_ID },
-    });
-    result.links = links;
     res.json({
       error: false,
       status: "200",
       message: "success",
-      result,
+      result: organization.dataValues,
     });
   } catch (error) {
     res.json({
