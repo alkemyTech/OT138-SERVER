@@ -3,16 +3,16 @@ import { Joi } from "express-validation";
 import { InvalidArgumentsError } from "./exceptions";
 
 export const verifyRefresh = ({ email, refreshToken }) => {
-  try {
-    const decoded = jwt.verify(refreshToken, "refreshSecret");
-    if (decoded.email === email) {
-      return true;
-    } else {
-      return false;
+    try {
+        const decoded = jwt.verify(refreshToken, process.env.JWT_SECRET || "SECRET_KEY");
+        if (decoded.email === email) {
+            return true;
+        } else {
+            return false;
+        }
+    } catch (error) {
+        return false;
     }
-  } catch (error) {
-    return false;
-  }
 };
 
 /**
@@ -27,57 +27,57 @@ export const verifyRefresh = ({ email, refreshToken }) => {
  * @throws InvalidArgumentsError if arguments limit or page are invalid.
  */
 export const paginate = async (
-  model,
-  limit = 10,
-  page = 1,
-  order = [],
-  where = {}
+    model,
+    limit = 10,
+    page = 1,
+    order = [],
+    where = {}
 ) => {
-  // Validate params
-  const validationSchema = Joi.object({
-    limit: Joi.number().integer().greater(0),
-    page: Joi.number().integer().greater(0),
-  });
-  const { error } = validationSchema.validate({ limit, page });
+    // Validate params
+    const validationSchema = Joi.object({
+        limit: Joi.number().integer().greater(0),
+        page: Joi.number().integer().greater(0),
+    });
+    const { error } = validationSchema.validate({ limit, page });
 
-  if (error) {
-    throw new InvalidArgumentsError("Invalid pagination params");
-  }
+    if (error) {
+        throw new InvalidArgumentsError("Invalid pagination params");
+    }
 
-  // Cast params
-  limit = parseInt(limit);
-  page = parseInt(page);
+    // Cast params
+    limit = parseInt(limit);
+    page = parseInt(page);
 
-  const result = {};
+    const result = {};
 
-  const data = await model.findAndCountAll({
-    subQuery: false,
-    limit: limit,
-    offset: (page - 1) * limit, // -1 so first page starts from 1
-    order: order,
-    where: where,
-  });
+    const data = await model.findAndCountAll({
+        subQuery: false,
+        limit: limit,
+        offset: (page - 1) * limit, // -1 so first page starts from 1
+        order: order,
+        where: where,
+    });
 
-  const pages = Math.ceil(data.count / limit);
+    const pages = Math.ceil(data.count / limit);
 
-  if (page > 1 && page <= pages) {
-    result.previous = {
-      page: page - 1,
-      limit: limit,
-    };
-  }
-  if (page < pages) {
-    result.next = {
-      page: page + 1,
-      limit: limit,
-    };
-  }
+    if (page > 1 && page <= pages) {
+        result.previous = {
+            page: page - 1,
+            limit: limit,
+        };
+    }
+    if (page < pages) {
+        result.next = {
+            page: page + 1,
+            limit: limit,
+        };
+    }
 
-  result.items = data.rows;
-  result.count = data.rows.length;
-  result.pages = pages;
+    result.items = data.rows;
+    result.count = data.rows.length;
+    result.pages = pages;
 
-  return result;
+    return result;
 };
 
 /**
@@ -89,7 +89,55 @@ export const paginate = async (
  * See https://joi.dev/api/?v=17.6.0#anyvalidatevalue-options
  */
 export const getJoiErrorFields = (joiValidationError) => {
-  return joiValidationError.details.map((value) => {
-    return value.context.key;
-  });
+    return joiValidationError.details.map((value) => {
+        return value.context.key;
+    });
 };
+
+export const signAccessToken = (payload) => {
+    const ACCESS_TOKEN_DURATION = process.env.ACCESS_TOKEN_DURATION || 1200;
+    const JWT_SECRET = process.env.JWT_SECRET || "SECRET_KEY";
+
+    return jwt.sign({...payload, exp: ACCESS_TOKEN_DURATION}, JWT_SECRET);
+}
+
+export const signRefreshToken = (payload) => {
+    const REFRESH_TOKEN_DURATION = process.env.REFRESH_TOKEN_DURATION || 604800;
+    const JWT_SECRET = process.env.JWT_SECRET || "SECRET_KEY";
+
+    return jwt.sign({...payload, exp: REFRESH_TOKEN_DURATION}, JWT_SECRET);
+}
+
+export const configureAccessTokenCookie = (token) => {
+    const ACCESS_TOKEN_COOKIE_NAME = process.env.ACCESS_TOKEN_COOKIE_NAME || 'access_token';
+    const ACCESS_TOKEN_DURATION = process.env.ACCESS_TOKEN_DURATION || 1200;
+
+    return [
+        ACCESS_TOKEN_COOKIE_NAME,
+        token,
+        {
+            maxAge: ACCESS_TOKEN_DURATION * 1000,
+            sameSite: "none",
+            path: "/",
+            httpOnly: true,
+            secure: true
+        }
+    ];
+}
+
+export const configureRefreshTokenCookie = (token) => {
+    const REFRESH_TOKEN_COOKIE_NAME = process.env.REFRESH_TOKEN_COOKIE_NAME || 'refresh_token';
+    const REFRESH_TOKEN_DURATION = process.env.REFRESH_TOKEN_DURATION || 604800;
+
+    return [
+        REFRESH_TOKEN_COOKIE_NAME,
+        token,
+        {
+            maxAge: REFRESH_TOKEN_DURATION * 1000,
+            sameSite: "none",
+            path: "/",
+            httpOnly: true,
+            secure: true
+        }
+    ];
+}

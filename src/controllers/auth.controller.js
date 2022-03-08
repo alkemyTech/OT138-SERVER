@@ -3,7 +3,14 @@ import bcrypt from "bcryptjs";
 import { Joi } from "express-validation";
 import { User, Role } from "../models";
 import jwt from "jsonwebtoken";
-import { verifyRefresh } from "../helpers";
+import {
+    configureAccessTokenCookie,
+    configureRefreshTokenCookie,
+    signAccessToken,
+    signRefreshToken,
+    verifyRefresh
+} from "../helpers";
+import { UnsupportedSessionTypeError } from '../helpers/exceptions';
 
 export const registerValidation = {
     body: Joi.object({
@@ -74,11 +81,15 @@ export const register = async (req, res) => {
  * @returns User data, access token and refresh token
  */
 export const login = async (req, res) => {
-    let jwtSecret = process.env.JWT_SECRET
+    const JWT_SECRET = process.env.JWT_SECRET ?? 'SECRET_KEY';
+    const SESSION_TYPE = process.env.SESSION_TYPE || 'cookie';
 
-    if (!jwtSecret) {
+    if (!JWT_SECRET) {
         console.warn('JWT_SECRET env variable not set, using default value');
-        jwtSecret = "SECRET_KEY";
+    }
+
+    if (SESSION_TYPE !== 'cookie' && SESSION_TYPE !== 'token') {
+        throw UnsupportedSessionTypeError('Invalid session type');
     }
 
     try {
@@ -106,10 +117,9 @@ export const login = async (req, res) => {
             /* Intentional error to avoid providing information about the existence of the user's email address. */
             return res.status(200).json({
                 error: true,
-                status: 401,
-                message: "Incorrect email or password",
-                accessToken: null,
-                refreshToken: null,
+                errorCode: 'REQ002',
+                status: "400",
+                message: "Invalid credentials"
             });
         }
 
@@ -118,65 +128,62 @@ export const login = async (req, res) => {
         const passwordMatch = await bcrypt.compare(password, savedPassword);
 
         if (passwordMatch) {
-            const accessToken = jwt.sign({ email: email }, jwtSecret, {
-                expiresIn: "30m",
-            });
-            const refreshToken = jwt.sign({ email: email }, jwtSecret, {
-                expiresIn: "7d",
-            });
+            const payload = { email: email };
+            const accessToken = signAccessToken(payload);
+            const refreshToken = signRefreshToken(payload);
 
             // Remove sensitive information
             const { password, ...userData } = user.dataValues;
 
-            return res
-                .status(200)
-                .cookie("access-token", `${accessToken}`, {
-                    maxAge: 120000, // would expire after 2 minutes
-                    sameSite: "none",
-                    path: "/",
-                    httpOnly: true,
-                    secure: true,
-                })
-                .cookie("refresh-token", `${accessToken}`, {
-                    maxAge: 600000, // would expire after 10 minutes
-                    sameSite: "none",
-                    path: "/",
-                    httpOnly: true,
-                    secure: true,
-                })
-                .json({
-                    error: false,
-                    status: 200,
-                    message: "User was authenticated successfully.",
-                    user: userData,
-                    accessToken,
-                    refreshToken,
-                });
+            switch (SESSION_TYPE) {
+                case 'cookie':
+                    return res
+                        .status(200)
+                        .cookie(...configureAccessTokenCookie(accessToken))
+                        .cookie(...configureRefreshTokenCookie(refreshToken))
+                        .json({
+                            error: false,
+                            status: "200",
+                            message: "User was authenticated successfully.",
+                            user: userData,
+                        });
+                case 'header':
+                    return res
+                        .status(200)
+                        .json({
+                            error: false,
+                            status: "200",
+                            message: "User was authenticated successfully.",
+                            user: userData,
+                            accessToken,
+                            refreshToken
+                        });
+            }
+
         }
         return res.status(200).send({
             error: true,
-            status: 401,
-            message: "Incorrect email or password",
-            accessToken: null,
-            refreshToken: null,
+            errorCode: 'REQ002',
+            status: "400",
+            message: "Invalid credentials"
         });
     } catch (error) {
         console.log(error);
         return res.status(200).json({
             error: true,
+            errorCode: 'SRV001',
             status: "500",
-            message: "An error occurred while logging the User.",
-            content: error,
+            message: "An error occurred while logging the User."
         });
     }
 };
 
 export const refresh = async (req, res) => {
-    let jwtSecret = process.env.JWT_SECRET
+    let JWT_SECRET = process.env.JWT_SECRET
 
-    if (!jwtSecret) {
+    if (!JWT_SECRET) {
         console.warn('JWT_SECRET env variable not set, using default value');
-        jwtSecret = "SECRET_KEY";
+        JWT_SECRET = "SECRET_KEY";
     }
 
     const { email, refreshToken } = req.body;
@@ -189,7 +196,7 @@ export const refresh = async (req, res) => {
             message: "Invalid token, try login again.",
         });
     }
-    const accessToken = jwt.sign({ email: email }, jwtSecret, {
+    const accessToken = jwt.sign({ email: email }, JWT_SECRET, {
         expiresIn: "30m",
     });
     return res.status(200).json({ error: false, status: "200", accessToken });
