@@ -48,7 +48,7 @@ app.use(function (err, req, res, next) {
     return res.status(500).json({ error: true, err });
 });
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocs));
-app.use("/", (_, res) => {
+app.get("/", (_, res) => {
     res.json({
         name: "AlkemyONG API",
         version: "v0.1",
@@ -56,6 +56,16 @@ app.use("/", (_, res) => {
         state: `Uptime ${parseInt(process.uptime())} seconds`,
     });
 });
+
+// If no route was matched return not found
+app.use("*", function (req, res) {
+    res.status(404).json({
+      error: true,
+      errorCode: "REQ001",
+      status: "404",
+      message: "Not found.",
+    });
+  });
 
 // Do not run server on test environment
 if (process.env.NODE_ENV !== 'test') {
