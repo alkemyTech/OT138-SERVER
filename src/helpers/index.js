@@ -85,14 +85,18 @@ export const signAccessToken = (payload) => {
     const ACCESS_TOKEN_DURATION = process.env.ACCESS_TOKEN_DURATION || 1200;
     const JWT_SECRET = process.env.JWT_SECRET || "SECRET_KEY";
 
-    return jwt.sign({...payload, exp: ACCESS_TOKEN_DURATION}, JWT_SECRET);
+    const { exp, ...data } = payload;
+
+    return jwt.sign(data, JWT_SECRET, { expiresIn: ACCESS_TOKEN_DURATION });
 }
 
 export const signRefreshToken = (payload) => {
     const REFRESH_TOKEN_DURATION = process.env.REFRESH_TOKEN_DURATION || 604800;
     const JWT_SECRET = process.env.JWT_SECRET || "SECRET_KEY";
 
-    return jwt.sign({...payload, exp: REFRESH_TOKEN_DURATION}, JWT_SECRET);
+    const { exp, ...data } = payload;
+
+    return jwt.sign(data, JWT_SECRET, { expiresIn: REFRESH_TOKEN_DURATION });
 }
 
 export const configureAccessTokenCookie = (token) => {
