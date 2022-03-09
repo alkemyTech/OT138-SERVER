@@ -2,19 +2,6 @@ import jwt from "jsonwebtoken";
 import { Joi } from "express-validation";
 import { InvalidArgumentsError } from "./exceptions";
 
-export const verifyRefresh = ({ email, refreshToken }) => {
-    try {
-        const decoded = jwt.verify(refreshToken, process.env.JWT_SECRET || "SECRET_KEY");
-        if (decoded.email === email) {
-            return true;
-        } else {
-            return false;
-        }
-    } catch (error) {
-        return false;
-    }
-};
-
 /**
  * Paginates all records of the given model.
  * May throw an exception if the query fails.

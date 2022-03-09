@@ -7,8 +7,7 @@ import {
     configureAccessTokenCookie,
     configureRefreshTokenCookie,
     signAccessToken,
-    signRefreshToken,
-    verifyRefresh
+    signRefreshToken
 } from "../helpers";
 import { UnsupportedSessionTypeError } from '../helpers/exceptions';
 
@@ -82,13 +81,13 @@ export const register = async (req, res) => {
  */
 export const login = async (req, res) => {
     const JWT_SECRET = process.env.JWT_SECRET ?? 'SECRET_KEY';
-    const SESSION_TYPE = process.env.SESSION_TYPE || 'cookie';
+    const SESSION_TYPE = process.env.SESSION_TYPE || 'header';
 
     if (!JWT_SECRET) {
         console.warn('JWT_SECRET env variable not set, using default value');
     }
 
-    if (SESSION_TYPE !== 'cookie' && SESSION_TYPE !== 'token') {
+    if (SESSION_TYPE !== 'cookie' && SESSION_TYPE !== 'header') {
         throw UnsupportedSessionTypeError('Invalid session type');
     }
 
@@ -150,6 +149,7 @@ export const login = async (req, res) => {
                 case 'header':
                     return res
                         .status(200)
+                        .cookie(...configureRefreshTokenCookie(refreshToken))
                         .json({
                             error: false,
                             status: "200",
@@ -179,27 +179,61 @@ export const login = async (req, res) => {
 };
 
 export const refresh = async (req, res) => {
-    let JWT_SECRET = process.env.JWT_SECRET
+    const JWT_SECRET = process.env.JWT_SECRET ?? 'SECRET_KEY';
+    const SESSION_TYPE = process.env.SESSION_TYPE || 'header';
+    let refreshToken;
 
     if (!JWT_SECRET) {
         console.warn('JWT_SECRET env variable not set, using default value');
-        JWT_SECRET = "SECRET_KEY";
     }
 
-    const { email, refreshToken } = req.body;
-    const isValid = verifyRefresh({ email, refreshToken });
+    switch (SESSION_TYPE) {
+        case 'cookie':
+            refreshToken = req.cookies[ACCESS_TOKEN_COOKIE_NAME];
+            break;
+        case 'header':
+            refreshToken = req.body.refreshToken;
+            break;
+        default:
+            throw UnsupportedSessionTypeError('Invalid session type');
+    }
 
-    if (!isValid) {
+    if (!refreshToken) {
         return res.status(200).json({
             error: true,
+            errorCode: "REQ002",
             status: "401",
-            message: "Invalid token, try login again.",
+            message: "Invalid token",
         });
     }
-    const accessToken = jwt.sign({ email: email }, JWT_SECRET, {
-        expiresIn: "30m",
-    });
-    return res.status(200).json({ error: false, status: "200", accessToken });
+
+    try {
+        decodedToken = jwt.verify(refreshToken, JWT_SECRET);
+        const newToken = signAccessToken(decodedToken);
+        switch (SESSION_TYPE) {
+            case 'cookie':
+                return res.cookie(...configureAccessTokenCookie(newToken));
+            case 'header':
+                return res
+                    .status(200)
+                    .json({
+                        error: false,
+                        status: "200",
+                        accessToken: newToken,
+                        refreshToken: refreshToken
+                    })
+        }
+
+    } catch (err) {
+        return res
+            .status(200)
+            .json({
+                error: true,
+                errorCode: 'AUT001',
+                status: "401",
+                message: "Invalid Token"
+            });
+    }
 };
 
 export const imLoggedIn = async (req, res) => {

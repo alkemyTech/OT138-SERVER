@@ -10,9 +10,8 @@ import { signAccessToken, configureAccessTokenCookie } from '../helpers';
  */
 export const isLoggedIn = async (req, res, next) => {
     const JWT_SECRET = process.env.JWT_SECRET || "SECRET_KEY";
-    const SESSION_TYPE = process.env.SESSION_TYPE || 'cookie';
+    const SESSION_TYPE = process.env.SESSION_TYPE || 'header';
     const ACCESS_TOKEN_COOKIE_NAME = process.env.ACCESS_TOKEN_COOKIE_NAME || 'access_token';
-    const REFRESH_TOKEN_COOKIE_NAME = process.env.REFRESH_TOKEN_COOKIE_NAME || 'refresh_token';
     let token;
     let decodedToken;
 
@@ -44,26 +43,14 @@ export const isLoggedIn = async (req, res, next) => {
         decodedToken = jwt.verify(token, JWT_SECRET);
     } catch (err) {
         if (err instanceof TokenExpiredError) {
-            const refreshToken = req.cookies[REFRESH_TOKEN_COOKIE_NAME];
-            if (SESSION_TYPE === 'cookie' && refreshToken) {
-                // Try using the refresh token
-                try {
-                    decodedToken = jwt.verify(refreshToken, JWT_SECRET);
-                    const newToken = signAccessToken(decodedToken);
-                    const cookieArgs = configureAccessTokenCookie(newToken);
-                    res.cookie(...cookieArgs);
-                } catch (err) {
-                    return res
-                        .status(200)
-                        .json({
-                            error: true,
-                            errorCode: 'AUT003',
-                            status: "401",
-                            message: "Expired token"
-                        });
-                }
-
-            }
+            return res
+                .status(200)
+                .json({
+                    error: true,
+                    errorCode: 'AUT003',
+                    status: "401",
+                    message: "Expired token"
+                });
         } else {
             return res
                 .status(200)
