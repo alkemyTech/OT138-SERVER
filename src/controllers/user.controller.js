@@ -201,18 +201,20 @@ export const updateProfileByAdmin = async (req, res) => {
 
     const { firstName, lastName, roleId } = req.body;
 
-    const instance = User.findByPk(id);
-
-    if(!instance){
-        return res.status(200).json({
-            error: true,
-            errorCode: "REQ001",
-            status: "404",
-            message: "User not found"
-        });
-    }
-
+    
     try{
+
+        const instance = await User.findByPk(id);
+    
+        if(!instance){
+            return res.status(200).json({
+                error: true,
+                errorCode: "REQ001",
+                status: "404",
+                message: "User not found"
+            });
+        }
+        
         instance.set({
             firstName: firstName,
             lastName: lastName,
@@ -277,6 +279,47 @@ export const deleteUserByAdmin = async (req, res) => {
             });
         })
     } catch (err) {
+        return res.status(200).json({
+            error: true,
+            errorCode: "SRV001",
+            status: "500",
+            message: "Internal server error"
+        });
+    }
+};
+
+export const getProfileByAdmin = async (req, res) => {
+    const id = req.params.id;
+    
+    if(!id){
+        return res.status(200).json({
+            error: true,
+            errorCore: "REQ002",
+            status: "400",
+            message: "The id was not provided"
+        });
+    }
+
+    try{
+
+        const instance = await User.findByPk(id);
+    
+        if(!instance){
+            return res.status(200).json({
+                error: true,
+                errorCode: "REQ001",
+                status: "404",
+                message: "User not found"
+            });
+        } else{
+            return res.status(200).json({
+                error: false,
+                status: "200",
+                result: instance
+            })
+        }
+    } catch (err) {
+        console.log(err);
         return res.status(200).json({
             error: true,
             errorCode: "SRV001",
