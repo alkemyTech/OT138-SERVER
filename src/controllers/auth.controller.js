@@ -233,3 +233,13 @@ export const profile = async (req, res) => {
         user,
     });
 };
+
+export const logout = async (req, res) => {
+    const REFRESH_TOKEN_COOKIE_NAME = process.env.REFRESH_TOKEN_COOKIE_NAME ?? 'refresh_token';
+    res.clearCookie(REFRESH_TOKEN_COOKIE_NAME);
+    return res.status(200).json({
+        error: false,
+        status: "200",
+        message: "Logged out"
+    })
+}

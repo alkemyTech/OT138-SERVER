@@ -7,6 +7,7 @@ import {
   refresh,
   register,
   registerValidation,
+  logout
 } from "../controllers/auth.controller";
 import { isLoggedIn, isAdmin, loginValidator } from "../middlewares/auth.middleware";
 const router = express.Router();
@@ -29,6 +30,8 @@ router.get("/auth/me", isLoggedIn, profile);
 router.get("/auth/protected", isLoggedIn, (req, res) => {
   res.json({ email: req.user.email, protected: true });
 });
+
+router.post("/auth/logout", isLoggedIn, logout);
 
 /**
  * @swagger
@@ -94,6 +97,16 @@ router.get("/auth/protected", isLoggedIn, (req, res) => {
  *              type: string
  *            password:
  *              type: string
+ *    responses:
+ *      '200':
+ *        description: A successful response
+ */
+
+/**
+ * @swagger
+ * /api/auth/logout:
+ *  post:
+ *    description: Signs off the current user
  *    responses:
  *      '200':
  *        description: A successful response
