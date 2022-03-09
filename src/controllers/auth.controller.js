@@ -3,7 +3,11 @@ import bcrypt from "bcryptjs";
 import { Joi } from "express-validation";
 import { User, Role } from "../models";
 import jwt from "jsonwebtoken";
-import { verifyRefresh } from "../helpers";
+import {
+    configureRefreshTokenCookie,
+    signAccessToken,
+    signRefreshToken
+} from "../helpers";
 
 export const registerValidation = {
     body: Joi.object({
@@ -74,11 +78,10 @@ export const register = async (req, res) => {
  * @returns User data, access token and refresh token
  */
 export const login = async (req, res) => {
-    let jwtSecret = process.env.JWT_SECRET
+    const JWT_SECRET = process.env.JWT_SECRET ?? 'SECRET_KEY';
 
-    if (!jwtSecret) {
+    if (!JWT_SECRET) {
         console.warn('JWT_SECRET env variable not set, using default value');
-        jwtSecret = "SECRET_KEY";
     }
 
     try {
@@ -106,10 +109,9 @@ export const login = async (req, res) => {
             /* Intentional error to avoid providing information about the existence of the user's email address. */
             return res.status(200).json({
                 error: true,
-                status: 401,
-                message: "Incorrect email or password",
-                accessToken: null,
-                refreshToken: null,
+                errorCode: 'REQ002',
+                status: "400",
+                message: "Invalid credentials"
             });
         }
 
@@ -118,81 +120,86 @@ export const login = async (req, res) => {
         const passwordMatch = await bcrypt.compare(password, savedPassword);
 
         if (passwordMatch) {
-            const accessToken = jwt.sign({ email: email }, jwtSecret, {
-                expiresIn: "30m",
-            });
-            const refreshToken = jwt.sign({ email: email }, jwtSecret, {
-                expiresIn: "7d",
-            });
+            const payload = { email: email };
+            const accessToken = signAccessToken(payload);
+            const refreshToken = signRefreshToken(payload);
 
             // Remove sensitive information
             const { password, ...userData } = user.dataValues;
 
             return res
                 .status(200)
-                .cookie("access-token", `${accessToken}`, {
-                    maxAge: 120000, // would expire after 2 minutes
-                    sameSite: "none",
-                    path: "/",
-                    httpOnly: true,
-                    secure: true,
-                })
-                .cookie("refresh-token", `${accessToken}`, {
-                    maxAge: 600000, // would expire after 10 minutes
-                    sameSite: "none",
-                    path: "/",
-                    httpOnly: true,
-                    secure: true,
-                })
+                .cookie(...configureRefreshTokenCookie(refreshToken))
                 .json({
                     error: false,
-                    status: 200,
+                    status: "200",
                     message: "User was authenticated successfully.",
                     user: userData,
                     accessToken,
-                    refreshToken,
+                    refreshToken
                 });
+
         }
         return res.status(200).send({
             error: true,
-            status: 401,
-            message: "Incorrect email or password",
-            accessToken: null,
-            refreshToken: null,
+            errorCode: 'REQ002',
+            status: "400",
+            message: "Invalid credentials"
         });
     } catch (error) {
         console.log(error);
         return res.status(200).json({
             error: true,
+            errorCode: 'SRV001',
             status: "500",
-            message: "An error occurred while logging the User.",
-            content: error,
+            message: "An error occurred while logging the User."
         });
     }
 };
 
 export const refresh = async (req, res) => {
-    let jwtSecret = process.env.JWT_SECRET
+    const JWT_SECRET = process.env.JWT_SECRET ?? 'SECRET_KEY';
+    const REFRESH_TOKEN_COOKIE_NAME = process.env.REFRESH_TOKEN_COOKIE_NAME ?? 'refresh_token';
 
-    if (!jwtSecret) {
+    if (!JWT_SECRET) {
         console.warn('JWT_SECRET env variable not set, using default value');
-        jwtSecret = "SECRET_KEY";
     }
 
-    const { email, refreshToken } = req.body;
-    const isValid = verifyRefresh({ email, refreshToken });
+    // Get the refresh token from the cookie or fall back to the request body.
+    const refreshToken = req.cookies[REFRESH_TOKEN_COOKIE_NAME] ?? req.body.refreshToken;
 
-    if (!isValid) {
+    if (!refreshToken) {
         return res.status(200).json({
             error: true,
+            errorCode: "REQ002",
             status: "401",
-            message: "Invalid token, try login again.",
+            message: "Refresh token not found",
         });
     }
-    const accessToken = jwt.sign({ email: email }, jwtSecret, {
-        expiresIn: "30m",
-    });
-    return res.status(200).json({ error: false, status: "200", accessToken });
+
+    try {
+        const decodedToken = jwt.verify(refreshToken, JWT_SECRET);
+        const newToken = signAccessToken(decodedToken);
+        return res
+            .status(200)
+            .json({
+                error: false,
+                status: "200",
+                accessToken: newToken,
+                refreshToken: refreshToken
+            });
+
+    } catch (err) {
+        console.log(err)
+        return res
+            .status(200)
+            .json({
+                error: true,
+                errorCode: 'AUT001',
+                status: "401",
+                message: "Invalid Token"
+            });
+    }
 };
 
 export const imLoggedIn = async (req, res) => {
@@ -226,3 +233,13 @@ export const profile = async (req, res) => {
         user,
     });
 };
+
+export const logout = async (req, res) => {
+    const REFRESH_TOKEN_COOKIE_NAME = process.env.REFRESH_TOKEN_COOKIE_NAME ?? 'refresh_token';
+    res.clearCookie(REFRESH_TOKEN_COOKIE_NAME);
+    return res.status(200).json({
+        error: false,
+        status: "200",
+        message: "Logged out"
+    })
+}
