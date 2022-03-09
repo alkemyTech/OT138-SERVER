@@ -40,8 +40,6 @@ router.use(contactRoutes);
 /*Slides Route*/
 router.use(slider);
 
-/*Contacts Route*/
-router.use(contactRoutes);
 /*Testimony Route*/
 router.use(testimony);
 
