@@ -208,8 +208,10 @@ export const refresh = async (req, res) => {
     }
 
     try {
-        decodedToken = jwt.verify(refreshToken, JWT_SECRET);
+        const decodedToken = jwt.verify(refreshToken, JWT_SECRET);
+        console.log(decodedToken)
         const newToken = signAccessToken(decodedToken);
+        console.log(newToken)
         switch (SESSION_TYPE) {
             case 'cookie':
                 return res.cookie(...configureAccessTokenCookie(newToken));
@@ -221,10 +223,11 @@ export const refresh = async (req, res) => {
                         status: "200",
                         accessToken: newToken,
                         refreshToken: refreshToken
-                    })
+                    });
         }
 
     } catch (err) {
+        console.log(err)
         return res
             .status(200)
             .json({
