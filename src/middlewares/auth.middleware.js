@@ -2,8 +2,6 @@ import jwt, { TokenExpiredError } from "jsonwebtoken";
 import sequelize from "sequelize";
 import { User, Role } from "../models";
 import { Joi } from "express-validation";
-import { UnsupportedSessionTypeError } from "../helpers/exceptions";
-import { signAccessToken, configureAccessTokenCookie } from '../helpers';
 
 /**
  * Checks if the user is authenticated and appends the user instance (if valid) to the request object.
