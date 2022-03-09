@@ -81,54 +81,78 @@ export const getJoiErrorFields = (joiValidationError) => {
     });
 };
 
+/**
+ * Creates a JWT string representing an access token
+ * Expiration (in seconds) is obtained from the ACCESS_TOKEN_DURATION env variable
+ * The secret phrase used to sign the token is obtained from the JWT_SECRET env variable
+ * @param {*} payload Object to encode
+ * @returns JWT with the encoded payload
+ */
 export const signAccessToken = (payload) => {
-    const ACCESS_TOKEN_DURATION = process.env.ACCESS_TOKEN_DURATION || 1200;
-    const JWT_SECRET = process.env.JWT_SECRET || "SECRET_KEY";
+    const JWT_SECRET = process.env.JWT_SECRET ?? "SECRET_KEY";
+    const ACCESS_TOKEN_DURATION = parseInt(process.env.ACCESS_TOKEN_DURATION ?? 1200);
 
+    // Remove previous timestamps
     const { iat, exp, ...data } = payload;
 
     return jwt.sign(data, JWT_SECRET, { expiresIn: ACCESS_TOKEN_DURATION });
 }
 
+/**
+ * Creates a JWT string representing a refresh token
+ * Expiration (in seconds) is obtained from the REFRESH_TOKEN_DURATION env variable
+ * The secret phrase used to sign the token is obtained from the JWT_SECRET env variable
+ * @param {*} payload Object to encode
+ * @returns JWT with the encoded payload
+ */
 export const signRefreshToken = (payload) => {
-    const REFRESH_TOKEN_DURATION = process.env.REFRESH_TOKEN_DURATION || 604800;
-    const JWT_SECRET = process.env.JWT_SECRET || "SECRET_KEY";
+    const REFRESH_TOKEN_DURATION = parseInt(process.env.REFRESH_TOKEN_DURATION ?? 604800);
+    const JWT_SECRET = process.env.JWT_SECRET ?? "SECRET_KEY";
 
+    // Remove previous timestamps
     const { iat, exp, ...data } = payload;
 
     return jwt.sign(data, JWT_SECRET, { expiresIn: REFRESH_TOKEN_DURATION });
 }
 
+/**
+ * Generates an array containing the arguments for the 'res.cookie' function.
+ * The cookie name is obtained from the ACCESS_TOKEN_COOKIE_NAME env variable
+ * The maxAge attribute of the cookie is set to REFRESH_TOKEN_DURATION env variable
+ * @param {*} token Content of the cookie
+ * @returns Array with the format ['cookieName', 'token', cookieConfig]
+ */
 export const configureAccessTokenCookie = (token) => {
-    const ACCESS_TOKEN_COOKIE_NAME = process.env.ACCESS_TOKEN_COOKIE_NAME || 'access_token';
-    const ACCESS_TOKEN_DURATION = process.env.ACCESS_TOKEN_DURATION || 1200;
+    const ACCESS_TOKEN_COOKIE_NAME = process.env.ACCESS_TOKEN_COOKIE_NAME ?? 'access_token';
+    const REFRESH_TOKEN_DURATION = parseInt(process.env.REFRESH_TOKEN_DURATION ?? 604800);
 
-    return [
-        ACCESS_TOKEN_COOKIE_NAME,
-        token,
-        {
-            maxAge: ACCESS_TOKEN_DURATION * 1000,
-            sameSite: "none",
-            path: "/",
-            httpOnly: true,
-            secure: true
-        }
-    ];
+    return _getCookieConfig(ACCESS_TOKEN_COOKIE_NAME, REFRESH_TOKEN_DURATION, token);
 }
 
+/**
+ * Generates an array containing the arguments for the 'res.cookie' function.
+ * The cookie name is obtained from the REFRESH_TOKEN_COOKIE_NAME env variable
+ * The maxAge attribute of the cookie is set to REFRESH_TOKEN_DURATION env variable
+ * @param {*} token Content of the cookie
+ * @returns Array with the format ['cookieName', 'token', cookieConfig]
+ */
 export const configureRefreshTokenCookie = (token) => {
-    const REFRESH_TOKEN_COOKIE_NAME = process.env.REFRESH_TOKEN_COOKIE_NAME || 'refresh_token';
-    const REFRESH_TOKEN_DURATION = process.env.REFRESH_TOKEN_DURATION || 604800;
+    const REFRESH_TOKEN_COOKIE_NAME = process.env.REFRESH_TOKEN_COOKIE_NAME ?? 'refresh_token';
+    const REFRESH_TOKEN_DURATION = parseInt(process.env.REFRESH_TOKEN_DURATION ?? 604800);
 
+    return _getCookieConfig(REFRESH_TOKEN_COOKIE_NAME, REFRESH_TOKEN_DURATION, token);
+}
+
+const _getCookieConfig = (name, maxAgeSeconds, payload) => {
     return [
-        REFRESH_TOKEN_COOKIE_NAME,
-        token,
+        name,
+        payload,
         {
-            maxAge: REFRESH_TOKEN_DURATION * 1000,
+            maxAge: maxAgeSeconds * 1000,
             sameSite: "none",
             path: "/",
             httpOnly: true,
             secure: true
         }
-    ];
+    ]
 }

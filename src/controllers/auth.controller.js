@@ -4,12 +4,10 @@ import { Joi } from "express-validation";
 import { User, Role } from "../models";
 import jwt from "jsonwebtoken";
 import {
-    configureAccessTokenCookie,
     configureRefreshTokenCookie,
     signAccessToken,
     signRefreshToken
 } from "../helpers";
-import { UnsupportedSessionTypeError } from '../helpers/exceptions';
 
 export const registerValidation = {
     body: Joi.object({
@@ -81,14 +79,9 @@ export const register = async (req, res) => {
  */
 export const login = async (req, res) => {
     const JWT_SECRET = process.env.JWT_SECRET ?? 'SECRET_KEY';
-    const SESSION_TYPE = process.env.SESSION_TYPE || 'header';
 
     if (!JWT_SECRET) {
         console.warn('JWT_SECRET env variable not set, using default value');
-    }
-
-    if (SESSION_TYPE !== 'cookie' && SESSION_TYPE !== 'header') {
-        throw UnsupportedSessionTypeError('Invalid session type');
     }
 
     try {
@@ -134,31 +127,17 @@ export const login = async (req, res) => {
             // Remove sensitive information
             const { password, ...userData } = user.dataValues;
 
-            switch (SESSION_TYPE) {
-                case 'cookie':
-                    return res
-                        .status(200)
-                        .cookie(...configureAccessTokenCookie(accessToken))
-                        .cookie(...configureRefreshTokenCookie(refreshToken))
-                        .json({
-                            error: false,
-                            status: "200",
-                            message: "User was authenticated successfully.",
-                            user: userData,
-                        });
-                case 'header':
-                    return res
-                        .status(200)
-                        .cookie(...configureRefreshTokenCookie(refreshToken))
-                        .json({
-                            error: false,
-                            status: "200",
-                            message: "User was authenticated successfully.",
-                            user: userData,
-                            accessToken,
-                            refreshToken
-                        });
-            }
+            return res
+                .status(200)
+                .cookie(...configureRefreshTokenCookie(refreshToken))
+                .json({
+                    error: false,
+                    status: "200",
+                    message: "User was authenticated successfully.",
+                    user: userData,
+                    accessToken,
+                    refreshToken
+                });
 
         }
         return res.status(200).send({
@@ -180,51 +159,35 @@ export const login = async (req, res) => {
 
 export const refresh = async (req, res) => {
     const JWT_SECRET = process.env.JWT_SECRET ?? 'SECRET_KEY';
-    const SESSION_TYPE = process.env.SESSION_TYPE || 'header';
-    let refreshToken;
+    const REFRESH_TOKEN_COOKIE_NAME = process.env.REFRESH_TOKEN_COOKIE_NAME ?? 'refresh_token';
 
     if (!JWT_SECRET) {
         console.warn('JWT_SECRET env variable not set, using default value');
     }
 
-    switch (SESSION_TYPE) {
-        case 'cookie':
-            refreshToken = req.cookies[ACCESS_TOKEN_COOKIE_NAME];
-            break;
-        case 'header':
-            refreshToken = req.body.refreshToken;
-            break;
-        default:
-            throw UnsupportedSessionTypeError('Invalid session type');
-    }
+    // Get the refresh token from the cookie or fall back to the request body.
+    const refreshToken = req.cookies[REFRESH_TOKEN_COOKIE_NAME] ?? req.body.refreshToken;
 
     if (!refreshToken) {
         return res.status(200).json({
             error: true,
             errorCode: "REQ002",
             status: "401",
-            message: "Invalid token",
+            message: "Refresh token not found",
         });
     }
 
     try {
         const decodedToken = jwt.verify(refreshToken, JWT_SECRET);
-        console.log(decodedToken)
         const newToken = signAccessToken(decodedToken);
-        console.log(newToken)
-        switch (SESSION_TYPE) {
-            case 'cookie':
-                return res.cookie(...configureAccessTokenCookie(newToken));
-            case 'header':
-                return res
-                    .status(200)
-                    .json({
-                        error: false,
-                        status: "200",
-                        accessToken: newToken,
-                        refreshToken: refreshToken
-                    });
-        }
+        return res
+            .status(200)
+            .json({
+                error: false,
+                status: "200",
+                accessToken: newToken,
+                refreshToken: refreshToken
+            });
 
     } catch (err) {
         console.log(err)

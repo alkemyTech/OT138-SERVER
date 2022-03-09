@@ -10,8 +10,6 @@ import { signAccessToken, configureAccessTokenCookie } from '../helpers';
  */
 export const isLoggedIn = async (req, res, next) => {
     const JWT_SECRET = process.env.JWT_SECRET || "SECRET_KEY";
-    const SESSION_TYPE = process.env.SESSION_TYPE || 'header';
-    const ACCESS_TOKEN_COOKIE_NAME = process.env.ACCESS_TOKEN_COOKIE_NAME || 'access_token';
     let token;
     let decodedToken;
 
@@ -19,16 +17,7 @@ export const isLoggedIn = async (req, res, next) => {
         console.warn("JWT_SECRET env variable not set, using default value");
     }
 
-    switch (SESSION_TYPE) {
-        case 'header':
-            token = req.get("Authorization")?.split(" ")[1];
-            break;
-        case 'cookie':
-            token = req.cookies[ACCESS_TOKEN_COOKIE_NAME];
-            break;
-        default:
-            throw UnsupportedSessionTypeError('Invalid session type');
-    }
+    token = req.get("Authorization")?.split(" ")[1];
 
     if (!token) {
         return res.status(200).json({
