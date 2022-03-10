@@ -16,7 +16,7 @@ export const getTestimony = async (req,res) =>{
             errorCode: "REQ001",
             errorFields: [],
             status: "404",
-            message: "News not found",
+            message: "Testimonials not found",
             result: testimony,
             });
         
@@ -42,6 +42,40 @@ export const getTestimony = async (req,res) =>{
 
     }
 }
+
+
+
+
+//GET ONE TESTIMONY
+export const getOneTestimony = async (req,res) =>{
+
+    
+        
+        const {id} = req.params;
+        const testimonyData = await testimony.findOne({where:{id:id}})
+        if(!testimonyData){
+            res.status(200).json({
+            error: true,
+            errorCode: "REQ001",
+            errorFields: [],
+            status: "404",
+            message: "Testimonials not found",
+            result: testimony,
+            });
+        
+            }else{
+            res.status(200).json({
+            error: false,
+            errorCode: "",
+            errorFields: [],
+            status: "200",
+            message: "Testimonials found",
+            result: testimonyData,
+            });}
+
+   
+
+        }
 
 
 //CREATE TESTIMONY
