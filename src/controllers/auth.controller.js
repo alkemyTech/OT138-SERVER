@@ -54,7 +54,10 @@ export const register = async (req, res) => {
             const { id } = response[0];
             !response[1]
                 ? res.status(200).json({
-                    ...responses.conflict,
+                    ...responses.validationError,
+                    errorFields: {
+                        email: 'Email not available'
+                    },
                     message: 'Email not available'
                 })
                 : res.status(200).json({
