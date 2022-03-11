@@ -115,8 +115,7 @@ export const login = async (req, res) => {
         if (!user) {
             /* Intentional error to avoid providing information about the existence of the user's email address. */
             return res.status(200).json({
-                ...responses.badRequest,
-                message: 'Invalid credentials'
+                ...responses.invalidCredentials
             });
         }
 
@@ -146,8 +145,7 @@ export const login = async (req, res) => {
 
         }
         return res.status(200).send({
-            ...responses.badRequest,
-            message: 'Invalid credentials'
+            ...responses.invalidCredentials
         });
     } catch (error) {
         console.log(error);

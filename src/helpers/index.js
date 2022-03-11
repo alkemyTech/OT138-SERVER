@@ -207,6 +207,12 @@ export const responses = Object.freeze({
         status: '401',
         message: 'Validation error'
     },
+    invalidCredentials: {
+        error: true,
+        errorCode: 'AUT004',
+        status: '400',
+        message: 'Invalid credentials'
+    },
     success: {
         error: false,
         status: '200',
