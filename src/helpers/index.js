@@ -156,3 +156,84 @@ const _getCookieConfig = (name, maxAgeSeconds, payload) => {
         }
     ]
 }
+
+export const responses = Object.freeze({
+    conflict: {
+        error: true,
+        errorCode: 'REQ003',
+        status: '409',
+        message: 'Resource already exists'
+    },
+    badRequest: {
+        error: true,
+        errorCode: 'REQ002',
+        status: '400',
+        message: 'Bad request'
+    },
+    notFound: {
+        error: true,
+        errorCode: 'REQ001',
+        status: '404',
+        message: 'Resource not found'
+    },
+    forbidden: {
+        error: true,
+        errorCode: 'AUT002',
+        status: '403',
+        message: 'Forbidden'
+    },
+    notAuthenticated: {
+        error: true,
+        errorCode: 'AUT001',
+        status: '401',
+        message: 'Authentication required'
+    },
+    sessionExpired: {
+        error: true,
+        errorCode: 'AUT003',
+        status: '401',
+        message: 'Session expired'
+    },
+    validationError: {
+        error: true,
+        errorCode: 'VAL001',
+        errorFields: [],
+        status: '401',
+        message: 'Validation error'
+    },
+    internalError: {
+        error: true,
+        errorCode: 'SRV001',
+        status: '401',
+        message: 'Validation error'
+    },
+    invalidCredentials: {
+        error: true,
+        errorCode: 'AUT004',
+        status: '400',
+        message: 'Invalid credentials'
+    },
+    success: {
+        error: false,
+        status: '200',
+        message: '',
+        result: {}
+    }
+});
+
+/**
+ * Returns an object where keys are field names and values are error messages.
+ * @param {*} error Joi errors array.
+ * @returns Object in the form { fieldName: errorMessage }
+ */
+export const formatValidationErrors = (error) => {
+    let errorFields = {};
+
+    if(error.details) {
+        error.details.forEach(e => {
+            errorFields[e.context.key] = e.message;
+        });
+    }
+
+    return errorFields;
+}
