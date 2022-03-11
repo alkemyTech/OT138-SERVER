@@ -6,7 +6,8 @@ import jwt from "jsonwebtoken";
 import {
     configureRefreshTokenCookie,
     signAccessToken,
-    signRefreshToken
+    signRefreshToken,
+    responses
 } from "../helpers";
 
 export const registerValidation = {
@@ -45,30 +46,25 @@ export const register = async (req, res) => {
             const { id } = response[0];
             !response[1]
                 ? res.status(200).json({
-                    error: true,
-                    status: "409",
-                    message: "The user already exists.",
-                    user: null,
+                    ...responses.conflict,
+                    message: 'Email not available'
                 })
                 : res.status(200).json({
-                    error: false,
-                    status: "200",
-                    message: "The user was created successfully.",
-                    user: {
+                    ...responses.success,
+                    message: 'The user was created successfully',
+                    result: {
                         id,
                         firstName,
                         lastName,
-                        email,
-                    },
+                        email
+                    }
                 });
         });
     } catch (error) {
         console.log(error);
         return res.status(200).json({
-            error: true,
-            status: "500",
-            message: "An error occurred while creating the User.",
-            content: error,
+            ...responses.internalError,
+            message: 'An error occurred while creating the User'
         });
     }
 };
@@ -108,10 +104,8 @@ export const login = async (req, res) => {
         if (!user) {
             /* Intentional error to avoid providing information about the existence of the user's email address. */
             return res.status(200).json({
-                error: true,
-                errorCode: 'REQ002',
-                status: "400",
-                message: "Invalid credentials"
+                ...responses.badRequest,
+                message: 'Invalid credentials'
             });
         }
 
@@ -131,32 +125,28 @@ export const login = async (req, res) => {
                 .status(200)
                 .cookie(...configureRefreshTokenCookie(refreshToken))
                 .json({
-                    error: false,
-                    status: "200",
-                    message: "User was authenticated successfully.",
-                    user: userData,
-                    accessToken,
-                    refreshToken
+                    ...responses.success,
+                    result: {
+                        user: userData,
+                        accessToken,
+                        refreshToken
+                    }
                 });
 
         }
         return res.status(200).send({
-            error: true,
-            errorCode: 'REQ002',
-            status: "400",
-            message: "Invalid credentials"
+            ...responses.badRequest,
+            message: 'Invalid credentials'
         });
     } catch (error) {
         console.log(error);
         return res.status(200).json({
-            error: true,
-            errorCode: 'SRV001',
-            status: "500",
-            message: "An error occurred while logging the User."
+            ...responses.internalError
         });
     }
 };
 
+/* Refresh token controller */
 export const refresh = async (req, res) => {
     const JWT_SECRET = process.env.JWT_SECRET ?? 'SECRET_KEY';
     const REFRESH_TOKEN_COOKIE_NAME = process.env.REFRESH_TOKEN_COOKIE_NAME ?? 'refresh_token';
@@ -170,10 +160,8 @@ export const refresh = async (req, res) => {
 
     if (!refreshToken) {
         return res.status(200).json({
-            error: true,
-            errorCode: "REQ002",
-            status: "401",
-            message: "Refresh token not found",
+            ...responses.badRequest,
+            message: 'Refresh token not found'
         });
     }
 
@@ -183,10 +171,11 @@ export const refresh = async (req, res) => {
         return res
             .status(200)
             .json({
-                error: false,
-                status: "200",
-                accessToken: newToken,
-                refreshToken: refreshToken
+                ...responses.success,
+                result: {
+                    accessToken: newToken,
+                    refreshToken: refreshToken
+                }
             });
 
     } catch (err) {
@@ -194,10 +183,8 @@ export const refresh = async (req, res) => {
         return res
             .status(200)
             .json({
-                error: true,
-                errorCode: 'AUT001',
-                status: "401",
-                message: "Invalid Token"
+                ...responses.notAuthenticated,
+                message: 'Invalid token'
             });
     }
 };
@@ -206,16 +193,13 @@ export const imLoggedIn = async (req, res) => {
     try {
         if (req.user) {
             res.status(200).json({
-                error: false,
-                user: req.user,
-                status: 200,
-                message: "You are logged in.",
+                ...responses.success,
+                result: req.user
             });
         } else {
             res.status(200).json({
-                error: true,
-                status: 401,
-                message: `You are not logged in.`,
+                ...responses.notAuthenticated,
+                message: 'Not authenticated'
             });
         }
     } catch (error) {
@@ -227,10 +211,8 @@ export const profile = async (req, res) => {
     const user = req.user;
 
     return res.status(200).json({
-        error: false,
-        status: "200",
-        message: "User was successfully found.",
-        user,
+        ...responses.success,
+        result: user
     });
 };
 
@@ -238,8 +220,7 @@ export const logout = async (req, res) => {
     const REFRESH_TOKEN_COOKIE_NAME = process.env.REFRESH_TOKEN_COOKIE_NAME ?? 'refresh_token';
     res.clearCookie(REFRESH_TOKEN_COOKIE_NAME);
     return res.status(200).json({
-        error: false,
-        status: "200",
-        message: "Logged out"
+        ...responses.success,
+        message: 'Logged out'
     })
 }

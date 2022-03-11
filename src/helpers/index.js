@@ -156,3 +156,61 @@ const _getCookieConfig = (name, maxAgeSeconds, payload) => {
         }
     ]
 }
+
+export const responses = Object.freeze({
+    conflict: {
+        error: true,
+        errorCode: 'REQ003',
+        status: '409',
+        message: 'Resource already exists'
+    },
+    badRequest: {
+        error: true,
+        errorCode: 'REQ002',
+        status: '400',
+        message: 'Bad request'
+    },
+    notFound: {
+        error: true,
+        errorCode: 'REQ001',
+        status: '404',
+        message: 'Resource not found'
+    },
+    forbidden: {
+        error: true,
+        errorCode: 'AUT002',
+        status: '403',
+        message: 'Forbidden'
+    },
+    notAuthenticated: {
+        error: true,
+        errorCode: 'AUT001',
+        status: '401',
+        message: 'Authentication required'
+    },
+    sessionExpired: {
+        error: true,
+        errorCode: 'AUT003',
+        status: '401',
+        message: 'Session expired'
+    },
+    validationError: {
+        error: true,
+        errorCode: 'VAL001',
+        errorFields: [],
+        status: '401',
+        message: 'Validation error'
+    },
+    internalError: {
+        error: true,
+        errorCode: 'SRV001',
+        status: '401',
+        message: 'Validation error'
+    },
+    success: {
+        error: false,
+        status: '200',
+        message: '',
+        result: {}
+    }
+});
