@@ -214,3 +214,20 @@ export const responses = Object.freeze({
         result: {}
     }
 });
+
+/**
+ * Returns an object where keys are field names and values are error messages.
+ * @param {*} error Joi errors array.
+ * @returns Object in the form { fieldName: errorMessage }
+ */
+export const formatValidationErrors = (error) => {
+    let errorFields = {};
+
+    if(error.details) {
+        error.details.forEach(e => {
+            errorFields[e.context.key] = e.message;
+        });
+    }
+
+    return errorFields;
+}

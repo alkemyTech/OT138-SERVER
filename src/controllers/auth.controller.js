@@ -7,30 +7,38 @@ import {
     configureRefreshTokenCookie,
     signAccessToken,
     signRefreshToken,
-    responses
+    responses,
+    formatValidationErrors
 } from "../helpers";
 
-export const registerValidation = {
-    body: Joi.object({
-        firstName: Joi.string()
-            .regex(/[a-zA-Z0-9]{3,50}/)
-            .required(),
-        lastName: Joi.string()
-            .regex(/[a-zA-Z0-9]{3,50}/)
-            .required(),
-        email: Joi.string()
-            .email()
-            .regex(/[a-zA-Z0-9]{3,50}/)
-            .required(),
-        password: Joi.string()
-            .regex(/[a-zA-Z0-9]{3,50}/)
-            .required(),
-    }),
-};
+const registerValidationSchema = Joi.object({
+    firstName: Joi.string()
+        .regex(/[a-zA-Z0-9]{3,50}/)
+        .required(),
+    lastName: Joi.string()
+        .regex(/[a-zA-Z0-9]{3,50}/)
+        .required(),
+    email: Joi.string()
+        .email()
+        .regex(/[a-zA-Z0-9]{3,50}/)
+        .required(),
+    password: Joi.string()
+        .regex(/[a-zA-Z0-9]{3,50}/)
+        .required()
+});
 
 export const register = async (req, res) => {
+    const {error, value} = registerValidationSchema.validate(req.body);
+
+    if(error) {
+        return res.status(200).json({
+            ...responses.validationError,
+            errorFields: formatValidationErrors(error)
+        });
+    }
+
     try {
-        const { firstName, lastName, email, password } = req.body;
+        const { firstName, lastName, email, password } = value;
 
         const hashedPassword = await bcrypt.hash(password, 12);
 
