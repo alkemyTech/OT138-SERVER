@@ -178,8 +178,8 @@ export const getNews = async (req, res) => {
   try {
     const news = await paginate(
       Entry,
-      req.params.page,
-      req.params.limit,
+      req.query.page,
+      req.query.limit,
       null,
       {
         type: "news",
