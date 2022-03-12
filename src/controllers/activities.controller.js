@@ -10,6 +10,31 @@ const createActivitiesSchema = Joi.object({
     content: Joi.string().required(),
 });
 
+export const getOneActivityController = async (req, res) => {
+    const id = req.params.id;
+
+    try {
+        const result = await Activities.findOne({ where: { id: id } });
+
+        if (!result) {
+            return res.status(200).json({
+                ...responses.notFound,
+                message: 'Activity not found'
+            });
+        }
+
+        return res.status(200).json({
+            ...responses.success,
+            result
+        });
+    } catch (err) {
+        console.log(err);
+        return res.status(200).json({
+            ...responses.internalError,
+        });
+    }
+}
+
 export const createActivitiesController = async (req, res) => {
     const { error, value } = createActivitiesSchema.validate(req.body);
     if (error) {
@@ -37,11 +62,8 @@ export const createActivitiesController = async (req, res) => {
 };
 
 export const getActivitiesController = async (req, res) => {
-    const id = req.params.id;
-    let condition = id ? { id: { [Op.eq]: id } } : null;
-
     try {
-        const activities = await paginate(Activities, req.query.limit, req.query.page, [['createdAt', 'DESC']], condition);
+        const activities = await paginate(Activities, req.query.limit, req.query.page, [['createdAt', 'DESC']]);
 
         let status = '200';
         let message = 'success';

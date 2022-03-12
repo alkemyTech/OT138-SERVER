@@ -1,6 +1,7 @@
 import express from "express";
 import {
   createActivitiesController,
+  getOneActivityController,
   getActivitiesController,
   updateActivitiesController
 } from "../controllers/activities.controller";
@@ -8,7 +9,8 @@ import {
 const router = express.Router();
 
 router.post("/activities", createActivitiesController);
-router.get("/activities/:id?", getActivitiesController);
+router.get("/activities/:id", getOneActivityController);
+router.get("/activities", getActivitiesController);
 router.put("/activities/:id?", updateActivitiesController);
 
 /**
