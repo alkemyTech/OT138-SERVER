@@ -1,163 +1,119 @@
-import { Joi } from "express-validation";
-import { Activities } from "../models";
-import { Op } from "sequelize";
-import { async } from "regenerator-runtime";
-const createActivitiesSchema = Joi.object({
-  name: Joi.string().required(),
-  image: Joi.string().uri(),
-  content: Joi.string().required(),
-});
-export const createActivitiesController = async (req, res) => {
-  const { error, value } = createActivitiesSchema.validate(req.body);
-  if (error) {
-    // Validation failed
-    res.json({
-      error: true,
-      status: "400",
-      message: error.message,
-    });
-  } else {
-    // Validation success
-    try {
-      const activity = await Activities.create(value);
-      res.json({
-        error: false,
-        status: "200",
-        message: "Activity created correctly.",
-      });
-    } catch (error) {
-      console.log(error);
-      res.json({
-        error: true,
-        status: "500",
-        message:
-          "An error occurred while adding activity to the database. Details: " +
-          error.message,
-      });
-    }
-  }
-};
+import { Joi } from 'express-validation';
+import { Activities } from '../models';
+import { Op } from 'sequelize';
+import { responses, formatValidationErrors, paginate } from '../helpers';
+import { InvalidArgumentsError } from '../helpers/exceptions';
 
-const getActivitiesQueryParamsSchema = Joi.object({
-  limit: Joi.number().integer().greater(0),
-  page: Joi.number().integer().greater(0),
+const createActivitiesSchema = Joi.object({
+    name: Joi.string().required(),
+    image: Joi.string().uri(),
+    content: Joi.string().required(),
 });
+
+export const createActivitiesController = async (req, res) => {
+    const { error, value } = createActivitiesSchema.validate(req.body);
+    if (error) {
+        // Validation failed
+        res.json({
+            ...responses.validationError,
+            errorFields: formatValidationErrors(error)
+        });
+    } else {
+        // Validation success
+        try {
+            const activity = await Activities.create(value);
+            res.json({
+                ...responses.success,
+                result: activity
+            });
+        } catch (error) {
+            console.log(error);
+            res.json({
+                ...responses.internalError,
+                message: 'An error occurred while adding activity to the database'
+            });
+        }
+    }
+};
 
 export const getActivitiesController = async (req, res) => {
-  const id = req.params.id;
-  let condition = id ? { id: { [Op.eq]: id } } : null;
-  let limit = req?.query?.limit ? parseInt(req?.query?.limit) : null;
-  let page = req?.query?.page ? parseInt(req?.query?.page) : null;
-  const { error } = getActivitiesQueryParamsSchema.validate({ limit, page });
-  if (error) {
-    // Validation failed
-    res.json({ error: true, status: 400, message: error.message });
-  } else {
-    // Validation success
-    try {
-      const activities = await Activities.findAndCountAll({
-        subQuery: false,
-        limit: limit,
-        offset: (page - 1) * limit, // -1 so first page starts from 1
-        order: [["createdAt", "DESC"]],
-        where: condition,
-      });
-      const totalNumberOfPages = Math.ceil(activities.count / limit);
-      let result = {};
-      if (page > 1 && page <= totalNumberOfPages) {
-        // if there is a previous page add previous property
-        result.previous = {
-          page: page - 1,
-          limit: limit,
-        };
-      }
-      if (page < totalNumberOfPages) {
-        // if there is a next page add next property
-        result.next = {
-          page: page + 1,
-          limit: limit,
-        };
-      }
-      // add activities to result
-      result.activities = activities.rows;
-      //Add number of activities to result
-      result.count = activities.rows.length;
-      //Add total number of pages
-      result.totalNumberOfPages = totalNumberOfPages;
+    const id = req.params.id;
+    let condition = id ? { id: { [Op.eq]: id } } : null;
 
-      // Response
-      let status = "200";
-      let message = "success";
-      if (activities.rows.length === 0) {
-        status = "204";
-        message = "No activities found";
-      }
-      res.json({
-        error: false,
-        status,
-        message,
-        result,
-      });
-    } catch (error) {
-      res.json({
-        error: true,
-        status: "500",
-        message:
-          "An unexpected error occurred when retrieving data form database",
-        content: error,
-      });
+    try {
+        const activities = await paginate(Activities, req.query.limit, req.query.page, [['createdAt', 'DESC']], condition);
+
+        let status = '200';
+        let message = 'success';
+
+        if (activities.count === 0) {
+            status = '204';
+            message = 'No activities found';
+        }
+
+        return res.status(200).json({
+            ...responses.success,
+            status,
+            message,
+            result: activities,
+        });
+
+    } catch (err) {
+        let resData = {};
+
+        if (err instanceof InvalidArgumentsError) {
+            resData = {
+                ...responses.validationError,
+                errorFields: formatValidationErrors(err.errors),
+                message: 'Invalid query params',
+            };
+        } else {
+            console.log(err);
+            resData = {
+                ...responses.internalError,
+                message: 'An unexpected error occurred when retrieving data form database'
+            };
+        }
+
+        return res.status(200).json(resData);
     }
-  }
 };
 
 
-export const updateActivitiesController = async (req,res) => {
+export const updateActivitiesController = async (req, res) => {
+    const { id } = req.params;
 
-  const {id} = req.params;
-  
+    try {
 
-  try {
-    
-    const instance = await Activities.findOne({where: {id: id}});
+        const instance = await Activities.findOne({ where: { id: id } });
 
-    if(!instance) {
-    return res.status(200).json({
-    error: true,
-    errorCode:"REQ002",
-    status: "404",
-    message: "Activity not found",
-    result:{}
-    })
+        if (!instance) {
+            return res.status(200).json({
+                ...responses.notFound,
+                message: 'Activity not found'
+            });
+        }
+
+        instance.set({
+            ...req.body,
+            deletedAt: instance.deletedAt,
+            createdAt: instance.createdAt,
+            updatedAt: Date.now()
+        });
+
+        await instance.save();
+
+        return res.status(200).json({
+            ...responses.success,
+            message: 'Activity updated',
+            result: instance
+        });
+
+
+    } catch (err) {
+        console.error(err);
+        return res.status(200).json({
+            ...responses.internalError
+        });
     }
-
-    instance.set({
-    ...req.body,
-    deletedAt: instance.deletedAt,
-    createdAt: instance.createdAt,
-    updatedAt: Date.now()
-    });
-
-    await instance.save();
-
-    return res.status(200).json({
-      error: false,
-      errorCode:"",
-      status: "200",
-      message: "updated activity",
-      result:instance
-    });
-
-
-    }catch (err) {
-    console.error(err);
-    return res.status(200).json({
-      error: true,
-      errorCode:"SRV001",
-      status: "500",
-      message: "Could not connect to server",
-      result:instance
-    });
-}
-  
-
 }

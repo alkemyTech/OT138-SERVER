@@ -10,6 +10,7 @@ import { InvalidArgumentsError } from "./exceptions";
  * @param {Number} page Page of the results. Default: 1
  * @param {Array} order Sequelize order array. Default: []
  * @param {Object} where Conditions (Sequelize where property) used to filter the results. Default: {}
+ * @param {Object} sequelizeOptions Object containing supported sequelize query options. Default: {}
  * @returns Object containing the results and information about the pagination
  * @throws InvalidArgumentsError if arguments limit or page are invalid.
  */
@@ -18,7 +19,8 @@ export const paginate = async (
     limit = 10,
     page = 1,
     order = [],
-    where = {}
+    where = {},
+    sequelizeOptions = {}
 ) => {
     // Validate params
     const validationSchema = Joi.object({
@@ -28,7 +30,7 @@ export const paginate = async (
     const { error } = validationSchema.validate({ limit, page });
 
     if (error) {
-        throw new InvalidArgumentsError("Invalid pagination params");
+        throw new InvalidArgumentsError("Invalid pagination params", error);
     }
 
     // Cast params
@@ -43,6 +45,7 @@ export const paginate = async (
         offset: (page - 1) * limit, // -1 so first page starts from 1
         order: order,
         where: where,
+        ...sequelizeOptions
     });
 
     const pages = Math.ceil(data.count / limit);
@@ -197,14 +200,14 @@ export const responses = Object.freeze({
     validationError: {
         error: true,
         errorCode: 'VAL001',
-        errorFields: [],
+        errorFields: {},
         status: '401',
         message: 'Validation error'
     },
     internalError: {
         error: true,
         errorCode: 'SRV001',
-        status: '401',
+        status: '500',
         message: 'Validation error'
     },
     invalidCredentials: {
@@ -229,7 +232,7 @@ export const responses = Object.freeze({
 export const formatValidationErrors = (error) => {
     let errorFields = {};
 
-    if(error.details) {
+    if (error.details) {
         error.details.forEach(e => {
             errorFields[e.context.key] = e.message;
         });
