@@ -16,6 +16,7 @@ export const updateNewsValidator = async (req, res, next) => {
         return res.status(200).json({
             error: true,
             status: "400",
+            errorCode: "VAL001",
             message: "Invalid data",
             invalidFields: error.details
         });

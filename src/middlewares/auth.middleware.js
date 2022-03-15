@@ -94,6 +94,7 @@ export const isAdmin = async (req, res, next) => {
             .json({
                 error: true,
                 status: "401",
+                errorCode: "AUT001",
                 message: "User is not authenticated",
             });
     }
@@ -104,6 +105,7 @@ export const isAdmin = async (req, res, next) => {
             .json({
                 error: true,
                 status: "403",
+                errorCode: "AUT002",
                 message: "User does not have the admin Role",
             });
     }
@@ -120,6 +122,7 @@ export const isAdmin = async (req, res, next) => {
             .json({
                 error: true,
                 status: "403",
+                errorCode: "AUT002",
                 message: "User does not have the admin Role",
             });
     }

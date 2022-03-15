@@ -47,6 +47,7 @@ export const update = async (req, res) => {
       return res.status(200).json({
         error: true,
         status: "404",
+        errorCode: "REQ001",
         message: "Entry not found",
       });
     }
@@ -71,6 +72,7 @@ export const update = async (req, res) => {
     return res.status(200).json({
       error: true,
       status: "500",
+      errorCode: "SRV001",
       message: "Internal error",
     });
   }
@@ -137,7 +139,8 @@ export const deleteNews = async (req, res) => {
     res.status(200).json({
       message: "ID is not provided",
       error: true,
-      status: "404",
+      errorCode: "REQ002",
+      status: "400",
     });
   } else {
     await Entry.destroy({ where: { id: id }, force: true })
