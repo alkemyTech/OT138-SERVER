@@ -3,7 +3,7 @@ const chai = require("chai");
 const chaiHttp = require("chai-http");
 const server = require("../app");
 const { User, Contacts, Role } = require("../models");
-const {standardResponseTest} = require("./helpers");
+const {standardResponseTest} = require("./helpers/tests");
 
 chai.use(chaiHttp);
 chai.use(require('chai-things'));
