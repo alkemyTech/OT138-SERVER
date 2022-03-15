@@ -2,7 +2,9 @@ import { faker } from '@faker-js/faker';
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const server = require('../app');
-const { User, Role, Entry } = require('../models');
+const { Entry } = require('../models');
+const { testIfNotLogged, testIfNotAdmin, testIfBodyValidationError, testIfNoResults, testIfSuccess } = require('./helpers/tests');
+const { createUsersAndRoles, authenticateUser, authenticateAdmin } = require('./helpers/auth');
 const should = chai.should();
 
 chai.use(chaiHttp);
@@ -14,58 +16,13 @@ const PASSWORD = '1kAJCSkn2c91';
 describe("News endpoint", async () => {
 
     before(async () => {
+
         await Entry.destroy({
             where: {},
             force: true
         })
-        await User.destroy({
-            where: {},
-            force: true
-        });
 
-        await Role.destroy({
-            where: {},
-            force: true
-        });
-
-        // Create Admin role
-        const role1 = await Role.create({
-            name: 'Admin'
-        });
-
-        // Create Standard role
-        const role2 = await Role.create({
-            name: 'Standard'
-        });
-
-        // Create a new user Admin using the register endpoint
-        await chai.request(server).post('/api/auth/register').send({
-            firstName: 'User1',
-            lastName: 'Test',
-            email: USER1_EMAIL,
-            password: PASSWORD
-        });
-
-        // Set Admin role to the new user
-        await User.update(
-            { roleId: role1.id },
-            { where: { email: USER1_EMAIL } }
-        );
-
-        // Create a new Standard user using the register endpoint
-        await chai.request(server).post('/api/auth/register').send({
-            firstName: 'User2',
-            lastName: 'Test',
-            email: USER2_EMAIL,
-            password: PASSWORD
-        });
-
-        // Set Admin role to the new user
-        await User.update(
-            { roleId: role2.id },
-            { where: { email: USER2_EMAIL } }
-        );
-
+        await createUsersAndRoles();
     });
 
     describe("/POST news", () => {
@@ -193,7 +150,6 @@ describe("News endpoint", async () => {
             });
             testIfSuccess(res);
         })
-
     })
 
     describe("GET /news/{id}", () => {
@@ -202,7 +158,6 @@ describe("News endpoint", async () => {
 
         it("should return an error flag if the entry does not exist", async () => {
             const res = await chai.request(server).get(`${route}/5`);
-            console.log(res.body);
             testIfNoResults(res);
         })
 
@@ -233,61 +188,7 @@ describe("News endpoint", async () => {
         
         it("should return an error flag if no results found", async () => {
             const res = await chai.request(server).get(route);
-            console.log(res.body)
             testIfNoResults(res)
         })
-
     })
 });
-
-async function authenticateUser() {
-    const res = await chai.request(server).post('/api/auth/login').send({ email: USER2_EMAIL, password: PASSWORD });
-    return res.body.result.accessToken;
-}
-
-async function authenticateAdmin(){
-    const res = await chai.request(server).post('/api/auth/login').send({ email: USER1_EMAIL, password: PASSWORD });
-    return res.body.result.accessToken;
-}
-
-const testIfNotLogged = (res) => {
-    errorFlag(res, "AUT001", "401");
-}
-
-const testIfNotAdmin = (res) => {
-    errorFlag(res, "AUT002", "403");
-}
-
-const testIfBodyValidationError = (res) => {
-    errorFlag(res, "VAL001", "400");
-}
-
-const testIfNoResults = (res) => {
-    errorFlag(res, "REQ001", "404");
-}
-
-const testIfParamsValidationError = (res) => {
-    errorFlag(res, "REQ002", "400");
-}
-
-const testIfSuccess = (res) => {
-    it("should return an success response object if no error", async () => {
-        res.should.be.a('object');
-        res.status.should.be.equal(200);
-        res.body.should.have.property("error");
-        res.body.should.have.property("status");
-        res.body.error.should.be.equal(false);
-    })
-}
-
-const errorFlag = (res, errorCode, status) => {
-    res.should.be.a('object');
-    res.status.should.be.equal(200);
-    res.body.should.have.property("error");
-    res.body.should.have.property("errorCode");
-    res.body.should.have.property("status");
-    res.body.error.should.be.equal(true);
-    res.body.errorCode.should.be.equal(errorCode);
-    res.body.status.should.be.equal(status);
-    res.body.message.should.be.a('string');
-}
