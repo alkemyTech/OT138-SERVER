@@ -4,22 +4,18 @@ import express from "express";
 import {
   retrieve,
   update,
-  retrieveAll,
   create,
-  deleteNews,
-  getNews,
+  destroy,
+  list,
 } from "../controllers/news.controller";
-import { updateNewsValidator } from "../middlewares/news.middleware";
 import { isLoggedIn, isAdmin } from "../middlewares/auth.middleware";
 const router = express.Router();
 
+router.get("/news", list);
 router.get("/news/:id", retrieve);
-router.put("/news/:id", updateNewsValidator, isLoggedIn, isAdmin, update);
-router.delete("/news/:id", isLoggedIn, isAdmin, deleteNews);
-
-router.get("/backoffice/news", isLoggedIn, isAdmin, retrieveAll);
-router.get("/news", getNews);
-router.post("/news", isLoggedIn, isAdmin, updateNewsValidator, create);
+router.put("/news/:id", isLoggedIn, isAdmin, update);
+router.delete("/news/:id", isLoggedIn, isAdmin, destroy);
+router.post("/news", isLoggedIn, isAdmin, create);
 
 /**
  * @swagger
