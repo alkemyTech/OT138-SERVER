@@ -6,7 +6,8 @@
         "start": "cross-env NODE_ENV=production node dist/app.js",
         "dev": "cross-env NODE_ENV=development nodemon --exec npx babel-node src/app.js",
         "build": "cross-env NODE_ENV=production babel src --out-dir dist",
-        "test": "cross-env NODE_ENV=test mocha -r @babel/register -r regenerator-runtime/runtime src/test"
+        "test": "cross-env NODE_ENV=test mocha -r @babel/register -r regenerator-runtime/runtime src/test",
+        "migrate-test-db": "cross-env NODE_ENV=test npx sequelize-cli db:migrate"
     },
     "dependencies": {
         "@sendgrid/mail": "^7.6.1",
