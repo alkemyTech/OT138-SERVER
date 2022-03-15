@@ -2,8 +2,7 @@ const { expect} = require("chai");
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 const server = require("../app");
-const { User } = require("../models");
-const {Contacts} = require("../models");
+const { User, Contacts, Role } = require("../models");
 const {standardResponseTest} = require("./helpers");
 
 chai.use(chaiHttp);
@@ -15,6 +14,22 @@ async function authenticateUser(email, password) {
     .post("/api/auth/login")
     .send({ email, password });
   return res.body.result.accessToken;
+}
+
+async function createContactsData(){
+  let seedData = [];
+  for (let i = 0; i < 20; i++) {
+    //create 20 contacts
+    seedData.push({
+      name: "name",
+      phone: "941218551",
+      email: "Test@email.com",
+      message: i % 3 != 0 ? "This is a message" : null, // 1 every 3 will not have a message
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+  }
+  return Contacts.bulkCreate(seedData);
 }
 
 const testData1 = {
@@ -81,33 +96,48 @@ describe("Contact endpoint /get tests:", () => {
   const PASSWORD = "test1234";
   let accessToken= "";
   before(async () => {
-      await chai.request(server).post("/api/auth/register").send({
-        firstName: "Test",
-        lastName: "User",
-        email: EMAIL,
-        password: PASSWORD,
-      });
-      // Change role to role Id 1 (admin)
-      const userInstance = await User.findOne({ where: { email: EMAIL } });
-      userInstance.roleId = 1;
-      await userInstance.save();
-      // Get Access Token
-      accessToken = await authenticateUser(EMAIL, PASSWORD);
-      //check number of contacts must be >= than 10 for test
-      const numberOfContacts = await Contacts.count();
-      if(numberOfContacts < 10){
-        throw new Error("Number of contacts less than 10, can't perform tests");
-      } else{
-        console.log("Number of contacts: ", numberOfContacts);
-      }
+    // create admin role
+    const adminRole = await Role.create({
+      name: "Admin",
+    });
+    // create user
+    await chai.request(server).post("/api/auth/register").send({
+      firstName: "Test",
+      lastName: "User",
+      email: EMAIL,
+      password: PASSWORD,
+    });
+    // Change role to role Id 1 (admin)
+    const userInstance = await User.findOne({ where: { email: EMAIL } });
+    userInstance.roleId = adminRole.id;
+    await userInstance.save();
+    // Get Access Token
+    accessToken = await authenticateUser(EMAIL, PASSWORD);
+    // create contacts
+    await createContactsData();
+    //check number of contacts must be >= than 10 for test
+    const numberOfContacts = await Contacts.count();
+    if(numberOfContacts < 10){
+      throw new Error(`Number of contacts = ${numberOfContacts}, is less than 10, can't perform tests.`);
+    } else{
+      console.log("Number of contacts: ", numberOfContacts);
+    }
   });
 
   after(async () => {
-    // Once finished hard delete user form DB
+    // Wipe DB
     await User.destroy({
-        where: {email: EMAIL},
+        where: {},
         force: true
       });
+    await Role.destroy({
+      where: {},
+      force: true
+    });
+    await Contacts.destroy({
+      where: {},
+      force: true
+    });
   });
 
   it("Should return error if no token is present.", async () => {
