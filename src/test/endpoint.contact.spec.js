@@ -3,18 +3,11 @@ const chai = require("chai");
 const chaiHttp = require("chai-http");
 const server = require("../app");
 const { User, Contacts, Role } = require("../models");
+const { createUsersAndRoles, authenticateAdmin } = require("./helpers/auth");
 const {standardResponseTest} = require("./helpers/tests");
 
 chai.use(chaiHttp);
 chai.use(require('chai-things'));
-
-async function authenticateUser(email, password) {
-  const res = await chai
-    .request(server)
-    .post("/api/auth/login")
-    .send({ email, password });
-  return res.body.result.accessToken;
-}
 
 async function createContactsData(){
   let seedData = [];
@@ -92,28 +85,13 @@ describe("Contact endpoint /POST tests:", () => {
 });
 
 describe("Contact endpoint /get tests:", () => {
-  const EMAIL = "test@email.com";
-  const PASSWORD = "test1234";
   let accessToken= "";
+
   before(async () => {
-    // create admin role
-    const adminRole = await Role.create({
-      name: "Admin",
-    });
-    // create user
-    await chai.request(server).post("/api/auth/register").send({
-      firstName: "Test",
-      lastName: "User",
-      email: EMAIL,
-      password: PASSWORD,
-    });
-    // Change role to role Id 1 (admin)
-    const userInstance = await User.findOne({ where: { email: EMAIL } });
-    userInstance.roleId = adminRole.id;
-    await userInstance.save();
-    // Get Access Token
-    accessToken = await authenticateUser(EMAIL, PASSWORD);
-    // create contacts
+    //create users and roles
+    await createUsersAndRoles();
+    // get access token
+    accessToken = await authenticateAdmin();
     await createContactsData();
     //check number of contacts must be >= than 10 for test
     const numberOfContacts = await Contacts.count();
@@ -153,6 +131,7 @@ describe("Contact endpoint /get tests:", () => {
   });
 
   it("Should return an error if page query params is not a number", async () =>{
+    const accessToken = await authenticateAdmin();
     const res = await chai.request(server).get("/api/contacts?page=notANumber").set("Authorization", `Bearer ${accessToken}`);
     standardResponseTest(res, true);
     expect(res.body.errorCode, "errorCode should be REQ002").to.equal("REQ002");
@@ -202,5 +181,4 @@ describe("Contact endpoint /get tests:", () => {
     expect (result.items, "Items should have property email").all.have.property("email");
     expect (result.items, "Items should have property message").all.have.property("message");
   });
-
 });
