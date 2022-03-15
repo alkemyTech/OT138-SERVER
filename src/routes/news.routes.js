@@ -14,12 +14,12 @@ import { isLoggedIn, isAdmin } from "../middlewares/auth.middleware";
 const router = express.Router();
 
 router.get("/news/:id", retrieve);
-router.put("/news/:id", updateNewsValidator, update);
-router.delete("/news/:id", deleteNews);
+router.put("/news/:id", updateNewsValidator, isLoggedIn, isAdmin, update);
+router.delete("/news/:id", isLoggedIn, isAdmin, deleteNews);
 
 router.get("/backoffice/news", isLoggedIn, isAdmin, retrieveAll);
 router.get("/news", getNews);
-router.post("/news", updateNewsValidator, isLoggedIn, isAdmin, create);
+router.post("/news", isLoggedIn, isAdmin, updateNewsValidator, create);
 
 /**
  * @swagger
