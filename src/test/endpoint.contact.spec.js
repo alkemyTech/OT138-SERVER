@@ -1,10 +1,10 @@
-const { expect, assert } = require("chai");
+const { expect} = require("chai");
 const chai = require("chai");
 const chaiHttp = require("chai-http");
-const { async } = require("regenerator-runtime");
 const server = require("../app");
 const { User } = require("../models");
 const {Contacts} = require("../models");
+const {standardResponseTest} = require("./helpers");
 
 chai.use(chaiHttp);
 chai.use(require('chai-things'));
@@ -44,20 +44,6 @@ const testData4 = {
   message: "Test message",
 };
 
-
-function standardResponseTest(res, testForError) {
-  expect(res.status, "Status code should be 200").to.equal(200);
-  expect(res.body, "Response body should be an object").to.be.a("object");
-  expect(res.body, 'Response body should include the property "error"').to.have.property("error");
-  expect(res.body, "Response body should have the property 'status'").to.have.property("status");
-  if (testForError) {
-    expect(res.body.error, "error should be set to true").to.equal(true);
-    expect(res.body, 'Response body should include the property "errorCode"').to.have.property("errorCode");
-  } else {
-    expect(res.body.error, "error should be set to false").to.equal(false);
-    expect(res.body.status, "Property status should be '200'").to.equal("200");
-  }
-}
 
 describe("Contact endpoint /POST tests:", () => {
   it("Should return and error response if sent fields do not correspond to correct schema.", async () => {
