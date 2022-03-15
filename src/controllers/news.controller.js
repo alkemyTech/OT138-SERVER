@@ -114,7 +114,7 @@ export const create = async (req, res) => {
     }
 
     try {
-        await Entry.create({
+        const newEntry = await Entry.create({
             ...value,
             type: "news",
             createdAt: new Date(),
@@ -124,7 +124,7 @@ export const create = async (req, res) => {
         res.status(200).json({
             ...responses.success,
             message: 'News entry created',
-            result: instances
+            result: newEntry
         });
     } catch (err) {
         console.log(err);
@@ -173,7 +173,7 @@ export const list = async (req, res) => {
             Entry,
             req.query.limit,
             req.query.page,
-            null,
+            [['createdAt', 'DESC']],
             {
                 type: "news",
             }
