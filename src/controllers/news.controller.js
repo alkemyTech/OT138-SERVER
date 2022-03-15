@@ -2,6 +2,28 @@
 
 import { Entry } from "../models";
 import { paginate, responses } from "../helpers";
+import { Joi } from 'express-validation';
+import { formatValidationErrors } from '../helpers';
+
+const validationSchema = Joi.object({
+    name: Joi.string().max(255).required(),
+    categoryId: Joi.custom((value, helpers) => {
+        if (value === "" || value === null) {
+            return null;
+        }
+
+        const number = Number(value);
+
+        if (Number.isInteger(number) && number > 0) {
+            return value;
+        }
+
+        return helpers.message('Field must be a positive integer or null');
+    }),
+    type: Joi.string().max(255),
+    image: Joi.string().max(255),
+    content: Joi.string().required(),
+}).unknown().options({ abortEarly: false });
 
 /**
  * Returns an instance of the Entry given by the 'id' param or an error object if not found.
@@ -37,6 +59,16 @@ export const retrieve = async (req, res) => {
 export const update = async (req, res) => {
     const entryId = req.params.id;
 
+    const { error, value } = validationSchema.validate(req.body);
+
+    if (error) {
+        return res.status(200).json({
+            ...responses.validationError,
+            message: 'Validation error',
+            errorFields: formatValidationErrors(error)
+        });
+    }
+
     try {
         const instance = await Entry.findByPk(entryId);
 
@@ -49,7 +81,7 @@ export const update = async (req, res) => {
 
         // Update fields
         instance.set({
-            ...req.body,
+            ...value,
             deletedAt: instance.deletedAt,
             createdAt: instance.createdAt,
             updatedAt: Date.now(),
@@ -71,12 +103,22 @@ export const update = async (req, res) => {
 };
 
 export const create = async (req, res) => {
+    const { error, value } = validationSchema.validate(req.body);
+
+    if (error) {
+        return res.status(200).json({
+            ...responses.validationError,
+            message: 'Validation error',
+            errorFields: formatValidationErrors(error)
+        });
+    }
+
     try {
         await Entry.create({
-            ...req.body,
+            ...value,
             type: "news",
-            createdAt: Date.now(),
-            updatedAt: Date.now(),
+            createdAt: new Date(),
+            updatedAt: new Date(),
         });
 
         res.status(200).json({
