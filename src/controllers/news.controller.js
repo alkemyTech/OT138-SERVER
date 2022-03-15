@@ -1,220 +1,150 @@
 "use strict";
 
 import { Entry } from "../models";
-import { paginate } from "../helpers/index";
+import { paginate, responses } from "../helpers";
+
 /**
  * Returns an instance of the Entry given by the 'id' param or an error object if not found.
  */
 export const retrieve = async (req, res) => {
-  const entryId = req.params.id;
+    const entryId = req.params.id;
 
-  try {
-    const instance = await Entry.findByPk(entryId);
+    try {
+        const instance = await Entry.findByPk(entryId);
 
-    if (!instance) {
-      return res.status(200).json({
-        error: true,
-        status: "404",
-        message: "Entry not found",
-      });
+        if (!instance) {
+            return res.status(200).json({
+                ...responses.notFound,
+                message: 'Entry not found'
+            });
+        }
+
+        return res.status(200).json({
+            ...responses.success,
+            result: instance,
+        });
+    } catch (err) {
+        console.error(err);
+        return res.status(200).json({
+            ...responses.internalError,
+        });
     }
-
-    return res.status(200).json({
-      error: false,
-      status: "200",
-      result: instance,
-    });
-  } catch (err) {
-    console.error(err);
-    return res.status(200).json({
-      error: true,
-      status: "500",
-      message: "Internal error",
-    });
-  }
 };
 
 /**
  * Updates an instance of the Entry given by the 'id' param with the data sent in the request body.
  */
 export const update = async (req, res) => {
-  const entryId = req.params.id;
+    const entryId = req.params.id;
 
-  try {
-    const instance = await Entry.findByPk(entryId);
+    try {
+        const instance = await Entry.findByPk(entryId);
 
-    if (!instance) {
-      return res.status(200).json({
-        error: true,
-        status: "404",
-        errorCode: "REQ001",
-        message: "Entry not found",
-      });
+        if (!instance) {
+            return res.status(200).json({
+                ...responses.notFound,
+                message: 'Entry not found'
+            });
+        }
+
+        // Update fields
+        instance.set({
+            ...req.body,
+            deletedAt: instance.deletedAt,
+            createdAt: instance.createdAt,
+            updatedAt: Date.now(),
+        });
+
+        await instance.save();
+
+        return res.status(200).json({
+            ...responses.success,
+            message: 'News entry updated',
+            result: instance,
+        });
+    } catch (err) {
+        console.error(err);
+        return res.status(200).json({
+            ...responses.internalError
+        });
     }
-
-    // Update fields
-    instance.set({
-      ...req.body,
-      deletedAt: instance.deletedAt,
-      createdAt: instance.createdAt,
-      updatedAt: Date.now(),
-    });
-
-    await instance.save();
-
-    return res.status(200).json({
-      error: false,
-      status: "200",
-      data: instance,
-    });
-  } catch (err) {
-    console.error(err);
-    return res.status(200).json({
-      error: true,
-      status: "500",
-      errorCode: "SRV001",
-      message: "Internal error",
-    });
-  }
-};
-
-/**
-Finds all the instances of Entry of type 'news' and retrieve its name, image and createdAt fields,
-or an error if the instances wasn't found, or if there is a server error.
-*/
-export const retrieveAll = async (req, res) => {
-  try {
-    const instances = await Entry.findAll({
-      where: { type: "news" },
-      attributes: ["name", "image", "createdAt"],
-    });
-    if (!instances) {
-      res.status(200).json({
-        error: true,
-        status: "404",
-        message: "Entries not found",
-      });
-    } else {
-      res.json({
-        error: false,
-        status: "200",
-        data: instances,
-      });
-    }
-  } catch (error) {
-    res.status(200).json({
-      error: true,
-      status: "500",
-      message: "Internal server error",
-    });
-  }
 };
 
 export const create = async (req, res) => {
-  try {
-    await Entry.create({
-      ...req.body,
-      type: "news",
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-    });
-
-    res.status(200).json({
-      error: false,
-      status: "200",
-    });
-  } catch (err) {
-    console.log(err);
-    res.status(200).json({
-      error: true,
-      status: "500",
-      message: "Internal server error",
-    });
-  }
-};
-
-export const deleteNews = async (req, res) => {
-  const { id } = req.params;
-  if (!id) {
-    res.status(200).json({
-      message: "ID is not provided",
-      error: true,
-      errorCode: "REQ002",
-      status: "400",
-    });
-  } else {
-    await Entry.destroy({ where: { id: id }, force: true })
-      .then((response) => {
-        if (response === 0) {
-          res.status(200).json({
-            error: true,
-            errorCode: "REQ001",
-            errorFields: [],
-            status: "404",
-            message: "Entry does not exist",
-            result: { response },
-          });
-        } else {
-          res.status(200).json({
-            error: false,
-            status: "200",
-            errorFields: [],
-            message: "Entry was removed",
-            result: { response },
-          });
-        }
-      })
-      .catch((error) => {
-        res.status(200).json({
-          error: true,
-          errorCode: "SRV001",
-          errorFields: [],
-          status: "500",
-          message: "Could not connect to server",
-          result: { error },
+    try {
+        await Entry.create({
+            ...req.body,
+            type: "news",
+            createdAt: Date.now(),
+            updatedAt: Date.now(),
         });
-      });
-  }
+
+        res.status(200).json({
+            ...responses.success,
+            message: 'News entry created',
+            result: instances
+        });
+    } catch (err) {
+        console.log(err);
+        res.status(200).json({
+            ...responses.internalError
+        });
+    }
 };
 
-export const getNews = async (req, res) => {
-  try {
-    const news = await paginate(
-      Entry,
-      req.query.limit,
-      req.query.page,
-      null,
-      {
-        type: "news",
-      }
-    );
-    if (!news) {
-      res.status(200).json({
-        error: true,
-        errorCode: "REQ001",
-        errorFields: [],
-        status: "404",
-        message: "News not found",
-        result: news,
-      });
-    } else {
-      res.status(200).json({
-        error: false,
-        errorCode: "",
-        errorFields: [],
-        status: "200",
-        message: "News found",
-        result: news,
-      });
+export const destroy = async (req, res) => {
+    const { id } = req.params;
+
+    if (!id) {
+        return res.status(200).json({
+            ...responses.badRequest,
+            message: 'Invalid id'
+        });
     }
-  } catch (error) {
-    res.status(200).json({
-      error: true,
-      errorCode: "SRV001",
-      errorFields: [],
-      status: "500",
-      message: "Server error",
-      result: null,
-    });
-  }
+
+    try {
+        const entry = await Entry.findOne({ where: { id: id } });
+
+        if (!entry) {
+            return res.status(200).json({
+                ...responses.notFound,
+                message: 'Entry not found'
+            })
+        }
+
+        await Entry.destroy({ where: { id: id }, force: true });
+
+        return res.status(200).json({
+            ...responses.success,
+            message: 'Entry deleted'
+        });
+    } catch (err) {
+        return res.status(200).json({
+            ...responses.internalError
+        });
+    }
+};
+
+export const list = async (req, res) => {
+    try {
+        const news = await paginate(
+            Entry,
+            req.query.limit,
+            req.query.page,
+            null,
+            {
+                type: "news",
+            }
+        );
+
+        return res.status(200).json({
+            ...responses.success,
+            result: news
+        });
+
+    } catch (error) {
+        return res.status(200).json({
+            ...responses.internalError
+        });
+    }
 };
