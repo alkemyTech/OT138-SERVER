@@ -9,7 +9,7 @@ module.exports = {
             news.push({
                 name: faker.lorem.sentence(),
                 content: faker.lorem.paragraph(),
-                image: faker.image.imageUrl(),
+                image: faker.image.imageUrl(1024, 768, 'arch', true),
                 type: 'news',
                 createdAt: new Date(),
                 updatedAt: new Date()
