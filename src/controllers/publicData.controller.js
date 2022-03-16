@@ -35,11 +35,15 @@ const organizationSchema = Joi.object({
 });
 
 export const updatePublicDataController = async (req, res) => {
+    const id = process.env.ORGANIZATION_ID;
+
     const data = {
         name: req.body.name,
         image: req.body.image,
     };
+
     const { error, value } = organizationSchema.validate(data);
+
     if (error) {
         // Validation failed
         res.json({
@@ -50,20 +54,31 @@ export const updatePublicDataController = async (req, res) => {
     } else {
         // Validation success
         try {
-            await Organization.update(
-                { name: req.body.name, image: req.body.image },
-                {
-                    where: {
-                        id: process.env.ORGANIZATION_ID,
-                    },
-                }
-            );
-            res.json({
-                ...responses.success
+            const org = await Organization.findOne({ where: { id: id } });
+
+            if(!org) {
+                return res.status(200).json({
+                    ...responses.notFound,
+                    message: 'Organization not found'
+                });
+            }
+
+            org.set({
+                name: req.body.name, 
+                image: req.body.image,
+                updatedAt: Date.now()
+            });
+
+            await org.save();
+            
+            return res.json({
+                ...responses.success,
+                message: 'Organization updated',
+                result: org
             });
         } catch (error) {
             console.log(error);
-            res.json({
+            return res.json({
                 ...responses.internalError,
                 message: `An unexpected error ocurred when storing data to the database.`,
             });
