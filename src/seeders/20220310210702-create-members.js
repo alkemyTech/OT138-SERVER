@@ -9,8 +9,8 @@ module.exports = {
       members.push({
         name: faker.name.firstName()+" "+faker.name.lastName(),
         image: faker.image.avatar(),
-        createdAt: Date.now(),
-        updatedAt: Date.now()
+        createdAt: new Date(),
+        updatedAt: new Date()
       })
     }
     console.log("seed")
