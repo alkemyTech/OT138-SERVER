@@ -33,6 +33,7 @@ const organizationSchema = Joi.object({
     name: Joi.string().required(),
     image: Joi.string().uri().required(),
 });
+
 export const updatePublicDataController = async (req, res) => {
     const data = {
         name: req.body.name,
@@ -42,10 +43,8 @@ export const updatePublicDataController = async (req, res) => {
     if (error) {
         // Validation failed
         res.json({
-            error: true,
-            errorCode: "VAL001",
+            ...responses.badRequest,
             errorFields: getJoiErrorFields(error),
-            status: "400",
             message: error.message,
         });
     } else {
@@ -60,16 +59,13 @@ export const updatePublicDataController = async (req, res) => {
                 }
             );
             res.json({
-                error: false,
-                status: "200",
-                message: "success",
+                ...responses.success
             });
         } catch (error) {
+            console.log(error);
             res.json({
-                error: true,
-                errorCode: "SRV001",
-                status: "500",
-                message: `An unexpected error ocurred when storing data to the database. Details:  ${error.message}`,
+                ...responses.internalError,
+                message: `An unexpected error ocurred when storing data to the database.`,
             });
         }
     }
