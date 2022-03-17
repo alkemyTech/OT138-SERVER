@@ -70,6 +70,7 @@ export const update = async (req, res) => {
             return res.status(200).json({
                 error: true,
                 status: "404",
+                errorCode: "REQ001",
                 message: "Category not found"
             })
         }
@@ -93,6 +94,7 @@ export const update = async (req, res) => {
         return res.status(200).json({
             error: true,
             status: "500",
+            errorCode: "SRV001",
             message: "Internal error",
         });
     }
@@ -113,6 +115,7 @@ export const destroy = async (req, res) => {
             return res.status(200).json({
                 error: true,
                 status: "404",
+                errorCode: "REQ001",
                 message: "Category not found"
             })
         }
@@ -129,6 +132,7 @@ export const destroy = async (req, res) => {
         return res.status(200).json({
             error: true,
             status: "500",
+            errorCode: "SRV001",
             message: "Internal error",
         });
     }
