@@ -1,24 +1,21 @@
 "use strict";
-
 const { faker } = require("@faker-js/faker");
-
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    const news = [];
+    const testimonials = [];
     for (let i = 0; i < 60; i++) {
-      news.push({
+      testimonials.push({
         name: faker.lorem.sentence(),
-        content: faker.lorem.paragraph(),
         image: faker.image.imageUrl(1024, 768, "arch", true),
-        type: "news",
+        content: faker.lorem.sentence(),
         createdAt: new Date(),
         updatedAt: new Date(),
       });
     }
-    await queryInterface.bulkInsert("Entries", news, {});
+    await queryInterface.bulkInsert("Testimonials", testimonials, {});
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete("Entries", null, {});
+    await queryInterface.bulkDelete("Testimonials", null, {});
   },
 };

@@ -9,7 +9,9 @@ import { getJoiErrorFields } from "../helpers";
  */
 export const list = async (req, res) => {
   try {
-    const contacts = await paginate(Contacts, req.query.limit, req.query.page);
+    const contacts = await paginate(Contacts, req.query.limit, req.query.page, [
+      ["createdAt", "DESC"],
+    ]);
     return res.status(200).json({
       error: false,
       status: "200",

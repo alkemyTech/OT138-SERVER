@@ -21,6 +21,7 @@
         "express-validation": "^3.0.8",
         "http-errors": "~1.6.3",
         "jsonwebtoken": "^8.5.1",
+        "mercadopago": "^1.5.12",
         "moment": "^2.29.1",
         "morgan": "^1.10.0",
         "mysql2": "^2.3.3",
