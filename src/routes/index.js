@@ -9,7 +9,8 @@ import categoryRoutes from "./category.routes";
 import contactRoutes from "./contact.routes";
 import slider from "./slider.routes";
 import membersRoutes from "./members.routes";
-import testimony from "./testimony.routes";
+import testimony from "./testimonials.routes";
+import mercadopago from "./mercadopago.routes";
 
 const router = express.Router();
 
@@ -45,5 +46,8 @@ router.use(testimony);
 
 /* Members Route */
 router.use(membersRoutes);
+
+/* Mercadopago Route */
+router.use(mercadopago);
 
 export default router;
