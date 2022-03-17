@@ -1,5 +1,5 @@
 'use strict';
-
+import {paginate} from '../helpers'
 import { Category } from '../models';
 
 /**
@@ -7,11 +7,11 @@ import { Category } from '../models';
  */
 export const list = async (req, res) => {
     try {
-        const categories = await Category.findAll();
+        const categories = await paginate(Category, req.query.limit, req.query.page)
         return res.status(200).json({
             error: false,
             status: "200",
-            data: categories
+            result: categories
         })
     } catch (err) {
         console.log(err);
