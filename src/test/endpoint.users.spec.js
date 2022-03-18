@@ -4,6 +4,15 @@ const chaiHttp = require('chai-http');
 const server = require('../app');
 const should = chai.should();
 const { User, Role } = require('../models');
+import {
+  testIfValidationError,
+  testIfBadRequest,
+  standardResponseTest,
+  testIfNotLogged,
+  testIfNotAdmin,
+  testIfSuccess,
+  testIfNoResults
+} from './helpers/tests';
 
 chai.use(chaiHttp);
 
@@ -83,10 +92,7 @@ describe('User endpoints', async () => {
         it('it should return an error response if not authenticated', async () => {
             const res = await chai.request(server).get('/api/users')
 
-            res.should.have.status(200);
-            res.body.should.be.a('object');
-            res.body.error.should.equal(true);
-            res.body.status.should.equal('401');
+            testIfNotLogged(res);
         });
 
         //Test with authenticated user with Standard role
@@ -100,10 +106,7 @@ describe('User endpoints', async () => {
             // Append token to request header
             res = await chai.request(server).get('/api/users').set('Authorization', `Bearer ${accessToken}`);
 
-            res.should.have.status(200);
-            res.body.should.be.a('object');
-            res.body.error.should.equal(true);
-            res.body.status.should.equal('403');
+            testIfNotAdmin(res);
         });
 
         //Test with authenticated user with Admin role
@@ -117,12 +120,9 @@ describe('User endpoints', async () => {
             // Append token to request header
             res = await chai.request(server).get('/api/users').set('Authorization', `Bearer ${accessToken}`);
 
-            res.should.have.status(200);
-            res.body.should.be.a('object');
-            res.body.error.should.equal(false);
+            testIfSuccess(res);
             res.body.result.should.be.a('array');
-            expect(res.body.result).to.have.lengthOf(2, 'Result should contain 2 items');
-            res.body.status.should.equal('200');
+            expect(res.body.result, 'Result should contain 2 items').to.have.lengthOf(2);
         });
 
         it('it should return a list of users without password field', async () => {
@@ -144,12 +144,9 @@ describe('User endpoints', async () => {
 
         //Test with anonymous user
         it('it should return an error response if not authenticated', async () => {
-            const res = await chai.request(server).delete('/api/users/5');
+            const res = await chai.request(server).delete('/api/users/protected/5');
 
-            res.should.have.status(200);
-            res.body.should.be.a('object');
-            res.body.error.should.equal(true);
-            res.body.status.should.equal('401');
+            testIfNotLogged(res);
         });
 
         //Test with authenticated user with Standard role
@@ -161,12 +158,9 @@ describe('User endpoints', async () => {
             const accessToken = await authenticateUser(USER2_EMAIL, PASSWORD);
 
             // Append token to request header
-            res = await chai.request(server).delete('/api/users/5').set('Authorization', `Bearer ${accessToken}`);
+            res = await chai.request(server).delete('/api/users/protected/5').set('Authorization', `Bearer ${accessToken}`);
 
-            res.should.have.status(200);
-            res.body.should.be.a('object');
-            res.body.error.should.equal(true);
-            res.body.status.should.equal('403');
+            testIfNotAdmin(res);
         });
 
         //Test with authenticated user with Admin role
@@ -200,12 +194,9 @@ describe('User endpoints', async () => {
 
             const usersBeforeDelete = await User.findAll();
 
-            res = await chai.request(server).delete(`/api/users/${idToDelete}`).set('Authorization', `Bearer ${accessToken}`);
+            res = await chai.request(server).delete(`/api/users/protected/${idToDelete}`).set('Authorization', `Bearer ${accessToken}`);
 
-            res.should.have.status(200);
-            res.body.should.be.a('object');
-            res.body.error.should.equal(false);
-            res.body.status.should.equal('200');
+            testIfSuccess(res);
 
             const usersAfterDelete = await User.findAll();
 
@@ -238,33 +229,27 @@ describe('User endpoints', async () => {
             });
 
             // Delete newUser using endpoint
-            res = await chai.request(server).delete(`/api/users/${newUser.id}`).set('Authorization', `Bearer ${accessToken}`);
+            res = await chai.request(server).delete(`/api/users/protected/${newUser.id}`).set('Authorization', `Bearer ${accessToken}`);
 
             // Try to delete newUser again
-            res = await chai.request(server).delete(`/api/users/${newUser.id}`).set('Authorization', `Bearer ${accessToken}`);
+            res = await chai.request(server).delete(`/api/users/protected/${newUser.id}`).set('Authorization', `Bearer ${accessToken}`);
 
-            res.should.have.status(200);
-            res.body.should.be.a('object');
-            res.body.error.should.equal(true);
-            res.body.errorCode.should.equal('REQ001', 'Nonexisting user id should return errorCode REQ001');
-            res.body.status.should.equal('404');
+            testIfNoResults(res);
         });
 
         //Test with authenticated user with Admin role on invalid userId
         it('it should return an error response if user id is invalid', async () => {
             let res;
 
+            const data = await User.findAll();
+
             // Authenticate  with admins user credentials
             const accessToken = await authenticateUser(USER1_EMAIL, PASSWORD);
 
             // Try deleting an invalid id
-            res = await chai.request(server).delete(`/api/users/hafsf`).set('Authorization', `Bearer ${accessToken}`);
+            res = await chai.request(server).delete(`/api/users/protected/hafsf`).set('Authorization', `Bearer ${accessToken}`);
 
-            res.should.have.status(200);
-            res.body.should.be.a('object');
-            res.body.error.should.equal(true);
-            res.body.errorCode.should.equal('VAL001', 'Invalid userId should return errorCode VAL001');
-            res.body.status.should.equal('400');
+            testIfBadRequest(res);
         });
     });
 
@@ -272,5 +257,5 @@ describe('User endpoints', async () => {
 
 async function authenticateUser(email, password) {
     const res = await chai.request(server).post('/api/auth/login').send({ email, password });
-    return res.body.accessToken;
+    return res.body.result.accessToken;
 }

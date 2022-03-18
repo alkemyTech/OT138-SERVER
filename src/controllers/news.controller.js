@@ -7,19 +7,7 @@ import { formatValidationErrors } from '../helpers';
 
 const validationSchema = Joi.object({
     name: Joi.string().max(255).required(),
-    categoryId: Joi.custom((value, helpers) => {
-        if (value === "" || value === null) {
-            return null;
-        }
-
-        const number = Number(value);
-
-        if (Number.isInteger(number) && number > 0) {
-            return value;
-        }
-
-        return helpers.message('Field must be a positive integer or null');
-    }),
+    categoryId: Joi.number().integer(),
     type: Joi.string().max(255),
     image: Joi.string().max(255),
     content: Joi.string().required(),
