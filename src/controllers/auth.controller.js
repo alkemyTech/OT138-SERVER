@@ -55,6 +55,7 @@ export const register = async (req, res) => {
             !response[1]
                 ? res.status(200).json({
                     ...responses.validationError,
+                    errorCode: 'REQ002',
                     errorFields: {
                         email: 'Email not available'
                     },

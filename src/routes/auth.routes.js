@@ -16,7 +16,7 @@ router.post("/auth/register", register);
 
 router.post("/auth/refresh", refresh);
 
-router.post("/auth/login",  login);
+router.post("/auth/login",  loginValidator, login);
 
 router.post("/auth/imloggedin", isLoggedIn, imLoggedIn);
 

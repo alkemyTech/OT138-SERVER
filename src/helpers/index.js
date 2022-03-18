@@ -201,7 +201,7 @@ export const responses = Object.freeze({
         error: true,
         errorCode: 'VAL001',
         errorFields: {},
-        status: '401',
+        status: '400',
         message: 'Validation error'
     },
     internalError: {
