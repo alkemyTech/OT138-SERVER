@@ -58,26 +58,6 @@ describe("News endpoint", async () => {
             testIfSuccess(res);
         })        
     })
-    
-    describe("/GET backoffice/news", () => {
-        let route = '/api/backoffice/news';
-        it("should return an error flag if user is not authenticated", async () => {
-            const res = await chai.request(server).get(route);
-            testIfNotLogged(res);
-        })
-        
-        it("should return an error flag if the user is not an admin", async () => {
-            const accessToken = await authenticateUser();
-            const res = await chai.request(server).get(route).set('Authorization', `Bearer ${accessToken}`);
-            testIfNotAdmin(res);
-        })
-
-        it("should return a success response object if not error", async () => {
-            const accessToken = await authenticateAdmin();
-            const res = await chai.request(server).get(route).set('Authorization', `Bearer ${accessToken}`);
-            testIfSuccess(res);
-        })
-    })
 
     describe("/PUT /news", () => {
         let route = '/api/news';
@@ -177,18 +157,6 @@ describe("News endpoint", async () => {
             const accessToken = await authenticateAdmin();
             const res = await chai.request(server).get(route);
             testIfSuccess(res);
-        })
-        
-        before(async () => {
-            await Entry.destroy({
-                where: {},
-                force: true
-            })
-        })
-        
-        it("should return an error flag if no results found", async () => {
-            const res = await chai.request(server).get(route);
-            testIfNoResults(res)
         })
     })
 });

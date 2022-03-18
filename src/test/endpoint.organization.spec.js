@@ -3,7 +3,7 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const server = require('../app');
 const { Organization } = require('../models');
-const { testIfNotLogged, testIfNotAdmin, testIfBodyValidationError, testIfNoResults, testIfSuccess } = require('./helpers/tests');
+const { testIfNotLogged, testIfNotAdmin, testIfBodyValidationError, testIfNoResults, testIfSuccess, testIfEmptyBody } = require('./helpers/tests');
 const { createUsersAndRoles, authenticateUser, authenticateAdmin } = require('./helpers/auth');
 const should = chai.should();
 
@@ -64,10 +64,10 @@ describe("Organization endpoints", () => {
             testIfNotAdmin(res);
         })
 
-        it("should return an error flag if no content on body or if its content is not valid", async () => {
+        it("should return an error flag if no content on body", async () => {
             const accessToken = await authenticateAdmin();
             const res = await chai.request(server).put('/api/organizations/1/public').set('Authorization', `Bearer ${accessToken}`).send({});
-            testIfBodyValidationError(res);
+            testIfEmptyBody(res);
         })
 
         it("should return a success response object if no server error", async () => {

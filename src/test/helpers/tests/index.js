@@ -12,6 +12,10 @@ export const testIfBodyValidationError = (res) => {
     errorFlag(res, "VAL001", "400");
 }
 
+export const testIfEmptyBody = (res) => {
+    errorFlag(res, "REQ002", "400");
+}
+
 export const testIfNoResults = (res) => {
     errorFlag(res, "REQ001", "404");
 }
