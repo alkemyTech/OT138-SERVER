@@ -144,7 +144,7 @@ describe('User endpoints', async () => {
 
         //Test with anonymous user
         it('it should return an error response if not authenticated', async () => {
-            const res = await chai.request(server).delete('/api/users/protected/5');
+            const res = await chai.request(server).delete('/api/users/5');
 
             testIfNotLogged(res);
         });
@@ -158,7 +158,7 @@ describe('User endpoints', async () => {
             const accessToken = await authenticateUser(USER2_EMAIL, PASSWORD);
 
             // Append token to request header
-            res = await chai.request(server).delete('/api/users/protected/5').set('Authorization', `Bearer ${accessToken}`);
+            res = await chai.request(server).delete('/api/users/5').set('Authorization', `Bearer ${accessToken}`);
 
             testIfNotAdmin(res);
         });
@@ -194,7 +194,7 @@ describe('User endpoints', async () => {
 
             const usersBeforeDelete = await User.findAll();
 
-            res = await chai.request(server).delete(`/api/users/protected/${idToDelete}`).set('Authorization', `Bearer ${accessToken}`);
+            res = await chai.request(server).delete(`/api/users/${idToDelete}`).set('Authorization', `Bearer ${accessToken}`);
 
             testIfSuccess(res);
 
@@ -229,10 +229,10 @@ describe('User endpoints', async () => {
             });
 
             // Delete newUser using endpoint
-            res = await chai.request(server).delete(`/api/users/protected/${newUser.id}`).set('Authorization', `Bearer ${accessToken}`);
+            res = await chai.request(server).delete(`/api/users/${newUser.id}`).set('Authorization', `Bearer ${accessToken}`);
 
             // Try to delete newUser again
-            res = await chai.request(server).delete(`/api/users/protected/${newUser.id}`).set('Authorization', `Bearer ${accessToken}`);
+            res = await chai.request(server).delete(`/api/users/${newUser.id}`).set('Authorization', `Bearer ${accessToken}`);
 
             testIfNoResults(res);
         });
@@ -247,7 +247,7 @@ describe('User endpoints', async () => {
             const accessToken = await authenticateUser(USER1_EMAIL, PASSWORD);
 
             // Try deleting an invalid id
-            res = await chai.request(server).delete(`/api/users/protected/hafsf`).set('Authorization', `Bearer ${accessToken}`);
+            res = await chai.request(server).delete(`/api/users/hafsf`).set('Authorization', `Bearer ${accessToken}`);
 
             testIfBadRequest(res);
         });
