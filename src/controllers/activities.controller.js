@@ -146,6 +146,8 @@ export const deleteActivityController = async (req, res) => {
 
     try {
         const instance = await Activities.destroy({ where: { id: id }});
+
+        console.log({instance});
         
         if (!instance) {
             return res.status(200).json({
