@@ -11,6 +11,7 @@ import slider from "./slider.routes";
 import membersRoutes from "./members.routes";
 import testimony from "./testimonials.routes";
 import mercadopago from "./mercadopago.routes";
+import donations from "./donations.routes";
 
 const router = express.Router();
 
@@ -49,5 +50,8 @@ router.use(membersRoutes);
 
 /* Mercadopago Route */
 router.use(mercadopago);
+
+/* Donations Route */
+router.use(donations);
 
 export default router;
