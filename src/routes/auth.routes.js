@@ -1,32 +1,24 @@
 import express from "express";
-import { validate } from "express-validation";
 import {
   imLoggedIn,
   login,
   profile,
   refresh,
   register,
-  registerValidation,
-  logout
+  logout,
+  deleteAccount,
+  updateAccount
 } from "../controllers/auth.controller";
-import { isLoggedIn, isAdmin, loginValidator } from "../middlewares/auth.middleware";
+import { isLoggedIn, loginValidator } from "../middlewares/auth.middleware";
 const router = express.Router();
 
 router.post("/auth/register", register);
-
 router.post("/auth/refresh", refresh);
-
-router.post("/auth/login",  login);
-
+router.post("/auth/login",  loginValidator, login);
 router.post("/auth/imloggedin", isLoggedIn, imLoggedIn);
-
 router.get("/auth/me", isLoggedIn, profile);
-
-/* This route protected by middleware is fully illustrative */
-router.get("/auth/protected", isLoggedIn, (req, res) => {
-  res.json({ email: req.user.email, protected: true });
-});
-
+router.delete("/auth/account", isLoggedIn, deleteAccount);
+router.put("/auth/account", isLoggedIn, updateAccount);
 router.post("/auth/logout", isLoggedIn, logout);
 
 /**

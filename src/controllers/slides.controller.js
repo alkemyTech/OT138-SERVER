@@ -4,7 +4,7 @@ import {Slide} from "../models"
 //GET SLIDER
 export const SliderGet =  async (req,res) => {
     try {
-        const slider = await Slide.findAll({attributes:["id","imageURL","text"]});
+        const slider = await Slide.findAll();
         if(!slider){
         res.status(200).json({
         message: "An error ocurred in the extraction",

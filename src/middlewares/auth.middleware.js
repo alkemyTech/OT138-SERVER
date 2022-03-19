@@ -147,6 +147,7 @@ export const loginValidator = async (req, res, next) => {
         return res.status(200).json({
             error: true,
             status: "400",
+            errorCode: "VAL001",
             message: "Invalid request",
             invalidFields: error.details,
         });
