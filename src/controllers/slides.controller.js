@@ -1,34 +1,31 @@
 import {Slide} from "../models"
-
+import {paginate} from '../helpers'
 
 //GET SLIDER
 export const SliderGet =  async (req,res) => {
+
+
     try {
-        const slider = await Slide.findAll();
-        if(!slider){
-        res.status(200).json({
-        message: "An error ocurred in the extraction",
-        slider: [],
-        error: true,
-        status: "500"
-        })}else{
+        const slider = await paginate(Slide, req.query.limit, req.query.page)
         res.status(200).json({
         message:"Slides was successfully found.",
         slider,
         error:false,
         status:"200"
-        })}
-        
-    }catch (error) {
+        })
+    } catch (error) {
         
         res.status(200).json({
-        message:"An error ocurred in the extraction",
+        error: true,
+        status: "500",
+        message: "Internal error",
         slider:[],
-        error:true,
-        status:"500",
         content:error
-        })
+        });
     }
+
+
+
 }
 
 
