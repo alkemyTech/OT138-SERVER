@@ -1,7 +1,7 @@
 import {Slide} from "../models"
 import {paginate} from '../helpers'
 
-//GET SLIDER
+//GET ALL SLIDER
 export const SliderGet =  async (req,res) => {
 
 
@@ -23,9 +23,6 @@ export const SliderGet =  async (req,res) => {
         content:error
         });
     }
-
-
-
 }
 
 
@@ -34,7 +31,7 @@ export const SliderPost =  async (req,res) => {
        const {imageURL,text,order,organizationID} = req.body;
        if(!imageURL || !text || !order || !organizationID){
        res.status(200).json({
-       message:"The corresponding data is not received",
+       message:"Error al crear el Slider",
        error: true,
        status: "404",
        })
