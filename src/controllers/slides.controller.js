@@ -8,10 +8,10 @@ export const SliderGet =  async (req,res) => {
     try {
         const slider = await paginate(Slide, req.query.limit, req.query.page)
         res.status(200).json({
-        message:"Slides was successfully found.",
-        slider,
         error:false,
-        status:"200"
+        message:"",
+        status:"200",
+        slider
         })
     } catch (error) {
         
