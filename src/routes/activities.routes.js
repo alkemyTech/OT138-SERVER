@@ -3,7 +3,8 @@ import {
   createActivitiesController,
   getOneActivityController,
   getActivitiesController,
-  updateActivitiesController
+  updateActivitiesController,
+  deleteActivityController,
 } from "../controllers/activities.controller";
 
 const router = express.Router();
@@ -12,6 +13,7 @@ router.post("/activities", createActivitiesController);
 router.get("/activities/:id", getOneActivityController);
 router.get("/activities", getActivitiesController);
 router.put("/activities/:id?", updateActivitiesController);
+router.delete("/activities/:id", deleteActivityController);
 
 /**
  * @swagger
