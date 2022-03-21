@@ -9,7 +9,6 @@ const memberSchema = Joi.object({
 export const getMembersController = async (req, res) => {
     
     //const { limit, offset } = req.params;
-    console.log(req.query)
     const options = {}
     if(req.query.limit){
         options.limit = parseInt(req.query.limit);
@@ -21,8 +20,6 @@ export const getMembersController = async (req, res) => {
     try{
 
         let instances = await Member.findAll({...options});
-
-        console.log(instances)
 
         if(!instances){
             return res.status(200).json({
@@ -52,8 +49,6 @@ export const updateMemberController = async ( req, res ) => {
     const memberId = req.params.id;
 
     const { error, value } = memberSchema.validate(req.body);
-
-    console.log(memberSchema.validate(req.body));
 
     if(error){
         return res.status(200).json({
