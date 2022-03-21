@@ -147,26 +147,12 @@ export const deleteActivityController = async (req, res) => {
     try {
         const instance = await Activities.destroy({ where: { id: id }});
 
-        console.log({instance});
-        
-        if (!instance) {
-            return res.status(200).json({
-                ...response.notFound,
-                message: 'Activity not found'
-            });
-        };
-
-        instance.set({
-            ...req.body,
-            deletedAt: Date.now(),
-            createdAt: instance.createdAr,
-            updatedAt: instance.updatedAt,
-        });
+        console.log(instance);
 
         return res.status(200).json({
             ...responses.success,
             message: 'Activity deleted',
-            result: instance
+            result: instance,
         });
 
     } catch (e) {
