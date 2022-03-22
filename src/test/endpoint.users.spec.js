@@ -121,8 +121,8 @@ describe('User endpoints', async () => {
             res = await chai.request(server).get('/api/users').set('Authorization', `Bearer ${accessToken}`);
 
             testIfSuccess(res);
-            res.body.result.should.be.a('array');
-            expect(res.body.result, 'Result should contain 2 items').to.have.lengthOf(2);
+            res.body.result.items.should.be.a('array');
+            expect(res.body.result.items, 'Result should contain 2 items').to.have.lengthOf(2);
         });
 
         it('it should return a list of users without password field', async () => {
@@ -134,7 +134,7 @@ describe('User endpoints', async () => {
             // Append token to request header
             res = await chai.request(server).get('/api/users').set('Authorization', `Bearer ${accessToken}`);
 
-            res.body.result.forEach(user => {
+            res.body.result.items.forEach(user => {
                 expect(user, 'Users should not include the password field in the response').to.not.have.property('password');
             });
         });
