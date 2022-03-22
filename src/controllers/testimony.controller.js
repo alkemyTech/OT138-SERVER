@@ -16,7 +16,7 @@ export const getTestimony = async (req, res) => {
 
     if (activities.count === 0) {
       status = "204";
-      message = "No activities found";
+      message = "No testimonials found";
     }
 
     return res.status(200).json({

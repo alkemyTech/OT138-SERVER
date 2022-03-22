@@ -60,9 +60,9 @@ export const SliderPost =  async (req,res) => {
 //PUT SLIDER
 export const SliderPut =  async (req,res) => {
 
-        const {imageURL,text} = req.body;
+        const {imageURL,text,order,organizationID} = req.body;
         const id = req.params.id;
-        if(!id || !imageURL || !text){
+        if(!id || !imageURL || !text || !order || !organizationID){
         res.status(200).json({
         error: true,
         status: "404",
@@ -70,7 +70,7 @@ export const SliderPut =  async (req,res) => {
         });
         }else{
         try { 
-        await Slide.update({imageURL:imageURL,text:text,updatedAt:new Date()},{where:{id:id}});
+        await Slide.update({imageURL:imageURL,text:text,order:order,organizationID:organizationID,updatedAt:new Date()},{where:{id:id}});
         res.status(200).json({
         message:"Slider updated successfully",
         error:false,
