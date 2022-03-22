@@ -57,6 +57,9 @@ app.get("/", (_, res) => {
     });
 });
 
+//serve static files (uploaded images)
+app.use("/uploads", express.static('uploads'))
+
 // If no route was matched return not found
 app.use("*", function (req, res) {
     res.status(404).json({
