@@ -6,14 +6,15 @@ import {
   updateActivitiesController,
   deleteActivityController,
 } from "../controllers/activities.controller";
+import { isAdmin, isLoggedIn } from "../middlewares/auth.middleware";
 
 const router = express.Router();
 
-router.post("/activities", createActivitiesController);
+router.post("/activities", isLoggedIn, isAdmin, createActivitiesController);
 router.get("/activities/:id", getOneActivityController);
 router.get("/activities", getActivitiesController);
-router.put("/activities/:id?", updateActivitiesController);
-router.delete("/activities/:id", deleteActivityController);
+router.put("/activities/:id?", isLoggedIn, isAdmin, updateActivitiesController);
+router.delete("/activities/:id", isLoggedIn, isAdmin, deleteActivityController);
 
 /**
  * @swagger

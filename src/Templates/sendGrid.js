@@ -1,6 +1,5 @@
-export  const ContactForm = (name) => {
-
-    return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+export const ContactForm = (name) => {
+  return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
     <html xmlns="http://www.w3.org/1999/xhtml" xmlns:o="urn:schemas-microsoft-com:office:office" style="width:100%;font-family:lato, 'helvetica neue', helvetica, arial, sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;padding:0;Margin:0">
      <head> 
       <meta charset="UTF-8"> 
@@ -120,7 +119,7 @@ export  const ContactForm = (name) => {
                       <td class="esd-container-frame" valign="top" align="center" style="padding:0;Margin:0;width:580px"> 
                        <table width="100%" cellspacing="0" cellpadding="0" role="presentation" class="module" data-type="code" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px"> 
                          <tr style="border-collapse:collapse"> 
-                          <td class="esd-block-image" align="center" style="Margin:0;padding-left:10px;padding-right:10px;padding-top:25px;padding-bottom:25px;font-size:0px"><a href="https://www.alkemy.ml/" target="_blank" style="-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;text-decoration:underline;color:#111111;font-size:14px"><img src="https://tagwfe.stripocdn.email/content/guids/CABINET_b8b2ceb2a4471b8e1ad66f66fc4122e3/images/logo.png" alt style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic" width="80"></a></td> 
+                          <td class="esd-block-image" align="center" style="Margin:0;padding-left:10px;padding-right:10px;padding-top:25px;padding-bottom:25px;font-size:0px"><a href="https://www.alkemy.ml/" target="_blank" style="-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;text-decoration:underline;color:#111111;font-size:14px"><img src="https://i.imgur.com/hs1MgaB.png" alt style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic" width="150px"></a></td> 
                          </tr> 
                        </table></td> 
                      </tr> 
@@ -168,13 +167,13 @@ export  const ContactForm = (name) => {
                       <td class="esd-container-frame" valign="top" align="center" style="padding:0;Margin:0;width:600px"> 
                        <table style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:separate;border-spacing:0px;border-radius:6px;background-color:#ffffff" width="100%" cellspacing="0" cellpadding="0" bgcolor="#ffffff" role="presentation" class="module" data-type="code"> 
                          <tr style="border-collapse:collapse"> 
-                          <td class="esd-block-text es-m-txt-l" bgcolor="#ffffff" align="left" style="Margin:0;padding-top:20px;padding-bottom:20px;padding-left:30px;padding-right:30px"><p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:'merriweather sans', 'helvetica neue', helvetica, arial, sans-serif;line-height:27px;color:#6aa84f;font-size:18px">Gracias por comunicarte con nosotros, nos pondremos en contacto contigo en la medida de lo posible.</p></td> 
+                          <td class="esd-block-text es-m-txt-l" bgcolor="#ffffff" align="left" style="Margin:0;padding-top:20px;padding-bottom:20px;padding-left:30px;padding-right:30px"><p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:'merriweather sans', 'helvetica neue', helvetica, arial, sans-serif;line-height:27px;color:#000;font-size:18px">Gracias por comunicarte con nosotros, nos pondremos en contacto contigo en la medida de lo posible.</p></td> 
                          </tr> 
                          <tr style="border-collapse:collapse"> 
-                          <td class="esd-block-text es-m-txt-l" align="left" style="padding:0;Margin:0;padding-top:20px;padding-left:30px;padding-right:30px"><p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:'merriweather sans', 'helvetica neue', helvetica, arial, sans-serif;line-height:27px;color:#6aa84f;font-size:18px">La mejor manera de ayudar a los demás es uniendo fuerzas</p></td> 
+                          <td class="esd-block-text es-m-txt-l" align="left" style="padding:0;Margin:0;padding-top:20px;padding-left:30px;padding-right:30px"><p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:'merriweather sans', 'helvetica neue', helvetica, arial, sans-serif;line-height:27px;color:#000;font-size:18px">¡La mejor manera de ayudar a los demás es uniendo fuerzas!</p></td> 
                          </tr> 
                          <tr style="border-collapse:collapse"> 
-                          <td class="esd-block-text es-m-txt-l" align="left" style="Margin:0;padding-top:20px;padding-left:30px;padding-right:30px;padding-bottom:40px"><p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:lato, 'helvetica neue', helvetica, arial, sans-serif;line-height:27px;color:#ffa73b;font-size:18px">Attentively:</p><p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:lato, 'helvetica neue', helvetica, arial, sans-serif;line-height:27px;color:#ffa73b;font-size:18px">ONG ALKEMY</p></td> 
+                          <td class="esd-block-text es-m-txt-l" align="left" style="Margin:0;padding-top:20px;padding-left:30px;padding-right:30px;padding-bottom:40px"><p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:lato, 'helvetica neue', helvetica, arial, sans-serif;line-height:27px;color:#ffa73b;font-size:18px">Saludos,</p><p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:lato, 'helvetica neue', helvetica, arial, sans-serif;line-height:27px;color:#ffa73b;font-size:18px">Somos Más ONG</p></td> 
                          </tr> 
                          <tr style="border-collapse:collapse"> 
                           <td align="left" class="esd-block-button" style="padding:0;Margin:0"><span class="es-button-border" style="border-style:solid;border-color:#FFA73B;background:#ffa73b;border-width:0px;display:block;border-radius:10px;width:auto"><a href="https://www.alkemy.ml/" class="es-button es-button-1" target="_blank" style="mso-style-priority:100 !important;text-decoration:none;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;color:#FFFFFF;font-size:18px;border-style:solid;border-color:#FFA73B;border-width:10px 5px 15px;display:block;background:#FFA73B;border-radius:10px;font-weight:normal;font-style:normal;line-height:22px;width:auto;text-align:center">Visitanos</a></span></td> 
@@ -211,14 +210,10 @@ export  const ContactForm = (name) => {
                </table></td> 
              </tr> 
            </table> 
-          `
+          `;
+};
 
-}
-
-
-
-export const FormRegister = ()=>{
-
+export const FormRegister = () => {
   return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
   <html data-editor-version="2" class="sg-campaigns" xmlns="http://www.w3.org/1999/xhtml">
       <head>
@@ -506,6 +501,5 @@ export const FormRegister = ()=>{
           </div>
         </center>
       </body>
-    </html>`
-
-}
+    </html>`;
+};
