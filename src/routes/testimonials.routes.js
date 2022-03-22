@@ -7,11 +7,12 @@ import {
   deleteTestimony,
   getOneTestimony,
 } from "../controllers/testimony.controller";
+import fileStorageMiddleware from "../middlewares/fileStorage.middleware";
 
 router.get("/testimonials", getTestimony);
 router.get("/testimonials/:id", getOneTestimony);
-router.post("/testimonials", postTestimony);
-router.put("/testimonials/:id", putTestimony);
+router.post("/testimonials", fileStorageMiddleware("image"), postTestimony);
+router.put("/testimonials/:id", fileStorageMiddleware("image"), putTestimony);
 router.delete("/testimonials/:id", deleteTestimony);
 
 export default router;

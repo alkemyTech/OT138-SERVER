@@ -4,7 +4,6 @@ const upload = multer({ dest: "uploads/" });
 function handleFileUpload(fieldName) {
   return (req, res, next) => {
     if (req.file) {
-      console.log();
       if (
         req.body.json &&
         req.headers["content-type"]
