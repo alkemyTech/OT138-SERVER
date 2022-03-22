@@ -4,6 +4,7 @@ import {
   updatePublicDataController,
 } from "../controllers/publicData.controller";
 import { isLoggedIn, isAdmin } from "../middlewares/auth.middleware";
+import fileStorageMiddleware from "../middlewares/fileStorage.middleware";
 const router = express.Router();
 
 router.get("/organizations/1/public", publicDataController);
@@ -11,6 +12,7 @@ router.put(
   "/organizations/1/public",
   isLoggedIn,
   isAdmin,
+  fileStorageMiddleware("image"),
   updatePublicDataController
 );
 /**

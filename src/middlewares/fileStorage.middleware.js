@@ -5,7 +5,12 @@ function handleFileUpload(fieldName) {
   return (req, res, next) => {
     if (req.file) {
       console.log();
-      if (req.body.json && req.headers["content-type"].toLowerCase().includes("multipart/form-data")) {
+      if (
+        req.body.json &&
+        req.headers["content-type"]
+          .toLowerCase()
+          .includes("multipart/form-data")
+      ) {
         try {
           req.body = { ...req.body, ...JSON.parse(req.body.json) };
           delete req.body.json;

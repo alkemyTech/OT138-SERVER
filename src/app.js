@@ -43,7 +43,7 @@ app.use(express.urlencoded({ limit: "50mb" }));
 app.use(cookieParser());
 
 // Use middleware to store images
-app.use(fileStorageMiddleware("image"));
+// app.use(fileStorageMiddleware("image"));
 
 app.use("/api", routes);
 app.use(function (err, req, res, next) {
@@ -64,7 +64,7 @@ app.get("/", (_, res) => {
 });
 
 //serve static files (uploaded images)
-app.use("/uploads", express.static('uploads'))
+app.use("/uploads", express.static("uploads"));
 
 // If no route was matched return not found
 app.use("*", function (req, res) {
