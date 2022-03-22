@@ -9,13 +9,15 @@ import {
   list,
 } from "../controllers/news.controller";
 import { isLoggedIn, isAdmin } from "../middlewares/auth.middleware";
+import fileStorageMiddleware from "../middlewares/fileStorage.middleware";
+
 const router = express.Router();
 
 router.get("/news", list);
 router.get("/news/:id", retrieve);
-router.put("/news/:id", isLoggedIn, isAdmin, update);
+router.put("/news/:id", isLoggedIn, isAdmin, fileStorageMiddleware("image"), update);
 router.delete("/news/:id", isLoggedIn, isAdmin, destroy);
-router.post("/news", isLoggedIn, isAdmin, create);
+router.post("/news", isLoggedIn, isAdmin, fileStorageMiddleware("image"), create);
 
 /**
  * @swagger
