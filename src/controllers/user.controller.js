@@ -1,17 +1,17 @@
 import sequelize, { Op } from "sequelize";
 import { serveFiles } from "swagger-ui-express";
-import { responses } from "../helpers";
+import { paginate, responses } from "../helpers";
 import { User } from "../models";
 
 //LIST USERS
 export const listUsers = async (req, res) => {
   try {
-    const users = await User.findAll();
+    const result = await paginate(User,req.query.limit, req.query.page)
 
     return res.status(200).json({
       error: false,
       status: "200",
-      result: users
+      result
     });
 
   } catch (error) {

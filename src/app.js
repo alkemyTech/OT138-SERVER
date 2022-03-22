@@ -6,6 +6,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import routes from "./routes";
 import { ValidationError } from "express-validation";
+import fileStorageMiddleware from "./middlewares/fileStorage.middleware";
+
 dotenv.config();
 const swaggerJsDoc = require("swagger-jsdoc");
 const swaggerUI = require("swagger-ui-express");
@@ -39,6 +41,10 @@ if (process.env.NODE_ENV !== "test") {
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb" }));
 app.use(cookieParser());
+
+// Use middleware to store images
+app.use(fileStorageMiddleware("image"));
+
 app.use("/api", routes);
 app.use(function (err, req, res, next) {
   if (err instanceof ValidationError) {
@@ -56,6 +62,9 @@ app.get("/", (_, res) => {
     state: `Uptime ${parseInt(process.uptime())} seconds`,
   });
 });
+
+//serve static files (uploaded images)
+app.use("/uploads", express.static('uploads'))
 
 // If no route was matched return not found
 app.use("*", function (req, res) {
