@@ -4,7 +4,8 @@ const upload = multer({ dest: "uploads/" });
 function handleFileUpload(fieldName) {
   return (req, res, next) => {
     if (req.file) {
-      if (req.body.json) {
+      console.log();
+      if (req.body.json && req.headers["content-type"].toLowerCase().includes("multipart/form-data")) {
         try {
           req.body = { ...req.body, ...JSON.parse(req.body.json) };
           delete req.body.json;
