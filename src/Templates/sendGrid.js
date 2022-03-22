@@ -8,6 +8,9 @@ export  const ContactForm = (name) => {
       <meta name="x-apple-disable-message-reformatting"> 
       <meta http-equiv="X-UA-Compatible" content="IE=edge"> 
       <meta content="telephone=no" name="format-detection"> 
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;800&display=swap" rel="stylesheet">
       <title>Nuevo mensaje</title> 
       <!--[if (mso 16)]>
         <style type="text/css">
@@ -22,18 +25,22 @@ export  const ContactForm = (name) => {
         <o:PixelsPerInch>96</o:PixelsPerInch>
         </o:OfficeDocumentSettings>
     </xml>
-    <![endif]--> 
-      <!--[if !mso]><!-- --> 
-      <link href="https://fonts.googleapis.com/css?family=Lato:400,400i,700,700i" rel="stylesheet"> 
-      <link href="https://fonts.googleapis.com/css?family=Merriweather:400,400i,700,700i" rel="stylesheet"> 
-      <link href="https://fonts.googleapis.com/css?family=Merriweather+Sans:400,400i,700,700i" rel="stylesheet"> 
-      <!--<![endif]--> 
+ 
       <style type="text/css">
+
+    *{
+      font-family: 'Poppins', sans-serif;
+    }
+
     #outlook a {
         padding:0;
     }
     .ExternalClass {
         width:100%;
+    }
+
+    button{
+      font-family: 'Poppins', sans-serif;
     }
     .ExternalClass,
     .ExternalClass p,
@@ -51,7 +58,7 @@ export  const ContactForm = (name) => {
         color:inherit!important;
         text-decoration:none!important;
         font-size:inherit!important;
-        font-family:inherit!important;
+        font-family: 'Poppins', sans-serif;
         font-weight:inherit!important;
         line-height:inherit!important;
     }
@@ -133,7 +140,7 @@ export  const ContactForm = (name) => {
                       <td class="esd-container-frame" valign="top" align="center" style="padding:0;Margin:0;width:600px"> 
                        <table style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:separate;border-spacing:0px;background-color:#ffffff;border-radius:4px" width="100%" cellspacing="0" cellpadding="0" bgcolor="#ffffff" role="presentation" class="module" data-type="code"> 
                          <tr style="border-collapse:collapse"> 
-                          <td class="esd-block-text" align="center" style="Margin:0;padding-bottom:5px;padding-left:30px;padding-right:30px;padding-top:35px"><h1 style="Margin:0;line-height:58px;mso-line-height-rule:exactly;font-family:lato, 'helvetica neue', helvetica, arial, sans-serif;font-size:48px;font-style:normal;font-weight:normal;color:#ffa73b">Hello ${name}</h1></td> 
+                          <td class="esd-block-text" align="center" style="Margin:0;padding-bottom:5px;padding-left:30px;padding-right:30px;padding-top:35px"><h1 style="Margin:0;line-height:58px;mso-line-height-rule:exactly;font-family:lato, 'helvetica neue', helvetica, arial, sans-serif;font-size:48px;font-style:normal;font-weight:normal;color:#ffa73b">Hola👏 ${name}</h1></td> 
                          </tr> 
                          <tr style="border-collapse:collapse"> 
                           <td class="esd-block-spacer" bgcolor="#ffffff" align="center" style="Margin:0;padding-top:5px;padding-bottom:5px;padding-left:20px;padding-right:20px;font-size:0"> 
@@ -161,16 +168,16 @@ export  const ContactForm = (name) => {
                       <td class="esd-container-frame" valign="top" align="center" style="padding:0;Margin:0;width:600px"> 
                        <table style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:separate;border-spacing:0px;border-radius:6px;background-color:#ffffff" width="100%" cellspacing="0" cellpadding="0" bgcolor="#ffffff" role="presentation" class="module" data-type="code"> 
                          <tr style="border-collapse:collapse"> 
-                          <td class="esd-block-text es-m-txt-l" bgcolor="#ffffff" align="left" style="Margin:0;padding-top:20px;padding-bottom:20px;padding-left:30px;padding-right:30px"><p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:'merriweather sans', 'helvetica neue', helvetica, arial, sans-serif;line-height:27px;color:#6aa84f;font-size:18px">Thank you for communicating with us, we will contact you as far as possible</p></td> 
+                          <td class="esd-block-text es-m-txt-l" bgcolor="#ffffff" align="left" style="Margin:0;padding-top:20px;padding-bottom:20px;padding-left:30px;padding-right:30px"><p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:'merriweather sans', 'helvetica neue', helvetica, arial, sans-serif;line-height:27px;color:#6aa84f;font-size:18px">Gracias por comunicarte con nosotros, nos pondremos en contacto contigo en la medida de lo posible.</p></td> 
                          </tr> 
                          <tr style="border-collapse:collapse"> 
-                          <td class="esd-block-text es-m-txt-l" align="left" style="padding:0;Margin:0;padding-top:20px;padding-left:30px;padding-right:30px"><p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:'merriweather sans', 'helvetica neue', helvetica, arial, sans-serif;line-height:27px;color:#6aa84f;font-size:18px">The best way to help others is by joining forces</p></td> 
+                          <td class="esd-block-text es-m-txt-l" align="left" style="padding:0;Margin:0;padding-top:20px;padding-left:30px;padding-right:30px"><p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:'merriweather sans', 'helvetica neue', helvetica, arial, sans-serif;line-height:27px;color:#6aa84f;font-size:18px">La mejor manera de ayudar a los demás es uniendo fuerzas</p></td> 
                          </tr> 
                          <tr style="border-collapse:collapse"> 
                           <td class="esd-block-text es-m-txt-l" align="left" style="Margin:0;padding-top:20px;padding-left:30px;padding-right:30px;padding-bottom:40px"><p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:lato, 'helvetica neue', helvetica, arial, sans-serif;line-height:27px;color:#ffa73b;font-size:18px">Attentively:</p><p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:lato, 'helvetica neue', helvetica, arial, sans-serif;line-height:27px;color:#ffa73b;font-size:18px">ONG ALKEMY</p></td> 
                          </tr> 
                          <tr style="border-collapse:collapse"> 
-                          <td align="left" class="esd-block-button" style="padding:0;Margin:0"><span class="es-button-border" style="border-style:solid;border-color:#FFA73B;background:#ffa73b;border-width:0px;display:block;border-radius:10px;width:auto"><a href="https://www.alkemy.ml/" class="es-button es-button-1" target="_blank" style="mso-style-priority:100 !important;text-decoration:none;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;color:#FFFFFF;font-size:18px;border-style:solid;border-color:#FFA73B;border-width:10px 5px 15px;display:block;background:#FFA73B;border-radius:10px;font-family:merriweather, georgia, 'times new roman', serif;font-weight:normal;font-style:normal;line-height:22px;width:auto;text-align:center">Visit us</a></span></td> 
+                          <td align="left" class="esd-block-button" style="padding:0;Margin:0"><span class="es-button-border" style="border-style:solid;border-color:#FFA73B;background:#ffa73b;border-width:0px;display:block;border-radius:10px;width:auto"><a href="https://www.alkemy.ml/" class="es-button es-button-1" target="_blank" style="mso-style-priority:100 !important;text-decoration:none;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;color:#FFFFFF;font-size:18px;border-style:solid;border-color:#FFA73B;border-width:10px 5px 15px;display:block;background:#FFA73B;border-radius:10px;font-weight:normal;font-style:normal;line-height:22px;width:auto;text-align:center">Visitanos</a></span></td> 
                          </tr> 
                        </table></td> 
                      </tr> 
@@ -204,83 +211,7 @@ export  const ContactForm = (name) => {
                </table></td> 
              </tr> 
            </table> 
-           <table class="es-content" cellspacing="0" cellpadding="0" align="center" role="modules-container" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;table-layout:fixed !important;width:100%"> 
-             <tr style="border-collapse:collapse"> 
-              <td class="esd-stripe" esd-custom-block-id="6341" align="center" style="padding:0;Margin:0"> 
-               <table class="es-content-body" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:transparent;width:600px" cellspacing="0" cellpadding="0" align="center"> 
-                 <tr style="border-collapse:collapse"> 
-                  <td class="esd-structure" align="left" style="padding:0;Margin:0"> 
-                   <table width="100%" cellspacing="0" cellpadding="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px"> 
-                     <tr style="border-collapse:collapse"> 
-                      <td class="esd-container-frame" valign="top" align="center" style="padding:0;Margin:0;width:600px"> 
-                       <table style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:separate;border-spacing:0px;background-color:#ffecd1;border-radius:4px" width="100%" cellspacing="0" cellpadding="0" bgcolor="#ffecd1" role="presentation" class="module" data-type="code"> 
-                         <tr style="border-collapse:collapse"> 
-                          <td class="esd-block-text" align="center" style="padding:0;Margin:0;padding-top:30px;padding-left:30px;padding-right:30px"><h3 style="Margin:0;line-height:24px;mso-line-height-rule:exactly;font-family:lato, 'helvetica neue', helvetica, arial, sans-serif;font-size:20px;font-style:normal;font-weight:normal;color:#111111">Need more help?</h3></td> 
-                         </tr> 
-                         <tr style="border-collapse:collapse"> 
-                          <td class="esd-block-text" esdev-links-color="#ffa73b" align="center" style="padding:0;Margin:0;padding-bottom:30px;padding-left:30px;padding-right:30px"><a target="_blank" href="https://viewstripo.email/" style="-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;text-decoration:underline;color:#ffa73b;font-size:18px">We’re here, ready to talk</a></td> 
-                         </tr> 
-                       </table></td> 
-                     </tr> 
-                   </table></td> 
-                 </tr> 
-               </table></td> 
-             </tr> 
-           </table> 
-           <table cellpadding="0" cellspacing="0" class="es-footer" align="center" role="modules-container" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;table-layout:fixed !important;width:100%;background-color:transparent;background-repeat:repeat;background-position:center top"> 
-             <tr style="border-collapse:collapse"> 
-              <td class="esd-stripe" esd-custom-block-id="6342" align="center" style="padding:0;Margin:0"> 
-               <table class="es-footer-body" cellspacing="0" cellpadding="0" align="center" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:transparent;width:600px"> 
-                 <tr style="border-collapse:collapse"> 
-                  <td class="esd-structure" align="left" style="Margin:0;padding-top:30px;padding-bottom:30px;padding-left:30px;padding-right:30px"> 
-                   <table width="100%" cellspacing="0" cellpadding="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px"> 
-                     <tr style="border-collapse:collapse"> 
-                      <td class="esd-container-frame" valign="top" align="center" style="padding:0;Margin:0;width:540px"> 
-                       <table width="100%" cellspacing="0" cellpadding="0" role="presentation" class="module" data-type="code" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px"> 
-                         <tr style="border-collapse:collapse"> 
-                          <td class="esd-block-text" align="left" style="padding:0;Margin:0"><p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:lato, 'helvetica neue', helvetica, arial, sans-serif;line-height:21px;color:#666666;font-size:14px"><strong><a target="_blank" href="https://viewstripo.email" style="-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;text-decoration:underline;color:#111111;font-size:14px">Dashboard</a> - <a target="_blank" href="https://viewstripo.email" style="-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;text-decoration:underline;color:#111111;font-size:14px">Billing</a> - <a target="_blank" href="https://viewstripo.email" style="-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;text-decoration:underline;color:#111111;font-size:14px">Help</a></strong></p></td> 
-                         </tr> 
-                         <tr style="border-collapse:collapse"> 
-                          <td align="left" class="esd-block-text" style="padding:0;Margin:0;padding-top:25px"><p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:lato, 'helvetica neue', helvetica, arial, sans-serif;line-height:21px;color:#666666;font-size:14px">You received this email because you just signed up for a new account. If it looks weird, <strong><a class="view" target="_blank" href="https://viewstripo.email" style="-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;text-decoration:underline;color:#111111;font-size:14px">view it in your browser</a></strong>.</p></td> 
-                         </tr> 
-                         <tr style="border-collapse:collapse"> 
-                          <td align="left" class="esd-block-text" style="padding:0;Margin:0;padding-top:25px"><p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:lato, 'helvetica neue', helvetica, arial, sans-serif;line-height:21px;color:#666666;font-size:14px">If these emails get annoying, please feel free to&nbsp;<strong><a target="_blank" class="unsubscribe" href="" style="-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;text-decoration:underline;color:#111111;font-size:14px">unsubscribe</a></strong>.</p></td> 
-                         </tr> 
-                         <tr style="border-collapse:collapse"> 
-                          <td class="esd-block-text" align="left" style="padding:0;Margin:0;padding-top:25px"><p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:lato, 'helvetica neue', helvetica, arial, sans-serif;line-height:21px;color:#666666;font-size:14px">Ceej - 1234 Main Street - Anywhere, MA - 56789</p></td> 
-                         </tr> 
-                       </table></td> 
-                     </tr> 
-                   </table></td> 
-                 </tr> 
-               </table></td> 
-             </tr> 
-           </table> 
-           <table class="esd-footer-popover es-content" cellspacing="0" cellpadding="0" align="center" role="modules-container" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;table-layout:fixed !important;width:100%"> 
-             <tr style="border-collapse:collapse"> 
-              <td class="esd-stripe" align="center" style="padding:0;Margin:0"> 
-               <table class="es-content-body" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:transparent;width:600px" cellspacing="0" cellpadding="0" align="center"> 
-                 <tr style="border-collapse:collapse"> 
-                  <td class="esd-structure" align="left" style="Margin:0;padding-left:20px;padding-right:20px;padding-top:30px;padding-bottom:30px"> 
-                   <table width="100%" cellspacing="0" cellpadding="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px"> 
-                     <tr style="border-collapse:collapse"> 
-                      <td class="esd-container-frame" valign="top" align="center" style="padding:0;Margin:0;width:560px"> 
-                       <table width="100%" cellspacing="0" cellpadding="0" role="presentation" class="module" data-type="code" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px"> 
-                         <tr style="border-collapse:collapse"> 
-                          <td class="esd-block-image es-infoblock made_with" align="center" style="padding:0;Margin:0;line-height:0px;font-size:0px;color:#CCCCCC"><a target="_blank" href="https://viewstripo.email/?utm_source=templates&utm_medium=email&utm_campaign=software2&utm_content=trigger_newsletter" style="-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;text-decoration:underline;color:#CCCCCC;font-size:12px"><img src="https://tagwfe.stripocdn.email/content/guids/CABINET_b8b2ceb2a4471b8e1ad66f66fc4122e3/images/logo.png" alt width="40" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic"></a></td> 
-                         </tr> 
-                       </table></td> 
-                     </tr> 
-                   </table></td> 
-                 </tr> 
-               </table></td> 
-             </tr> 
-           </table></td> 
-         </tr> 
-       </table> 
-      </div>  
-     </body>
-    </html>`
+          `
 
 }
 
@@ -293,6 +224,9 @@ export const FormRegister = ()=>{
       <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;800&display=swap" rel="stylesheet">
         <!--[if !mso]><!-->
         <meta http-equiv="X-UA-Compatible" content="IE=Edge">
         <!--<![endif]-->
@@ -313,8 +247,13 @@ export const FormRegister = ()=>{
     </style>
   <![endif]-->
         <style type="text/css">
+
+  *{
+    font-family: 'Poppins', sans-serif;
+  }
+
       body, p, div {
-        font-family: inherit;
+        font-family: 'Poppins', sans-serif;
         font-size: 14px;
       }
       body {
@@ -404,9 +343,9 @@ export const FormRegister = ()=>{
         }
       }
     </style>
-        <!--user entered Head Start--><link href="https://fonts.googleapis.com/css?family=Lato&display=swap" rel="stylesheet"><style>
-  body {font-family: 'Lato', sans-serif;}
-  </style><!--End Head user entered-->
+       
+
+  </style>
       </head>
       <body>
         <center class="wrapper" data-link-color="#000000" data-body-style="font-size:14px; font-family:inherit; color:#000000; background-color:#FFFFFF;">
@@ -457,7 +396,7 @@ export const FormRegister = ()=>{
     </table><table class="module" role="module" data-type="text" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;" data-muid="7cd4c72c-c042-4c16-82f3-4aca5b1f0da3" data-mc-module-version="2019-10-22">
       <tbody>
         <tr>
-          <td style="padding:50px 40px 40px 40px; line-height:28px; text-align:inherit; background-color:#f8f8f8;" height="100%" valign="top" bgcolor="#f8f8f8" role="module-content"><div><div style="font-family: inherit; text-align: center"><span style="color: #000000; font-family: inherit; font-size: 48px">WELCOME</span></div><div></div></div></td>
+          <td style="padding:50px 40px 40px 40px; line-height:28px; text-align:inherit; background-color:#f8f8f8;" height="100%" valign="top" bgcolor="#f8f8f8" role="module-content"><div><div style="font-family: inherit; text-align: center"><span style="color: #000000; font-family: inherit; font-size: 48px">BIENVENIDO</span></div><div></div></div></td>
         </tr>
       </tbody>
     </table><table class="module" role="module" data-type="divider" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;" data-muid="b5ec95f4-9902-4d4d-acdc-8952190a117f">
@@ -485,9 +424,9 @@ export const FormRegister = ()=>{
     </table><table class="module" role="module" data-type="text" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;" data-muid="7cd4c72c-c042-4c16-82f3-4aca5b1f0da3.1" data-mc-module-version="2019-10-22">
       <tbody>
         <tr>
-          <td style="padding:50px 40px 40px 40px; line-height:28px; text-align:inherit; background-color:#f8f8f8;" height="100%" valign="top" bgcolor="#f8f8f8" role="module-content"><div><div style="font-family: inherit; text-align: inherit"><span style="font-size: 24px; font-family: inherit">Thank you for registering on our platform and being part of our community.</span></div>
+          <td style="padding:50px 40px 40px 40px; line-height:28px; text-align:inherit; background-color:#f8f8f8;" height="100%" valign="top" bgcolor="#f8f8f8" role="module-content"><div><div style="font-family: inherit; text-align: inherit"><span style="font-size: 24px; font-family: inherit">Gracias por registrarte en nuestra plataforma y ser parte de nuestra comunidad</span></div>
   <div style="font-family: inherit; text-align: inherit"><br></div>
-  <div style="font-family: inherit; text-align: inherit"><span style="font-size: 24px; font-family: inherit">You can see the activities of our community!</span></div><div></div></div></td>
+  <div style="font-family: inherit; text-align: inherit"><span style="font-size: 24px; font-family: inherit">Puedes ver las actividades de nuestra comunidad!</span></div><div></div></div></td>
         </tr>
       </tbody>
     </table><table border="0" cellpadding="0" cellspacing="0" class="module" data-role="module-button" data-type="button" role="module" style="table-layout:fixed;" width="100%" data-muid="f4a77ac4-65c4-470a-a564-646acdd83093.1">
@@ -498,7 +437,7 @@ export const FormRegister = ()=>{
                 <tbody>
                   <tr>
                   <td align="center" bgcolor="#fbde67" class="inner-td" style="border-radius:6px; font-size:16px; text-align:center; background-color:inherit;">
-                    <a href="https://www.alkemy.ml/actividades" style="background-color:#fbde67; border:1px solid #fbde67; border-color:#fbde67; border-radius:0px; border-width:1px; color:#000000; display:inline-block; font-size:16px; font-weight:400; letter-spacing:0px; line-height:22px; padding:12px 18px 12px 18px; text-align:center; text-decoration:none; border-style:solid; font-family:inherit; width:180px;" target="_blank">View activities</a>
+                    <a href="https://www.alkemy.ml/actividades" style="background-color:#fbde67; border:1px solid #fbde67; border-color:#fbde67; border-radius:0px; border-width:1px; color:#000000; display:inline-block; font-size:16px; font-weight:400; letter-spacing:0px; line-height:22px; padding:12px 18px 12px 18px; text-align:center; text-decoration:none; border-style:solid; font-family:inherit; width:180px;" target="_blank">Ver nuestras actividades</a>
                   </td>
                   </tr>
                 </tbody>

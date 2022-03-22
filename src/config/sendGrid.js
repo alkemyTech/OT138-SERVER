@@ -8,7 +8,7 @@ function Message1(name,email,message){
   return {
     to: email, // Change to your recipient
     from: 'colinparrado@gmail.com', // Change to your verified sender
-    subject: 'Thanks for writing to us - ONG-AlKEMY',
+    subject: 'Gracias por escribirnos - ONG-AlKEMY',
     text: message,
     html: ContactForm(name),
   }
@@ -20,7 +20,7 @@ function Message2(email){
   return {
     to: email, // Change to your recipient
     from: 'colinparrado@gmail.com', // Change to your verified sender
-    subject: 'Congratulations on joining - ONG-AlKEMY',
+    subject: 'Felicitaciones por unirse - ONG-AlKEMY',
     html: FormRegister(),
   }
 
