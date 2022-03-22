@@ -3,11 +3,7 @@ const upload = multer({ dest: "uploads/" });
 
 function handleFileUpload(fieldName) {
   return (req, res, next) => {
-    console.log("file handling");
     if (req.file) {
-      console.log("Request has file!");
-      console.log("File", req.file);
-      console.log("Body", req.body);
       if (req.body.json) {
         try {
           req.body = { ...req.body, ...JSON.parse(req.body.json) };
@@ -26,7 +22,6 @@ function handleFileUpload(fieldName) {
       req.body[fieldName] =
         process.env.BACKEND_URL + "/" + req.file.path.replace("\\", "/");
     }
-    console.log("Body", req.body);
     next();
   };
 }
