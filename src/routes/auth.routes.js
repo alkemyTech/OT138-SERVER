@@ -10,6 +10,8 @@ import {
   updateAccount
 } from "../controllers/auth.controller";
 import { isLoggedIn, loginValidator } from "../middlewares/auth.middleware";
+import fileStorageMiddleware from "../middlewares/fileStorage.middleware";
+
 const router = express.Router();
 
 router.post("/auth/register", register);
@@ -18,7 +20,7 @@ router.post("/auth/login",  loginValidator, login);
 router.post("/auth/imloggedin", isLoggedIn, imLoggedIn);
 router.get("/auth/me", isLoggedIn, profile);
 router.delete("/auth/account", isLoggedIn, deleteAccount);
-router.put("/auth/account", isLoggedIn, updateAccount);
+router.put("/auth/account", isLoggedIn, fileStorageMiddleware("image"), updateAccount);
 router.post("/auth/logout", isLoggedIn, logout);
 
 /**

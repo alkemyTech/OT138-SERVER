@@ -242,7 +242,7 @@ export const updateAccount = async (req, res) => {
     });
   }
 
-  const { firstName, lastName } = req.body;
+  const { firstName, lastName, image } = req.body;
 
   try {
     const instance = await User.findByPk(userId);
@@ -258,9 +258,10 @@ export const updateAccount = async (req, res) => {
       {
         firstName: firstName,
         lastName: lastName,
+        image: image,
         updatedAt: new Date(),
       },
-      ["firstName, lastName, updatedAt"]
+      ["firstName, lastName, image, updatedAt"]
     );
 
     await instance.save();
