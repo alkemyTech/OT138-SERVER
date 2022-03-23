@@ -49,10 +49,7 @@ export const update = async (req, res) => {
 
     const { error, value } = validationSchema.validate(req.body);
 
-    console.log(req.body);
-
     if (error) {
-        console.log(error)
         return res.status(200).json({
             ...responses.validationError,
             message: 'Validation error',
