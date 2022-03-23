@@ -1,5 +1,13 @@
+import mimeTypes from "mime-types";
+import { v4 as uuidv4 } from "uuid";
 const multer = require("multer");
-const upload = multer({ dest: "uploads/" });
+const storage = multer.diskStorage({
+  destination: "uploads/",
+  filename: function (req, file, cb) {
+    cb("", uuidv4() + "." + mimeTypes.extension(file.mimetype));
+  },
+});
+const upload = multer({ storage: storage });
 
 function handleFileUpload(fieldName) {
   return (req, res, next) => {
