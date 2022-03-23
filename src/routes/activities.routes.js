@@ -7,13 +7,14 @@ import {
   deleteActivityController,
 } from "../controllers/activities.controller";
 import { isAdmin, isLoggedIn } from "../middlewares/auth.middleware";
+import fileStorageMiddleware from "../middlewares/fileStorage.middleware";
 
 const router = express.Router();
 
-router.post("/activities", isLoggedIn, isAdmin, createActivitiesController);
+router.post("/activities", isLoggedIn, isAdmin, fileStorageMiddleware("image"), createActivitiesController);
 router.get("/activities/:id", getOneActivityController);
 router.get("/activities", getActivitiesController);
-router.put("/activities/:id?", isLoggedIn, isAdmin, updateActivitiesController);
+router.put("/activities/:id?", isLoggedIn, isAdmin, fileStorageMiddleware("image"), updateActivitiesController);
 router.delete("/activities/:id", isLoggedIn, isAdmin, deleteActivityController);
 
 /**
