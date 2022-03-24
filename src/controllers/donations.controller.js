@@ -1,5 +1,5 @@
 import { Joi } from "express-validation";
-import { Donations } from "../models";
+import { Donations, UserDonations } from "../models";
 import { Op } from "sequelize";
 import { responses, formatValidationErrors, paginate } from "../helpers";
 import { InvalidArgumentsError } from "../helpers/exceptions";
@@ -10,7 +10,8 @@ export const getDonations = async (req, res) => {
       Donations,
       req.query.limit,
       req.query.page,
-      [["createdAt", "DESC"]]
+      [["createdAt", "DESC"]],
+      { status: { [Op.ne]: 0 } }
     );
 
     let status = "200";

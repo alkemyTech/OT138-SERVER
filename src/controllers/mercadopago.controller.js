@@ -18,7 +18,7 @@ export const processPayment = async (req, res) => {
     ).catch((error) => console.log(error));
 
     let json = {
-      userID: req?.user?.id ? req?.user?.id : null,
+      userID: req?.user?.id ?? null,
       donationUUID: uuid,
       value: value,
     };

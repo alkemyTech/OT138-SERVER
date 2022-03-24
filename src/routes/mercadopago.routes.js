@@ -3,10 +3,10 @@ import {
   instantPaymentNotification,
   processPayment,
 } from "../controllers/mercadopago.controller";
-import { isLoggedIn } from "../middlewares/auth.middleware";
+import { checkIsLoggedIn } from "../middlewares/auth.middleware";
 const router = express.Router();
 
-router.post("/payment/new", isLoggedIn, processPayment);
+router.post("/payment/new", checkIsLoggedIn, processPayment);
 router.post("/ipn", instantPaymentNotification);
 
 export default router;
