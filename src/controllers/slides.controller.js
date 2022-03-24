@@ -4,7 +4,6 @@ import {paginate} from '../helpers'
 //GET ALL SLIDER
 export const SliderGet =  async (req,res) => {
 
-
     try {
         const slider = await paginate(Slide, req.query.limit, req.query.page)
         res.status(200).json({
@@ -14,7 +13,6 @@ export const SliderGet =  async (req,res) => {
         slider
         })
     } catch (error) {
-        
         res.status(200).json({
         error: true,
         status: "500",
@@ -28,30 +26,31 @@ export const SliderGet =  async (req,res) => {
 
 //POST SLIDER
 export const SliderPost =  async (req,res) => {
-       const {imageURL,text,order,organizationID} = req.body;
-       if(!imageURL || !text || !order || !organizationID){
-       res.status(200).json({
-       message:"Error al crear el Slider",
-       error: true,
-       status: "404",
-       })
 
-       }else{
+    const {text,order,organizationID, image} = req.body;
+
+    if(!image || !text || !order || !organizationID){
+        res.status(200).json({
+        message:"Error al crear el Slider",
+        error: true,
+        status: "404",
+        })
+    } else{
        try { 
-       await Slide.create({imageURL:imageURL,text:text,order:order,organizationID:organizationID,createdAt:new Date(),updatedAt:new Date()})
-       res.status(200).json({
-       message:"Slider created successfully",
-       error:false,
-       status:"200"
-       })
-       }catch (error) {
-       res.status(200).json({
-       message:error,
-       error:true,
-       status:"500"
-       })
+        await Slide.create({imageURL:image,text:text,order:order,organizationID:organizationID,createdAt:new Date(),updatedAt:new Date()})
+            res.status(200).json({
+            message:"Slider created successfully",
+            error:false,
+            status:"200"
+        })
+        }catch (error) {
+            res.status(200).json({
+            message:error,
+            error:true,
+            status:"500"
+        })
        }
-       }
+    }
 
 }
 
@@ -59,32 +58,29 @@ export const SliderPost =  async (req,res) => {
 
 //PUT SLIDER
 export const SliderPut =  async (req,res) => {
-
-        const {imageURL,text,order,organizationID} = req.body;
-        const id = req.params.id;
-        if(!id || !imageURL || !text || !order || !organizationID){
+    const { image, text, order, organizationID } = req.body;
+    const id = req.params.id;
+    if(!id || !image || !text || !order || !organizationID){
         res.status(200).json({
         error: true,
         status: "404",
         message: "The corresponding data is not received",
         });
-        }else{
-        try { 
-        await Slide.update({imageURL:imageURL,text:text,order:order,organizationID:organizationID,updatedAt:new Date()},{where:{id:id}});
-        res.status(200).json({
-        message:"Slider updated successfully",
-        error:false,
-        status:"200"
+    } else {
+    try { 
+        await Slide.update({imageURL:image,text:text,order:order,organizationID:organizationID,updatedAt:new Date()},{where:{id:id}});
+            res.status(200).json({
+            message:"Slider updated successfully",
+            error:false,
+            status:"200"
         })
-
-        }catch (error) {
-        res.status(200).json({
+    } catch (error) {
+    res.status(200).json({
         message:error,
         error:true,
         status:"500"
-        })
-    
-    }}
+    })
+}}
 
 
 }
