@@ -16,6 +16,8 @@ router.delete("/categories/:id", isLoggedIn, isAdmin, destroy);
  * /api/categories:
  *      get:
  *        summary: List all categories
+ *        tags:
+ *          - Categories
  *        responses:
  *          '200':
  *            description: List with all categories
@@ -25,6 +27,8 @@ router.delete("/categories/:id", isLoggedIn, isAdmin, destroy);
  *                  type: object
  *      post:
  *        summary: Create a category
+ *        tags:
+ *          -  Categories
  *        parameters:
  *          - in: body
  *            schema:
@@ -47,6 +51,8 @@ router.delete("/categories/:id", isLoggedIn, isAdmin, destroy);
  * /api/categories/{id}: 
  *      put:
  *        summary: Update an existing category
+ *        tags:
+ *          -  Categories
  *        parameters:
  *          - in: path
  *            name: id
@@ -73,6 +79,8 @@ router.delete("/categories/:id", isLoggedIn, isAdmin, destroy);
  *                  type: object
  *      delete:
  *        summary: Removes a category
+ *        tags:
+ *          -  Categories
  *        parameters:
  *          - in: path
  *            name: id

@@ -28,6 +28,9 @@ router.post("/auth/logout", isLoggedIn, logout);
  * /api/auth/register:
  *  post:
  *    description: User Registration endpoint
+ *    summary: Creates an user
+ *    tags:
+ *      - Authentication
  *    parameters:
  *      - in: body
  *        schema:
@@ -53,6 +56,9 @@ router.post("/auth/logout", isLoggedIn, logout);
  * /api/auth/refresh:
  *  post:
  *    description: User Refresh Token
+ *    summary: Refresh user token
+ *    tags:
+ *      - Authentication
  *    parameters:
  *      - in: body
  *        schema:
@@ -75,6 +81,9 @@ router.post("/auth/logout", isLoggedIn, logout);
  * /api/auth/login:
  *  post:
  *    description: User Login Route
+ *    summary: Login
+ *    tags:
+ *    - Authentication
  *    parameters:
  *      - in: body
  *        schema:
@@ -89,7 +98,47 @@ router.post("/auth/logout", isLoggedIn, logout);
  *              type: string
  *    responses:
  *      '200':
- *        description: A successful response
+ *        description: A success response object with user data
+ *        schema:
+ *          type: object
+ *          properties:
+ *            error:
+ *              type: boolean
+ *            status:
+ *              type: string
+ *            message:
+ *              type: string
+ *            result:
+ *              type: object
+ *              properties:
+ *                user:
+ *                  type: object
+ *                  properties:
+ *                    id:
+ *                      type: integer
+ *                    firstName:
+ *                      type: string
+ *                    lastName:
+ *                      type: string
+ *                    phone:
+ *                      type: string
+ *                    email:
+ *                      type: string
+ *                    image:
+ *                      type: string
+ *                    roleId:
+ *                      type: string
+ *                    createdAt:
+ *                     type: string
+ *                    updatedAt:
+ *                      type: string
+ *                    roleName:
+ *                      type: string
+ *                accessToken:
+ *                  type: string
+ *                refreshToken:
+ *                  type: string
+ *                
  */
 
 /**
@@ -97,9 +146,24 @@ router.post("/auth/logout", isLoggedIn, logout);
  * /api/auth/logout:
  *  post:
  *    description: Signs off the current user
+ *    summary: Logout
+ *    tags:
+ *      - Authentication
  *    responses:
  *      '200':
  *        description: A successful response
+ *        schema:
+ *          type: object
+ *          properties:
+ *            error:
+ *              type: boolean
+ *            status:
+ *              type: string
+ *            message:
+ *              type: string
+ *            result:
+ *              type: object
+ *              description: An empty object
  */
 
 export default router;
