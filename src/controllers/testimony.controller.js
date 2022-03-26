@@ -4,17 +4,17 @@ import { InvalidArgumentsError } from "../helpers/exceptions";
 
 export const getTestimony = async (req, res) => {
   try {
-    const activities = await paginate(
+    const testimonials = await paginate(
       Testimonials,
       req.query.limit,
       req.query.page,
-      [["createdAt", "DESC"]]
+      [["id", "DESC"]]
     );
 
     let status = "200";
     let message = "success";
 
-    if (activities.count === 0) {
+    if (testimonials.count === 0) {
       status = "204";
       message = "No testimonials found";
     }
@@ -23,7 +23,7 @@ export const getTestimony = async (req, res) => {
       ...responses.success,
       status,
       message,
-      result: activities,
+      result: testimonials,
     });
   } catch (err) {
     let resData = {};
