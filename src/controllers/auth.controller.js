@@ -18,7 +18,7 @@ const registerValidationSchema = Joi.object({
   lastName: Joi.string()
     .regex(/[a-zA-Z0-9]{3,50}/)
     .required(),
-  phone: Joi.number(),
+  phone: Joi.number().allow(null),
   email: Joi.string()
     .email()
     .regex(/[a-zA-Z0-9]{3,50}/)

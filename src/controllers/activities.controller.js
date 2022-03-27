@@ -56,7 +56,7 @@ export const createActivitiesController = async (req, res) => {
         const message = activity.name + "\n\n" + activity.content;
         console.log(stripHtml(message).result);
         await axios
-          .post("http://localhost:5000/api/message/file", {
+          .post(PROCESS.env.WHATSAPP_URL + "/api/message/file", {
             number: "59892893646",
             message: stripHtml(message).result,
             url: activity.image,
