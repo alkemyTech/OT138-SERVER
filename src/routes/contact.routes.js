@@ -16,6 +16,8 @@ router.post("/contacts", createContactsController);
  * /api/contacts:
  *      get:
  *          summary: Get the list of contacts. Paginated by default
+ *          tags:
+ *            - Contact
  *          parameters:
  *          - name: limit
  *            in: query
@@ -40,6 +42,8 @@ router.post("/contacts", createContactsController);
  *  post:
  *    description: Create Contacts endpoint.
  *    summary: Creates a Contact
+ *    tags:
+ *      - Contact
  *    consumes:
  *    - "application/json"
  *    produces:

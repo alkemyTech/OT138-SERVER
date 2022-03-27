@@ -23,6 +23,8 @@ router.delete("/activities/:id", isLoggedIn, isAdmin, deleteActivityController);
  *  post:
  *    description: Create Activities endpoint.
  *    summary: Creates an Activity
+ *    tags:
+ *      - Activities
  *    consumes:
  *    - "application/json"
  *    produces:
@@ -48,14 +50,12 @@ router.delete("/activities/:id", isLoggedIn, isAdmin, deleteActivityController);
  *    responses:
  *      '200':
  *        description: A successful response.
- */
-
-/**
- * @swagger
- * /api/activities:
+ * 
  *  get:
  *    description: "Gets Activities from database. Requires limit and page parameters to paginate results."
  *    summary: "Gets activities from database"
+ *    tags:
+ *    - Activities
  *    consumes:
  *    - "application/json"
  *    produces:
@@ -89,7 +89,7 @@ router.delete("/activities/:id", isLoggedIn, isAdmin, deleteActivityController);
  *            result:
  *              type: object
  *              properties:
- *                pervious:
+ *                previous:
  *                  type: object
  *                  properties:
  *                    page:
@@ -130,6 +130,125 @@ router.delete("/activities/:id", isLoggedIn, isAdmin, deleteActivityController);
  *                      image:
  *                        type: string
  *                        example: "http://placeimg.com/640/480"
+ * 
+ * /api/actividades/{id}:
+ *  get:
+ *    description: Get a activity data
+ *    summary: Get an activity data
+ *    tags:
+ *      - Activities
+ *    consumes:
+ *    - application/json
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        type: integer
+ *        required: true
+ *        description: Entry id
+ *    responses:
+ *      200:
+ *        description: A success response object with the activity data
+ *        schema:
+ *          type: object
+ *          properties:
+ *            error:
+ *              type: boolean
+ *            status:
+ *              type: string
+ *            message:
+ *              type: string
+ *            result: 
+ *              type: object
+ *              properties:
+ *                id:
+ *                  type: integer
+ *                name:
+ *                  type: string
+ *                content:
+ *                  type: string
+ *                image:
+ *                  type: string
+ * 
+ *  put:
+ *    description: Updates an activity entry
+ *    summary: Update an activity
+ *    tags:
+ *    - Activities
+ *    consumes:
+ *    - multipart/form-data
+ *    parameters:
+ *    - in: formData
+ *      name: name
+ *      type: string
+ *      description: The activity name
+ *      required: true
+ *    - in: formData
+ *      name: content
+ *      type: string
+ *      description: The activity content
+ *      required: true
+ *    - in: formData
+ *      name: image
+ *      type: file
+ *      description: Image file
+ *      required: true
+ *    responses:
+ *      200:
+ *        description: A success object response with the updated instance
+ *        schema:
+ *          type: object
+ *          properties:
+ *            error:
+ *              type: boolean
+ *            message:
+ *              type: string
+ *            result:
+ *              type: object
+ *              properties:
+ *                id:
+ *                  type: integer
+ *                name:
+ *                  type: string
+ *                image:
+ *                  type: string
+ *                content:
+ *                  type: string
+ *                deletedAt:
+ *                  type: string
+ *                createdAt:
+ *                  type: string
+ *                updatedAt:
+ *                  type: string
+ *  delete:
+ *    description: Deletes an activity entry
+ *    summary: Deletes an activity
+ *    tags:
+ *      - Activities
+ *    consumes: application/json
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        type: integer
+ *        required: true
+ *        description: Id of the entry to delete
+ *    responses:
+ *      200:
+ *        description: A success object response
+ *        schema:
+ *          type: object
+ *          properties:
+ *            error:
+ *              type: boolean
+ *              example: false
+ *            status:
+ *              type: string
+ *              example: "200"
+ *            message:
+ *              type: string
+ *              example: Activity deleted
+ *            result: 
+ *              type: integer
+ *      
  */
 
 export default router;

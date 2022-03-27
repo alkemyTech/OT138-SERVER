@@ -16,21 +16,24 @@ export default router;
  * @swagger
  * /api/members/:
  *  get:
- *      description: "Retrieves all the members data (optional: pagination)"
+ *      description: Retrieves all the members data
+ *      summary: Get all members
+ *      tags:
+ *        - Members
  *      parameters:
  *        - name: limit
  *          in: query
- *          description: "Amount of records to retrieve"
+ *          description: Amount of records to retrieve
  *          type: integer
  *          required: false
  *        - name: offset
  *          in: query
- *          description: "Amount of records to skip"
+ *          description: Amount of records to skip
  *          type: integer
  *          required: false
  *      responses:
- *          "200":
- *              description: "An object that contains the members data array"
+ *          200:
+ *              description: An object that contains the members data array
  *              schema:
  *                  type: object
  *                  properties:
@@ -46,21 +49,24 @@ export default router;
  *          
  * /api/members:
  *  post:
- *      description: "Creates a new member record"
+ *      description: Creates a new member record
+ *      summary: Create a member
+ *      tags:
+ *        - Members
  *      parameters:
  *        - name: name
  *          in: body
- *          description: "Member name"
+ *          description: Member name
  *          type: string
  *          required: true
  *        - name: image
  *          in: body
- *          description: "Member photo url"
+ *          description: Member photo url
  *          type: string
  *          required: true
  *      responses:
- *          "200":
- *              description: "A successfull response"
+ *          200:
+ *              description: A successfull response
  *              schema:
  *                  type: object
  *                  properties:
@@ -72,7 +78,7 @@ export default router;
  *                          example: "200"
  *                      message:
  *                          type: string
- *                          example: "Member created successfully"
+ *                          example: Member created successfully
  */
  
 /**
@@ -80,6 +86,9 @@ export default router;
  * /api/members/{id}:
  *  put:
  *      description: "Update a member record"
+ *      summary: "Update a member"
+ *      tags:
+ *        - Members
  *      parameters:
  *        - in: path
  *          name: id
@@ -99,9 +108,9 @@ export default router;
  *                  image:
  *                      type: string
  *                      required: true
- *                      example: "https://fakeimages.com/jane_doe.jpg"
+ *                      example: https://fakeimages.com/jane_doe.jpg
  *      responses:
- *          "200":
+ *          200:
  *              description: "A successfull response"
  *              schema:
  *                  properties:
@@ -113,7 +122,7 @@ export default router;
  *                          example: "200"
  *                      message:
  *                          type: string
- *                          example: "Member updated successfully"
+ *                          example: Member updated successfully
  *                      
  */
 
@@ -121,16 +130,19 @@ export default router;
  * @swagger
  * /api/members/{id}:
  *  delete:
- *      description: "Deletes a member record"
+ *      description: Deletes a member record
+ *      summary: Delete a member
+ *      tags:
+ *        - Members
  *      parameters:
  *        - in: path
  *          name: id
- *          description: "Id of the record to delete"
+ *          description: Id of the record to delete
  *          type: integer
  *          required: true
  *      responses:
- *          "200":
- *              description: "A successfull response"
+ *          200:
+ *              description: A successfull response
  *              schema:
  *                  properties:
  *                      error:
@@ -141,5 +153,5 @@ export default router;
  *                          example: "200"
  *                      message:
  *                          type: string
- *                          example: "The member entry was successfully deleted"
+ *                          example: The member entry was successfully deleted
  */

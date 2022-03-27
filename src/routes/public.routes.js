@@ -20,6 +20,9 @@ router.put(
  * /api/organizations/1/public:
  *  get:
  *    description: Public ORganization Data endpoint
+ *    summary: Get organization public data
+ *    tags:
+ *      - Organization
  *    responses:
  *      '200':
  *        description: A successful response with public organization data.
@@ -29,8 +32,10 @@ router.put(
  * @swagger
  *  /api/organizations/1/public:
  *  put:
- *    description: Update Organization Data.
- *    summary: Update Organization Data.
+ *    description: Update Organization Data
+ *    summary: Update Organization Data
+ *    tags:
+ *    - Organization
  *    consumes:
  *    - "application/json"
  *    produces:
