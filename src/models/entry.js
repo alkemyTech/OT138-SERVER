@@ -8,6 +8,7 @@ module.exports = (sequelize, DataTypes) => {
         static associate(models) {
             Entry.belongsTo(models.Category, {
                 foreignKey: 'categoryId',
+                as: 'category',
                 onDelete: 'SET NULL'
             })
         }
