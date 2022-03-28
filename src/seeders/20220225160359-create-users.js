@@ -41,6 +41,7 @@ module.exports = {
         password: hashedPassword,
         image: faker.image.avatar(),
         roleId: i < 10 ? 2 : 1, // 10 users with null role and 10 users with role id 1
+        phone: faker.phone.phoneNumber("54##########"),
         createdAt: faker.date.past(2),
         updatedAt: new Date(),
       });
