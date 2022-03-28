@@ -226,7 +226,7 @@ export const responses = Object.freeze({
     error: true,
     errorCode: "SRV001",
     status: "500",
-    message: "Validation error",
+    message: "Internal error",
   },
   invalidCredentials: {
     error: true,
