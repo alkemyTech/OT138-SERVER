@@ -32,6 +32,7 @@ export const retrieve = async (req, res) => {
         {
           model: Category,
           required: false,
+          as: 'category',
           attributes: [],
         }
       ]
@@ -188,6 +189,7 @@ export const list = async (req, res) => {
           {
             model: Category,
             required: false,
+            as: 'category',
             attributes: [],
           }
         ]
