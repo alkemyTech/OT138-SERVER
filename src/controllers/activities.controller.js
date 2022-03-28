@@ -1,5 +1,5 @@
 import { Joi } from "express-validation";
-import { Activities } from "../models";
+import { Activities, User } from "../models";
 import { Op } from "sequelize";
 import { responses, formatValidationErrors, paginate } from "../helpers";
 import { InvalidArgumentsError } from "../helpers/exceptions";
@@ -54,14 +54,23 @@ export const createActivitiesController = async (req, res) => {
 
       if (value.send) {
         const message = activity.name + "\n\n" + activity.content;
-        console.log(stripHtml(message).result);
-        await axios
-          .post(PROCESS.env.WHATSAPP_URL + "/api/message/file", {
-            number: "59892893646",
-            message: stripHtml(message).result,
-            url: activity.image,
-          })
-          .catch((error) => console.log(error));
+
+        const users = await User.findAll({
+          where: {
+            phone: {
+              [Op.not]: null,
+            },
+          },
+        });
+        users?.map((user) => {
+          axios
+            .post(process.env.WHATSAPP_URL + "/api/message/file", {
+              number: user?.phone,
+              message: stripHtml(message).result,
+              url: activity.image,
+            })
+            .catch((error) => console.log(error));
+        });
       }
       res.json({
         ...responses.success,
