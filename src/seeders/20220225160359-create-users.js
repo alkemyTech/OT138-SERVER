@@ -40,7 +40,7 @@ module.exports = {
         email: emailList.pop(),
         password: hashedPassword,
         image: faker.image.avatar(),
-        roleId: i < 10 ? null : 1, // 10 users with null role and 10 users with role id 1
+        roleId: i < 10 ? 2 : 1, // 10 users with null role and 10 users with role id 1
         createdAt: faker.date.past(2),
         updatedAt: new Date(),
       });
