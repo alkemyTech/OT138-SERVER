@@ -1,8 +1,10 @@
 import { Member } from "../models";
 import { Joi } from "express-validation";
+import { paginate, responses, createFormData } from "../helpers"
 
 const memberSchema = Joi.object({
   name: Joi.string().required(),
+  area: Joi.string().required(),
   image: Joi.string().uri().required(),
 });
 
@@ -16,10 +18,17 @@ export const getMembersController = async (req, res) => {
     options.offset = parseInt(req.query.offset);
   }
 
+  
   try {
-    let instances = await Member.findAll({ ...options });
 
-    if (!instances) {
+    const members = await paginate(
+      Member,
+      req.query.limit,
+      req.query.page,
+      [["createdAt", "ASC"]]
+    );
+
+    if (!members) {
       return res.status(200).json({
         error: true,
         status: "404",
@@ -28,9 +37,8 @@ export const getMembersController = async (req, res) => {
     }
 
     return res.status(200).json({
-      error: false,
-      status: "200",
-      data: instances,
+      ...responses.success,
+      result: members,
     });
   } catch (err) {
     console.log(err);
@@ -43,6 +51,7 @@ export const getMembersController = async (req, res) => {
 };
 
 export const updateMemberController = async (req, res) => {
+
   const memberId = req.params.id;
 
   const { error, value } = memberSchema.validate(req.body);
@@ -89,6 +98,8 @@ export const updateMemberController = async (req, res) => {
 };
 
 export const createMemberController = async (req, res) => {
+
+  console.log(req.body)
   const { error, value } = memberSchema.validate(req.body);
 
   if (error) {
@@ -105,10 +116,11 @@ export const createMemberController = async (req, res) => {
       createdAt: Date.now(),
       updatedAt: Date.now(),
     });
+    
     return res.status(200).json({
-      error: false,
-      status: "200",
-      message: "Member created successfully",
+      ...responses.success,
+      message: "Activity updated",
+      result: instance,
     });
   } catch (err) {
     return res.status(200).json({
